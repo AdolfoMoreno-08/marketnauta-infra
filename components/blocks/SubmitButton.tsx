@@ -5,29 +5,40 @@ import { Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 
 interface SubmitButtonProps {
     status: "idle" | "sending" | "success" | "error";
+    loadingText?: string;
 }
 
-export default function SubmitButton({ status }: SubmitButtonProps) {
+export default function SubmitButton({ status, loadingText = "Procesando..." }: SubmitButtonProps) {
     return (
-        <button
+        <motion.button
             type="submit"
             disabled={status === "sending" || status === "success"}
+            // Animación de Glow Exterior (Se aplica al botón para que no se corte)
+            animate={{
+                boxShadow:
+                    status === "success"
+                        ? "0 0 30px 2px rgba(16, 185, 129, 0.6)" // Glow Esmeralda potente
+                        : status === "error"
+                            ? "0 0 20px 2px rgba(239, 68, 68, 0.3)"  // Glow Rojo sutil
+                            : "0 0 0px rgba(0,0,0,0)",             // Sin glow
+                scale: status === "success" ? 1.02 : 1,        // Ligera expansión al triunfar
+            }}
+            transition={{ duration: 0.5 }}
             className="relative w-full py-5 rounded-xl font-bold text-lg transition-all duration-500 overflow-hidden group border border-white/5"
         >
             {/* Fondo dinámico según estado */}
             <motion.div
-                className={`absolute inset-0 z-0 ${status === "error" ? "bg-red-500/20" : "bg-marketnauta-primary"
-                    }`}
+                className="absolute inset-0 z-0"
                 initial={false}
                 animate={{
                     backgroundColor:
-                        status === "success" ? "#10b981" : // Esmeralda para éxito
-                            status === "error" ? "#ef4444" :    // Rojo para error
+                        status === "success" ? "#10b981" : // Esmeralda
+                            status === "error" ? "#ef4444" :   // Rojo
                                 "#00E5FF",                         // Cian Marketnauta
                 }}
             />
 
-            {/* Efecto de Brillo en Hover */}
+            {/* Efecto de Brillo en Hover (Sweep) */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
 
             <div className="relative z-20 flex items-center justify-center gap-3 text-abisal-950">
@@ -54,7 +65,7 @@ export default function SubmitButton({ status }: SubmitButtonProps) {
                             className="flex items-center gap-3"
                         >
                             <Loader2 className="w-5 h-5 animate-spin" />
-                            Procesando Encriptación...
+                            {loadingText}
                         </motion.div>
                     )}
 
@@ -83,6 +94,6 @@ export default function SubmitButton({ status }: SubmitButtonProps) {
                     )}
                 </AnimatePresence>
             </div>
-        </button>
+        </motion.button>
     );
 }
