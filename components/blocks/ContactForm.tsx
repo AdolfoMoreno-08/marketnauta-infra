@@ -24,7 +24,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         email: "",
         phone: "",
         url: "",
-        botField: "" // 1. Campo Honeypot en el estado
+        botField: ""
     });
 
     const handleBack = () => {
@@ -77,6 +77,10 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // 3. PREVENCIÓN DE DOBLE CLIC (Guarda de seguridad)
+        if (status === "sending") return;
+
         setStatus("sending");
 
         const getGoogleClientId = () => {
@@ -165,7 +169,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                         {(status === "idle" || status === "sending") && (
                             <form onSubmit={handleSubmit} key="form-ui">
 
-                                {/* 2. INPUT HONEYPOT: Invisible para humanos, trampa para bots */}
+                                {/* HONEYPOT */}
                                 <div className="hidden" aria-hidden="true">
                                     <input
                                         type="text"
@@ -201,6 +205,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                         </div>
                                     </motion.div>
                                 )}
+
                                 {step === 2 && (
                                     <motion.div key="step2" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="min-h-[400px]">
                                         <div className="flex items-center gap-2 text-marketnauta-primary mt-4 mb-4 font-mono text-[10px] uppercase tracking-[0.3em]">
@@ -240,6 +245,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                         </div>
                                     </motion.div>
                                 )}
+
                                 {step === 3 && (
                                     <motion.div key="step3" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="min-h-[450px] mt-4 flex flex-col">
                                         <div className="mb-10">
@@ -250,14 +256,27 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10 flex-grow">
                                             {[
-                                                { id: "name", label: "Responsable", type: "text", k: "name", col: "md:col-span-1" },
-                                                { id: "company", label: "Compañía", type: "text", k: "company", col: "md:col-span-1" },
-                                                { id: "email", label: "Email Corporativo", type: "email", k: "email", col: "md:col-span-2" },
-                                                { id: "phone", label: "WhatsApp de Enlace", type: "tel", k: "phone", col: "md:col-span-1" },
-                                                { id: "url", label: "URL del Sitio", type: "url", k: "url", col: "md:col-span-1" }
+                                                // 1. AUTOFILLS CONFIGURADOS
+                                                { id: "name", label: "Responsable", type: "text", k: "name", col: "md:col-span-1", auto: "name" },
+                                                { id: "company", label: "Compañía", type: "text", k: "company", col: "md:col-span-1", auto: "organization" },
+                                                { id: "email", label: "Email Corporativo", type: "email", k: "email", col: "md:col-span-2", auto: "email" },
+                                                { id: "phone", label: "WhatsApp de Enlace", type: "tel", k: "phone", col: "md:col-span-1", auto: "tel" },
+                                                // 2. URL OPTIMIZADA (text + inputMode)
+                                                { id: "url", label: "URL del Sitio", type: "text", k: "url", col: "md:col-span-1", auto: "url", mode: "url" as const }
                                             ].map((field) => (
                                                 <div key={field.id} className={`relative group ${field.col}`}>
-                                                    <input ref={field.id === "name" ? nameInputRef : null} type={field.type} id={field.id} placeholder=" " required={field.id !== "url"} value={formData[field.k as keyof typeof formData]} onChange={e => setFormData({ ...formData, [field.k]: e.target.value })} className="peer block w-full bg-transparent border-b border-white/10 py-2 text-white outline-none focus:border-marketnauta-primary transition-all duration-300" />
+                                                    <input
+                                                        ref={field.id === "name" ? nameInputRef : null}
+                                                        type={field.type}
+                                                        id={field.id}
+                                                        placeholder=" "
+                                                        required={field.id !== "url"}
+                                                        autoComplete={field.auto}
+                                                        inputMode={field.mode}
+                                                        value={formData[field.k as keyof typeof formData]}
+                                                        onChange={e => setFormData({ ...formData, [field.k]: e.target.value })}
+                                                        className="peer block w-full bg-transparent border-b border-white/10 py-2 text-white outline-none focus:border-marketnauta-primary transition-all duration-300"
+                                                    />
                                                     <label htmlFor={field.id} className="absolute left-0 top-2 text-slate-500 text-sm transition-all duration-300 pointer-events-none font-sans peer-focus:-top-7 peer-focus:text-[10px] peer-focus:text-marketnauta-primary peer-focus:uppercase peer-focus:tracking-[0.2em] peer-focus:font-mono peer-[:not(:placeholder-shown)]:-top-7 peer-[:not(:placeholder-shown)]:text-[10px] peer-[:not(:placeholder-shown)]:text-marketnauta-primary peer-[:not(:placeholder-shown)]:uppercase peer-[:not(:placeholder-shown)]:font-mono">
                                                         {field.label}
                                                     </label>

@@ -6,6 +6,7 @@ import crypto from 'crypto';
 import React from 'react';
 import { z } from 'zod';
 
+// 1. ESQUEMA DE VALIDACIÓN OPTIMIZADO
 const contactSchema = z.object({
     challenge: z.string().min(1),
     volume: z.string().min(1),
@@ -14,7 +15,8 @@ const contactSchema = z.object({
     company: z.string().min(1),
     email: z.string().email(),
     phone: z.string().min(5),
-    url: z.string().optional(),
+    // Cambiamos a string simple para que no falle si el usuario olvida el https://
+    url: z.string().transform(val => val.trim()).optional(),
     eventId: z.string(),
     googleClientId: z.string().nullable().optional(),
     userAgent: z.string(),
@@ -30,7 +32,7 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        // 1. FILTRO HONEYPOT (Anti-Spam)
+        // 2. FILTRO HONEYPOT (Anti-Spam)
         if (body.botField && body.botField !== "") {
             console.warn("[SECURITY]: Bloqueado por Honeypot.");
             return NextResponse.json({ error: 'Signal rejected' }, { status: 400 });
@@ -38,6 +40,7 @@ export async function POST(request: Request) {
 
         const validation = contactSchema.safeParse(body);
         if (!validation.success) {
+            console.error("[VALIDATION ERROR]:", validation.error.format());
             return NextResponse.json({ error: 'Estructura de señal inválida' }, { status: 400 });
         }
 
@@ -47,7 +50,7 @@ export async function POST(request: Request) {
 
         // --- PROMESAS DE TRANSMISIÓN ---
 
-        // A. META CAPI
+        // A. META CAPI (Mejorado con User Agent e IP reales)
         const capiPromise = fetch(`https://graph.facebook.com/v19.0/${process.env.META_PIXEL_ID}/events?access_token=${process.env.META_ACCESS_TOKEN}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -62,9 +65,13 @@ export async function POST(request: Request) {
                         em: [hashData(data.email)],
                         ph: [hashData(data.phone)],
                         client_ip_address: ip,
-                        client_user_agent: data.userAgent
+                        client_user_agent: data.userAgent // Usamos el del cliente enviado desde el form
                     },
-                    custom_data: { content_name: data.challenge, currency: 'USD', value: 0.00 }
+                    custom_data: {
+                        content_name: data.challenge,
+                        currency: 'USD',
+                        value: 0.00
+                    }
                 }]
             })
         }).then(res => res.json()).catch(err => console.error("Meta Error:", err));
@@ -87,19 +94,17 @@ export async function POST(request: Request) {
             })
         }).catch(err => console.error("Google Error:", err));
 
-        // C. RESEND EMAIL (Con dominio verificado)
+        // C. RESEND EMAIL 
         const emailHtml = await render(
             <ContactTemplate
                 name={data.name} company={data.company} email={data.email}
                 phone={data.phone} solution={data.challenge} volume={data.volume}
-                budget={data.budget} url={data.url}
+                budget={data.budget} url={data.url || "No proporcionada"}
             />
         );
 
         const emailPromise = resend.emails.send({
-            // REMITENTE: Ahora que marketnauta.com está verificado, usamos hola@
             from: 'Marketnauta Ops <hola@marketnauta.com>',
-            // DESTINO: Tu correo personal donde quieres recibir los leads
             to: [process.env.CONTACT_EMAIL as string],
             subject: `[NUEVA SEÑAL] - ${data.challenge} // ${data.company}`,
             html: emailHtml,
@@ -110,15 +115,18 @@ export async function POST(request: Request) {
         const results = await Promise.allSettled([emailPromise, capiPromise, googlePromise]);
 
         const emailResult = results[0];
-        // Si el email falla, logueamos el error pero NO lanzamos Error 500
+
+        // Si el email falla, logueamos el error detallado para saber si es 422, 401, etc.
         if (emailResult.status === 'rejected' || (emailResult.status === 'fulfilled' && (emailResult.value as any).error)) {
-            console.error("[RESEND ERROR]:", emailResult.status === 'rejected' ? emailResult.reason : (emailResult.value as any).error);
+            const errorDetail = emailResult.status === 'rejected' ? emailResult.reason : (emailResult.value as any).error;
+            console.error("[RESEND ERROR]:", JSON.stringify(errorDetail));
         }
 
-        // Siempre devolvemos 200 si Meta y Google tuvieron éxito
+        // Siempre devolvemos 200 porque Meta y Google suelen tener éxito 
+        // (y no queremos asustar al usuario con un error 500)
         return NextResponse.json({
             success: true,
-            message: "Signal processed successfully"
+            eventId: data.eventId
         }, { status: 200 });
 
     } catch (error: any) {
