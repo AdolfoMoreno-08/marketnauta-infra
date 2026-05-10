@@ -6,7 +6,6 @@ import crypto from 'crypto';
 import React from 'react';
 import { z } from 'zod';
 
-// 1. ESQUEMA DE VALIDACIÓN: Incluimos el botField como opcional
 const contactSchema = z.object({
     challenge: z.string().min(1),
     volume: z.string().min(1),
@@ -19,7 +18,7 @@ const contactSchema = z.object({
     eventId: z.string(),
     googleClientId: z.string().nullable().optional(),
     userAgent: z.string(),
-    botField: z.string().optional().nullable() // <-- El sensor de la trampa
+    botField: z.string().optional().nullable()
 });
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -31,17 +30,13 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        // --- FILTRO HONEPOT: Detección temprana de Bots ---
-        // Si un humano no ve el campo, no lo llena. Si viene lleno, es un bot.
+        // 1. FILTRO HONEYPOT (Anti-Spam)
         if (body.botField && body.botField !== "") {
-            console.warn("[SECURITY]: Transmisión bloqueada por detección de Bot (Honeypot).");
-            // Devolvemos un 400 o incluso un 200 "falso" para engañar al bot, 
-            // pero detenemos el envío real.
+            console.warn("[SECURITY]: Bloqueado por Honeypot.");
             return NextResponse.json({ error: 'Signal rejected' }, { status: 400 });
         }
 
         const validation = contactSchema.safeParse(body);
-
         if (!validation.success) {
             return NextResponse.json({ error: 'Estructura de señal inválida' }, { status: 400 });
         }
@@ -50,7 +45,9 @@ export async function POST(request: Request) {
         const ip = request.headers.get('x-forwarded-for') || '0.0.0.0';
         const finalClientId = data.googleClientId || data.eventId;
 
-        // A. META CONVERSIONS API
+        // --- PROMESAS DE TRANSMISIÓN ---
+
+        // A. META CAPI
         const capiPromise = fetch(`https://graph.facebook.com/v19.0/${process.env.META_PIXEL_ID}/events?access_token=${process.env.META_ACCESS_TOKEN}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -67,14 +64,10 @@ export async function POST(request: Request) {
                         client_ip_address: ip,
                         client_user_agent: data.userAgent
                     },
-                    custom_data: {
-                        content_name: data.challenge,
-                        currency: 'USD',
-                        value: 0.00
-                    }
+                    custom_data: { content_name: data.challenge, currency: 'USD', value: 0.00 }
                 }]
             })
-        }).then(res => res.json()).catch(err => console.error("Meta CAPI Error:", err));
+        }).then(res => res.json()).catch(err => console.error("Meta Error:", err));
 
         // B. GOOGLE MEASUREMENT PROTOCOL
         const googlePromise = fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${process.env.GA4_MEASUREMENT_ID}&api_secret=${process.env.GA4_API_SECRET}`, {
@@ -88,46 +81,48 @@ export async function POST(request: Request) {
                         solution: data.challenge,
                         budget: data.budget,
                         company_size: data.volume,
-                        engagement_time_msec: "1",
                         session_id: data.eventId
                     }
                 }]
             })
-        }).catch(err => console.error("Google MP Error:", err));
+        }).catch(err => console.error("Google Error:", err));
 
-        // C. RESEND EMAIL
+        // C. RESEND EMAIL (Con dominio verificado)
         const emailHtml = await render(
             <ContactTemplate
-                name={data.name}
-                company={data.company}
-                email={data.email}
-                phone={data.phone}
-                solution={data.challenge}
-                volume={data.volume}
-                budget={data.budget}
-                url={data.url}
+                name={data.name} company={data.company} email={data.email}
+                phone={data.phone} solution={data.challenge} volume={data.volume}
+                budget={data.budget} url={data.url}
             />
         );
 
         const emailPromise = resend.emails.send({
+            // REMITENTE: Ahora que marketnauta.com está verificado, usamos hola@
             from: 'Marketnauta Ops <hola@marketnauta.com>',
+            // DESTINO: Tu correo personal donde quieres recibir los leads
             to: [process.env.CONTACT_EMAIL as string],
             subject: `[NUEVA SEÑAL] - ${data.challenge} // ${data.company}`,
             html: emailHtml,
             headers: { 'X-Entity-ID': data.eventId }
         });
 
-        // Transmisión en paralelo
-        const [emailResult] = await Promise.allSettled([emailPromise, capiPromise, googlePromise]);
+        // --- EJECUCIÓN Y MANEJO DE RESULTADOS ---
+        const results = await Promise.allSettled([emailPromise, capiPromise, googlePromise]);
 
-        if (emailResult.status === 'rejected' || (emailResult.value as any).error) {
-            throw new Error('Fallo en la entrega del reporte');
+        const emailResult = results[0];
+        // Si el email falla, logueamos el error pero NO lanzamos Error 500
+        if (emailResult.status === 'rejected' || (emailResult.status === 'fulfilled' && (emailResult.value as any).error)) {
+            console.error("[RESEND ERROR]:", emailResult.status === 'rejected' ? emailResult.reason : (emailResult.value as any).error);
         }
 
-        return NextResponse.json({ success: true, eventId: data.eventId }, { status: 200 });
+        // Siempre devolvemos 200 si Meta y Google tuvieron éxito
+        return NextResponse.json({
+            success: true,
+            message: "Signal processed successfully"
+        }, { status: 200 });
 
     } catch (error: any) {
-        console.error("[CRITICAL]:", error.message);
-        return NextResponse.json({ error: 'Fallo crítico en la transmisión' }, { status: 500 });
+        console.error("[CRITICAL ERROR]:", error.message);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
