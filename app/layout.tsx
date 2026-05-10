@@ -5,6 +5,7 @@ import "./globals.css";
 import NavbarWrapper from "@/components/blocks/NavbarWrapper";
 import FooterWrapper from "@/components/blocks/FooterWrapper";
 import FBPixelTracking from "@/components/tracking/FBPixelTracking";
+import CookieBanner from "@/components/blocks/CookieBanner";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -32,7 +33,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* 1. GOOGLE TAG MANAGER: El cerebro de la telemetría */}
+        {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Debe ser lo primero en el head) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'wait_for_update': 500
+              });
+            `,
+          }}
+        />
+
+        {/* 2. GOOGLE TAG MANAGER: El cerebro de la telemetría */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
@@ -47,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
-        {/* 2. META PIXEL: El radar de conversiones sociales */}
+        {/* 3. META PIXEL: El radar de conversiones sociales */}
         <Script
           id="fb-pixel-base"
           strategy="afterInteractive"
@@ -68,8 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen selection:bg-marketnauta-primary/30 flex flex-col bg-abisal-950">
 
-        {/* 3. COBERTURA SIN JAVASCRIPT (Noscripts) */}
-        {/* GTM Noscript: Recomendado por Google al inicio del body */}
+        {/* Noscripts (Seguridad para navegadores sin JS) */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-WVHGMSDM"
@@ -78,8 +95,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-
-        {/* Meta Pixel Noscript */}
         <noscript>
           <img
             height="1" width="1" style={{ display: "none" }}
@@ -88,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
 
-        {/* 4. RASTREO DINÁMICO DE SPA: PageViews automáticos */}
+        {/* Rastreo dinámico de SPA */}
         <Suspense fallback={null}>
           <FBPixelTracking />
         </Suspense>
@@ -100,6 +115,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
 
         <FooterWrapper />
+
+        {/* 4. BANNER DE COOKIES (Controlador de consentimiento) */}
+        <CookieBanner />
 
       </body>
     </html>
