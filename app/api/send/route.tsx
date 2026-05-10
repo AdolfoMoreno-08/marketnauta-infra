@@ -110,7 +110,7 @@ export async function POST(request: Request) {
         );
 
         const emailPromise = resend.emails.send({
-            from: 'Marketnauta Ops <onboarding@resend.dev>',
+            from: 'Marketnauta Ops <hola@marketnauta.com>',
             to: [process.env.CONTACT_EMAIL as string],
             subject: `[NUEVA SEÑAL] - ${data.challenge} // ${data.company}`,
             html: emailHtml,
