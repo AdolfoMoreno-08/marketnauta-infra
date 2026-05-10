@@ -16,11 +16,17 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
     const [loadingText, setLoadingText] = useState("Iniciando secuencia...");
 
     const [formData, setFormData] = useState({
-        challenge: "", volume: "", budget: "", name: "",
-        company: "", email: "", phone: "", url: ""
+        challenge: "",
+        volume: "",
+        budget: "",
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        url: "",
+        botField: "" // 1. Campo Honeypot en el estado
     });
 
-    // Función para retroceder
     const handleBack = () => {
         if (status === "idle") setStep((prev) => Math.max(1, prev - 1));
     };
@@ -29,13 +35,9 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         if (!isOpen) return;
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
-
-            // Retroceder con Backspace
             if (e.key === "Backspace" && step > 1) {
-                // Solo retroceder si no se está escribiendo en un input
                 if (document.activeElement?.tagName !== "INPUT") handleBack();
             }
-
             if (step === 1 && ["1", "2", "3"].includes(e.key)) {
                 const options = ["Trazabilidad y Visualización de Datos", "Escalabilidad en Pauta (Growth)", "Infraestructura Web y Performance"];
                 handleSelection("challenge", options[parseInt(e.key) - 1], 2);
@@ -58,7 +60,10 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                 setTimeout(() => {
                     setStatus("idle");
                     setStep(1);
-                    setFormData({ challenge: "", volume: "", budget: "", name: "", company: "", email: "", phone: "", url: "" });
+                    setFormData({
+                        challenge: "", volume: "", budget: "", name: "",
+                        company: "", email: "", phone: "", url: "", botField: ""
+                    });
                 }, 500);
             }, 4500);
             return () => clearTimeout(timer);
@@ -131,13 +136,11 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={onClose} className="absolute inset-0 bg-abisal-950/80 backdrop-blur-xl" />
             <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="relative w-full max-w-2xl glass-card rounded-[2rem] border border-white/10 bg-abisal-900/95 overflow-hidden shadow-[0_0_50px_rgba(0,229,255,0.15)] flex flex-col">
 
-                {/* Barra de Progreso Dinámica */}
                 <div className="h-1 w-full bg-white/5">
                     <motion.div className="h-full bg-marketnauta-primary" initial={{ width: "33%" }} animate={{ width: status === "success" ? "100%" : `${(step / 3) * 100}%` }} transition={{ duration: 0.5 }} />
                 </div>
 
                 <div className="p-8 md:p-12">
-                    {/* Controles de Navegación Superiores */}
                     <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-50">
                         <AnimatePresence>
                             {step > 1 && status === "idle" && (
@@ -161,6 +164,19 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                     <AnimatePresence mode="wait">
                         {(status === "idle" || status === "sending") && (
                             <form onSubmit={handleSubmit} key="form-ui">
+
+                                {/* 2. INPUT HONEYPOT: Invisible para humanos, trampa para bots */}
+                                <div className="hidden" aria-hidden="true">
+                                    <input
+                                        type="text"
+                                        name="hp_field"
+                                        tabIndex={-1}
+                                        autoComplete="off"
+                                        value={formData.botField}
+                                        onChange={e => setFormData({ ...formData, botField: e.target.value })}
+                                    />
+                                </div>
+
                                 {step === 1 && (
                                     <motion.div key="step1" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="min-h-[400px]">
                                         <div className="flex items-center gap-2 text-marketnauta-primary mt-4 mb-4 font-mono text-[10px] uppercase tracking-[0.3em]">
@@ -174,8 +190,8 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                                     type="button"
                                                     onClick={() => handleSelection("challenge", t, 2)}
                                                     className={`w-full p-5 rounded-2xl border text-left flex justify-between items-center group transition-all ${formData.challenge === t
-                                                            ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white'
-                                                            : 'border-white/5 bg-white/[0.02] text-slate-300 hover:bg-marketnauta-primary/10'
+                                                        ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white'
+                                                        : 'border-white/5 bg-white/[0.02] text-slate-300 hover:bg-marketnauta-primary/10'
                                                         }`}
                                                 >
                                                     <span><span className="text-xs font-mono text-slate-500 mr-4">[{i + 1}]</span>{t}</span>
@@ -212,8 +228,8 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                                             type="button"
                                                             onClick={() => handleSelection("budget", b, 3)}
                                                             className={`w-full py-3 px-6 rounded-full border text-left text-sm transition-all ${formData.budget === b
-                                                                    ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white'
-                                                                    : 'border-white/5 bg-white/[0.02] text-slate-300 hover:bg-marketnauta-primary/10'
+                                                                ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white'
+                                                                : 'border-white/5 bg-white/[0.02] text-slate-300 hover:bg-marketnauta-primary/10'
                                                                 }`}
                                                         >
                                                             {b}
@@ -255,7 +271,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                 )}
                             </form>
                         )}
-                        {/* Secciones de Success y Error (sin cambios) */}
                         {status === "success" && (
                             <motion.div key="success-ui" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center py-12 px-6">
                                 <div className="relative mb-8">
