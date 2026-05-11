@@ -146,8 +146,14 @@ export default function DesarrolloEstrategiaPage() {
 
                         {/* Tarjeta 4: UX/UI (Span 7) - Aplicamos p-6 md:p-10 */}
                         <motion.div {...fadeInUp} transition={{ delay: 0.3 }} className="md:col-span-7 p-6 md:p-10 rounded-[2rem] glass-card border border-marketnauta-primary/10 bg-abisal-900/60 relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.05] group-hover:opacity-[0.1] transition-opacity" />
-                            <div className="relative z-10">
+                            <div
+                                className="absolute inset-0 opacity-[0.02]"
+                                style={{
+                                    backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), 
+                                          linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                                    backgroundSize: '40px 40px'
+                                }}
+                            />                            <div className="relative z-10">
                                 <Layout className="w-8 h-8 text-marketnauta-primary mb-6" />
                                 <span className="text-[10px] font-mono text-marketnauta-primary uppercase tracking-widest block mb-2">INFRA_04 // UI</span>
                                 <h3 className="text-3xl font-display font-bold mb-4 text-white">Interfaces Orientadas a Objetivos</h3>
