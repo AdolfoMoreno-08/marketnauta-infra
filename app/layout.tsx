@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Debe ser lo primero en el head) */}
+        {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Prioridad máxima) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
-        {/* 2. GOOGLE TAG MANAGER: El cerebro de la telemetría */}
+        {/* 2. GOOGLE TAG MANAGER VIA CLOUDFLARE GATEWAY (/metrics) */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
@@ -59,13 +59,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              'https://www.marketnauta.com/metrics/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
               })(window,document,'script','dataLayer','GTM-WVHGMSDM');
             `,
           }}
         />
 
-        {/* 3. META PIXEL: El radar de conversiones sociales */}
+        {/* 3. META PIXEL */}
         <Script
           id="fb-pixel-base"
           strategy="afterInteractive"
@@ -86,15 +86,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen selection:bg-marketnauta-primary/30 flex flex-col bg-abisal-950">
 
-        {/* Noscripts (Seguridad para navegadores sin JS) */}
+        {/* Noscript GTM actualizado a la ruta /metrics */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-WVHGMSDM"
+            src="https://www.marketnauta.com/metrics/ns.html?id=GTM-WVHGMSDM"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+
         <noscript>
           <img
             height="1" width="1" style={{ display: "none" }}
@@ -103,7 +104,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
 
-        {/* Rastreo dinámico de SPA */}
         <Suspense fallback={null}>
           <FBPixelTracking />
         </Suspense>
@@ -116,7 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <FooterWrapper />
 
-        {/* 4. BANNER DE COOKIES (Controlador de consentimiento) */}
+        {/* Control de consentimiento */}
         <CookieBanner />
 
       </body>

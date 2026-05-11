@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, X } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 export default function CookieBanner() {
     const [showBanner, setShowBanner] = useState(false);
 
     useEffect(() => {
-        // Verificamos si ya existe una decisión guardada
         const consent = localStorage.getItem("cookie_consent");
         if (!consent) {
             setShowBanner(true);
@@ -16,16 +15,23 @@ export default function CookieBanner() {
     }, []);
 
     const handleConsent = (status: "granted" | "denied") => {
-        // 1. Guardamos en el navegador
+        // 1. Guardamos la decisión en localStorage
         localStorage.setItem("cookie_consent", status);
 
-        // 2. Actualizamos el Consent Mode de Google
+        // 2. Ejecutamos el comando de consentimiento
         if (typeof window !== "undefined" && (window as any).gtag) {
             (window as any).gtag("consent", "update", {
                 ad_storage: status,
-                analytics_storage: status,
                 ad_user_data: status,
                 ad_personalization: status,
+                analytics_storage: status,
+            });
+
+            // Opcional: Disparar un evento personalizado para GTM
+            (window as any).dataLayer = (window as any).dataLayer || [];
+            (window as any).dataLayer.push({
+                event: "consent_updated",
+                consent_status: status
             });
         }
 
@@ -41,7 +47,7 @@ export default function CookieBanner() {
                     exit={{ y: 100, opacity: 0 }}
                     className="fixed bottom-6 left-6 right-6 md:left-auto md:max-w-md z-[110]"
                 >
-                    <div className="glass-card bg-abisal-900/95 border border-white/10 p-6 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                    <div className="glass-card bg-abisal-900/95 border border-white/10 p-6 rounded-2xl shadow-2xl">
                         <div className="flex items-start gap-4">
                             <div className="p-2 bg-marketnauta-primary/10 rounded-lg">
                                 <ShieldCheck className="w-6 h-6 text-marketnauta-primary" />

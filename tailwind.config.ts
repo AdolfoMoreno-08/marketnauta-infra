@@ -36,6 +36,10 @@ const config: Config = {
                     "100%": { opacity: "1", transform: "translateY(0)" },
                 },
             },
+            boxShadow: {
+                'neon-short': "0 0 10px rgba(0, 229, 255, 0.3)",
+                'neon-long': "0 0 20px rgba(0, 229, 255, 0.15), 0 0 40px rgba(0, 229, 255, 0.1)",
+            },
         },
     },
     plugins: [],
