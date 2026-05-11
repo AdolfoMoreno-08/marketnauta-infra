@@ -51,8 +51,15 @@ export default function Home() {
             // En móvil el brillo es más pequeño para no lavar el contraste
             className="absolute top-[35%] left-[50%] -translate-x-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-marketnauta-primary/10 rounded-full blur-[80px] md:blur-[150px]"
           />
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] md:opacity-[0.05] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
-        </div>
+          <div
+            className="absolute inset-0 opacity-[0.05]"
+            style={{
+              backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), 
+                      linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+              backgroundSize: '40px 40px',
+              maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)'
+            }}
+          />        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}

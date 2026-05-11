@@ -33,24 +33,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Prioridad máxima) */}
+        {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Prioridad máxima y síncrona) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
+
+              // 1.1 Intentar recuperar consentimiento previo de localStorage inmediatamente
+              var initialConsent = 'denied';
+              try {
+                var saved = localStorage.getItem('cookie_consent');
+                if (saved === 'granted') initialConsent = 'granted';
+              } catch (e) {}
+
+              // 1.2 Establecer el estado por defecto antes de que cargue GTM
               gtag('consent', 'default', {
-                'ad_storage': 'denied',
-                'analytics_storage': 'denied',
-                'ad_user_data': 'denied',
-                'ad_personalization': 'denied',
+                'ad_storage': initialConsent,
+                'analytics_storage': initialConsent,
+                'ad_user_data': initialConsent,
+                'ad_personalization': initialConsent,
                 'wait_for_update': 500
               });
             `,
           }}
         />
 
-        {/* 2. GOOGLE TAG MANAGER (Ruta Estándar para validación) */}
+        {/* 2. GOOGLE TAG MANAGER */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
@@ -85,9 +94,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="min-h-screen selection:bg-marketnauta-primary/30 flex flex-col bg-abisal-950">
 
-        {/* Noscript GTM (Ruta Estándar) */}
+      <body className="min-h-screen selection:bg-marketnauta-primary/30 flex flex-col bg-abisal-950">
+        {/* Noscript GTM */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-WVHGMSDM"
@@ -97,6 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
 
+        {/* Noscript Meta Pixel */}
         <noscript>
           <img
             height="1" width="1" style={{ display: "none" }}
@@ -117,6 +127,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <FooterWrapper />
 
+        {/* El banner gestiona el gtag('consent', 'update', ...) */}
         <CookieBanner />
 
       </body>

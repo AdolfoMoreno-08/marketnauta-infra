@@ -9,32 +9,42 @@ export default function CookieBanner() {
 
     useEffect(() => {
         const consent = localStorage.getItem("cookie_consent");
+
+        // Si no hay decisión tomada, mostramos el banner
         if (!consent) {
             setShowBanner(true);
+        } else {
+            // Si ya existe consentimiento, reforzamos el update por si el default del layout falló
+            updateGTMConsent(consent as "granted" | "denied");
         }
     }, []);
 
-    const handleConsent = (status: "granted" | "denied") => {
-        // 1. Guardamos la decisión en localStorage
-        localStorage.setItem("cookie_consent", status);
+    const updateGTMConsent = (status: "granted" | "denied") => {
+        if (typeof window !== "undefined") {
+            const gtag = (window as any).gtag;
+            const dataLayer = (window as any).dataLayer;
 
-        // 2. Ejecutamos el comando de consentimiento
-        if (typeof window !== "undefined" && (window as any).gtag) {
-            (window as any).gtag("consent", "update", {
-                ad_storage: status,
-                ad_user_data: status,
-                ad_personalization: status,
-                analytics_storage: status,
-            });
+            if (gtag) {
+                gtag("consent", "update", {
+                    ad_storage: status,
+                    ad_user_data: status,
+                    ad_personalization: status,
+                    analytics_storage: status,
+                });
+            }
 
-            // Opcional: Disparar un evento personalizado para GTM
-            (window as any).dataLayer = (window as any).dataLayer || [];
-            (window as any).dataLayer.push({
-                event: "consent_updated",
-                consent_status: status
-            });
+            if (dataLayer) {
+                dataLayer.push({
+                    event: "consent_updated",
+                    consent_status: status,
+                });
+            }
         }
+    };
 
+    const handleConsent = (status: "granted" | "denied") => {
+        localStorage.setItem("cookie_consent", status);
+        updateGTMConsent(status);
         setShowBanner(false);
     };
 
