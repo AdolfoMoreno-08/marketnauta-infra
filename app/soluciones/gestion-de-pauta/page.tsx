@@ -29,7 +29,14 @@ export default function GrowthPage() {
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-marketnauta-primary/10 rounded-full blur-[150px]" />
                 <div className="absolute top-[40%] right-[-10%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[150px]" />
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.02]" />
+                <div
+                    className="absolute inset-0 opacity-[0.02]"
+                    style={{
+                        backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), 
+                                          linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                        backgroundSize: '40px 40px'
+                    }}
+                />
             </div>
 
             {/* 1. HERO: PROPULSIÓN DE RENDIMIENTO */}
@@ -161,7 +168,7 @@ export default function GrowthPage() {
                                           linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
                                     backgroundSize: '40px 40px'
                                 }}
-                            />                            
+                            />
                             <div className="flex-1 relative z-10">
                                 <span className="text-[10px] font-mono text-marketnauta-primary uppercase tracking-widest block mb-2">PHASE_03 // SCALE</span>
                                 <h3 className="text-3xl font-display font-bold mb-4 text-white">Escalamiento e Incrementalidad</h3>
