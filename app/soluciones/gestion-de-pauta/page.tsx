@@ -154,7 +154,14 @@ export default function GrowthPage() {
 
                         {/* Bloque 3: Escalamiento e Incrementalidad (Ancho completo) */}
                         <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="md:col-span-12 p-10 rounded-[2rem] glass-card border border-marketnauta-primary/20 bg-abisal-900/60 flex flex-col md:flex-row items-center gap-10 group relative overflow-hidden">
-                            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.05] group-hover:opacity-[0.1] transition-opacity" />
+                            <div
+                                className="absolute inset-0 opacity-[0.02]"
+                                style={{
+                                    backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), 
+                                          linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                                    backgroundSize: '40px 40px'
+                                }}
+                            />                            
                             <div className="flex-1 relative z-10">
                                 <span className="text-[10px] font-mono text-marketnauta-primary uppercase tracking-widest block mb-2">PHASE_03 // SCALE</span>
                                 <h3 className="text-3xl font-display font-bold mb-4 text-white">Escalamiento e Incrementalidad</h3>
