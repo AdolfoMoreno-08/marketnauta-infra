@@ -78,7 +78,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // 3. PREVENCIÓN DE DOBLE CLIC (Guarda de seguridad)
+        // Prevención de doble clic
         if (status === "sending") return;
 
         setStatus("sending");
@@ -115,12 +115,31 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
 
             if (response.ok) {
                 setStatus("success");
+
+                // --- MEDICIÓN DE SEÑAL ACTUALIZADA ---
+
+                // 1. Meta Pixel
                 fbq.event('Lead', {
                     content_name: formData.challenge,
                     value: 0.00,
                     currency: 'USD',
                     eventID: eventId
                 });
+
+                // 2. Google Tag Manager (form_send)
+                if (typeof window !== "undefined") {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        event: 'form_send', // Activador configurado en GTM
+                        event_id: eventId,
+                        form_type: 'contact_modal',
+                        lead_challenge: formData.challenge,
+                        lead_budget: formData.budget,
+                        status: 'success'
+                    });
+                }
+
+                // 3. GTM Helper (Lead Conversion para BigQuery)
                 gtm.pushToDataLayer({
                     event: 'lead_conversion',
                     event_id: eventId,
@@ -129,8 +148,13 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                     lead_company_size: formData.volume,
                     lead_location: 'Web_Terminal_v1'
                 });
-            } else { setStatus("error"); }
-        } catch { setStatus("error"); }
+
+            } else {
+                setStatus("error");
+            }
+        } catch {
+            setStatus("error");
+        }
     };
 
     if (!isOpen) return null;
@@ -168,6 +192,15 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                     <AnimatePresence mode="wait">
                         {(status === "idle" || status === "sending") && (
                             <form onSubmit={handleSubmit} key="form-ui">
+                                {/* SOLUCIÓN 404: Cuadrícula CSS Puro */}
+                                <div
+                                    className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                                    style={{
+                                        backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), 
+                                                          linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                                        backgroundSize: '30px 30px'
+                                    }}
+                                />
 
                                 {/* HONEYPOT */}
                                 <div className="hidden" aria-hidden="true">
@@ -256,12 +289,10 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10 flex-grow">
                                             {[
-                                                // 1. AUTOFILLS CONFIGURADOS
                                                 { id: "name", label: "Responsable", type: "text", k: "name", col: "md:col-span-1", auto: "name" },
                                                 { id: "company", label: "Compañía", type: "text", k: "company", col: "md:col-span-1", auto: "organization" },
                                                 { id: "email", label: "Email Corporativo", type: "email", k: "email", col: "md:col-span-2", auto: "email" },
                                                 { id: "phone", label: "WhatsApp de Enlace", type: "tel", k: "phone", col: "md:col-span-1", auto: "tel" },
-                                                // 2. URL OPTIMIZADA (text + inputMode)
                                                 { id: "url", label: "URL del Sitio", type: "text", k: "url", col: "md:col-span-1", auto: "url", mode: "url" as const }
                                             ].map((field) => (
                                                 <div key={field.id} className={`relative group ${field.col}`}>
