@@ -32,13 +32,13 @@ export default function Navbar({ onContactClick }: NavbarProps) {
     return (
         <nav
             className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${isScrolled
-                    ? 'py-4 bg-abisal-950/80 backdrop-blur-xl border-b border-white/5 shadow-2xl'
-                    : 'py-6 md:py-10 bg-transparent'
+                ? 'py-4 bg-abisal-950/80 backdrop-blur-xl border-b border-white/5 shadow-2xl'
+                : 'py-6 md:py-10 bg-transparent'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
-                {/* BRANDING: Mayor peso visual */}
+                {/* BRANDING */}
                 <Link href="/" className="flex items-center gap-3 group relative z-[110]">
                     <div className="relative">
                         <Compass className="w-8 h-8 text-marketnauta-primary group-hover:rotate-180 transition-transform duration-1000 ease-[0.22,1,0.36,1]" />
@@ -49,7 +49,7 @@ export default function Navbar({ onContactClick }: NavbarProps) {
                     </span>
                 </Link>
 
-                {/* DESKTOP NAV: Escala corregida (13px es el estándar de oro para tech) */}
+                {/* DESKTOP NAV */}
                 <div className="hidden md:flex items-center gap-10">
                     {navLinks.map((link) => (
                         <Link
@@ -82,7 +82,7 @@ export default function Navbar({ onContactClick }: NavbarProps) {
                 </div>
             </div>
 
-            {/* MOBILE OVERLAY: Rediseño más limpio */}
+            {/* MOBILE OVERLAY */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
@@ -91,8 +91,15 @@ export default function Navbar({ onContactClick }: NavbarProps) {
                         exit={{ opacity: 0, y: -20 }}
                         className="fixed inset-0 w-full h-screen bg-abisal-950 flex flex-col justify-center px-10 md:hidden"
                     >
-                        {/* Grid de fondo decorativo */}
-                        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] pointer-events-none" />
+                        {/* SOLUCIÓN AL 404: Reemplazo de grid.svg por gradiente CSS puro */}
+                        <div
+                            className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                            style={{
+                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), 
+                                                  linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                                backgroundSize: '40px 40px'
+                            }}
+                        />
 
                         <div className="flex flex-col gap-12 relative z-10">
                             <p className="text-[10px] font-mono text-marketnauta-primary tracking-[0.5em] uppercase opacity-50">
