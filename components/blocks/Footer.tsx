@@ -140,7 +140,7 @@ export default function Footer({ onContactClick }: FooterProps) {
                         </div>
                         <div className="flex items-center gap-2 text-slate-300 text-[14px] font-mono group cursor-pointer hover:text-marketnauta-primary transition-colors">
                             <Mail className="w-4 h-4" />
-                            <span>hola@marketnauta.com</span>
+                            <span>Enrique@marketnauta.com</span>
                         </div>
                     </div>
                 </div>
