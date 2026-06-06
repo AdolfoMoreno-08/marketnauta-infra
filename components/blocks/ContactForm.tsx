@@ -22,7 +22,7 @@ const STEP_METADATA: Record<number, StepConfig> = {
 
 export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     const nameInputRef = useRef<HTMLInputElement>(null);
-    const isMounted = useRef(true); // Ref para evitar fugas de memoria
+    const isMounted = useRef(true);
 
     const [step, setStep] = useState(1);
     const [status, setStatus] = useState<FormStatus>("idle");
@@ -41,7 +41,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         botField: ""
     });
 
-    // Control del ciclo de vida del componente
     useEffect(() => {
         isMounted.current = true;
         return () => {
@@ -49,12 +48,10 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         };
     }, []);
 
-    // Limpia errores locales al cambiar de fase
     useEffect(() => {
         setLocalError(null);
     }, [step]);
 
-    // Interceptor seguro para cierres por atajos globales (Teclado Escape)
     useEffect(() => {
         if (!isOpen) return;
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -64,7 +61,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [isOpen, step, formData]);
 
-    // Auto-focus predictivo en la fase de inputs estructurados
     useEffect(() => {
         if (step === 3 && status === "idle") {
             const timer = setTimeout(() => nameInputRef.current?.focus(), 150);
@@ -76,7 +72,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         if (status === "idle") setStep((prev) => Math.max(1, prev - 1));
     };
 
-    // Prevención de cierre accidental (UX): Evita perder datos si hay interacción
     const handleCloseIntent = () => {
         const hasInteracted = !!(formData.challenge || formData.volume || formData.budget || formData.name || formData.email);
         if (hasInteracted && step < 3 && status === "idle") {
@@ -88,7 +83,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         }
     };
 
-    // Navegación asíncrona totalmente validada
     const handleStepNavigation = (next: boolean) => {
         if (!next) {
             handleBack();
@@ -104,15 +98,15 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         }
 
         if (step === 2) {
-            if (!formData.volume || !formData.budget) {
-                setLocalError("Parámetros incompletos. Por favor, define ambos criterios operativos o selecciona [Omitir Fase].");
+            // Solo exigimos la Asignación Mensual (budget)
+            if (!formData.budget) {
+                setLocalError("Falta la Asignación Mensual. Por favor, define este criterio o selecciona [Omitir Fase].");
                 return;
             }
             setStep(3);
         }
     };
 
-    // Función de escape (CRO) inyectando tokens explícitos
     const skipStep = () => {
         if (step === 1) {
             setFormData(prev => ({ ...prev, challenge: "No especificado" }));
@@ -137,15 +131,19 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         const cleanPhone = formData.phone.trim();
         const cleanUrl = formData.url.trim();
 
-        if (!cleanName || !cleanCompany || !cleanEmail || !cleanPhone) {
-            setLocalError("Error de Enlace: Los campos requeridos (*) no pueden contener únicamente espacios.");
+        // Validación: Solo Nombre y WhatsApp son estrictamente obligatorios
+        if (!cleanName || !cleanPhone) {
+            setLocalError("Error de Enlace: Nombre y WhatsApp son coordenadas obligatorias.");
             return;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(cleanEmail)) {
-            setLocalError("Sintaxis inválida: Por favor ingresa un Email Corporativo real.");
-            return;
+        // Validación condicional del email: Si el usuario escribe algo, validamos que sea un email real
+        if (cleanEmail !== "") {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(cleanEmail)) {
+                setLocalError("Sintaxis inválida: Por favor ingresa un Email corporativo válido.");
+                return;
+            }
         }
 
         const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[\s/0-9]*$/;
@@ -160,6 +158,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
 
         const payload = {
             ...formData,
+            volume: formData.volume || "No especificado", // Inyectamos fallback si viene vacío
             name: cleanName,
             company: cleanCompany,
             email: cleanEmail,
@@ -177,13 +176,13 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
             });
 
             for (const phase of phases) {
-                if (!isMounted.current) return; // Abortar si el componente se desmontó
+                if (!isMounted.current) return;
                 setLoadingText(phase);
                 await new Promise(res => setTimeout(res, 500));
             }
 
             const response = await apiCall;
-            if (!isMounted.current) return; // Doble validación post-fetch
+            if (!isMounted.current) return;
 
             if (response.ok) {
                 setStatus("success");
@@ -196,7 +195,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                 });
 
                 if (typeof window !== "undefined") {
-                    // Casteo a any para evitar el error estricto de TypeScript
                     const w = window as any;
                     w.dataLayer = w.dataLayer || [];
                     w.dataLayer.push({
@@ -272,7 +270,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
 
                     <AnimatePresence mode="wait">
                         {(status === "idle" || status === "sending") && (
-                            // Se agregó 'noValidate' para priorizar la validación manual sobre la de HTML5
                             <form onSubmit={handleSubmit} className="w-full" noValidate>
                                 <div className="hidden" aria-hidden="true">
                                     <input type="text" name="hp_field" tabIndex={-1} autoComplete="off" value={formData.botField} onChange={e => setFormData({ ...formData, botField: e.target.value })} />
@@ -296,8 +293,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                 {step === 2 && (
                                     <motion.div key="step2" initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: -15 }} className="space-y-6">
                                         <div className="space-y-3">
-                                            <span className="text-slate-500 text-[10px] font-mono uppercase tracking-wider block">Escala de Operación</span>
-                                            <div className="grid grid-cols-3 gap-2">
+                                            <span className="text-slate-500 text-[10px] font-mono uppercase tracking-wider block">Escala de Operación (Opcional)</span>                                            <div className="grid grid-cols-3 gap-2">
                                                 {["Startup", "Pyme / Mediana", "Corporativa"].map((v) => (
                                                     <button key={v} type="button" onClick={() => { setFormData(prev => ({ ...prev, volume: v })); setLocalError(null); }} className={`py-2.5 px-3 rounded-lg border text-xs font-medium transition-all ${formData.volume === v ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white' : 'border-white/5 bg-white/[0.02] text-slate-400 hover:border-white/10'}`}>
                                                         {v}
@@ -322,16 +318,19 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                     <motion.div key="step3" initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {[
-                                                { id: "name", label: "Responsable *", type: "text", k: "name", col: "md:col-span-1", auto: "name" },
-                                                { id: "company", label: "Compañía *", type: "text", k: "company", col: "md:col-span-1", auto: "organization" },
-                                                { id: "email", label: "Email Corporativo *", type: "email", k: "email", col: "md:col-span-2", auto: "email" },
-                                                { id: "phone", label: "WhatsApp de Enlace *", type: "tel", k: "phone", col: "md:col-span-1", auto: "tel" },
-                                                { id: "url", label: "URL del Sitio (Opcional)", type: "text", k: "url", col: "md:col-span-1", auto: "url" }
+                                                // req: true para los obligatorios, req: false para los opcionales
+                                                { id: "name", label: "Responsable *", type: "text", k: "name", col: "md:col-span-1", auto: "name", req: true },
+                                                { id: "company", label: "Compañía (Opcional)", type: "text", k: "company", col: "md:col-span-1", auto: "organization", req: false },
+                                                { id: "email", label: "Email (Opcional)", type: "email", k: "email", col: "md:col-span-2", auto: "email", req: false },
+                                                { id: "phone", label: "WhatsApp de Enlace *", type: "tel", k: "phone", col: "md:col-span-1", auto: "tel", req: true },
+                                                { id: "url", label: "URL del Sitio (Opcional)", type: "text", k: "url", col: "md:col-span-1", auto: "url", req: false }
                                             ].map((field) => (
                                                 <div key={field.id} className={`relative ${field.col}`}>
                                                     <input
                                                         ref={field.id === "name" ? nameInputRef : null}
-                                                        type={field.type} id={field.id} placeholder=" " required={field.id !== "url"} autoComplete={field.auto}
+                                                        type={field.type} id={field.id} placeholder=" "
+                                                        required={field.req} // Se aplica la propiedad req
+                                                        autoComplete={field.auto}
                                                         value={formData[field.k as keyof typeof formData]}
                                                         onChange={e => setFormData({ ...formData, [field.k]: e.target.value })}
                                                         className="peer block w-full bg-transparent border-b border-white/10 py-1.5 text-sm text-white outline-none focus:border-marketnauta-primary transition-colors"
