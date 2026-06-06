@@ -98,7 +98,7 @@ export async function POST(request: Request) {
         const emailHtml = await render(
             <ContactTemplate
                 name={data.name} company={data.company} email={data.email}
-                phone={data.phone} solution={data.challenge} volume={data.volume}
+                phone={data.phone} challenge={data.challenge} volume={data.volume}
                 budget={data.budget} url={data.url || "No proporcionada"}
             />
         );
