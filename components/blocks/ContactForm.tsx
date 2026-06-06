@@ -2,18 +2,32 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, CheckCircle2, X, Terminal, AlertCircle, Fuel } from "lucide-react";
+import { ChevronRight, ChevronLeft, CheckCircle2, X, Terminal, AlertCircle, Fuel, ShieldCheck } from "lucide-react";
 import SubmitButton from "@/components/blocks/SubmitButton";
 import * as fbq from "@/lib/fpixel";
 import * as gtm from "@/lib/gtm";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
 
+interface StepConfig {
+    title: string;
+    description: string;
+}
+
+const STEP_METADATA: Record<number, StepConfig> = {
+    1: { title: "Fase 01 // Calibración", description: "¿Qué área presenta el mayor punto ciego?" },
+    2: { title: "Fase 02 // Dimensionamiento", description: "Configuración de escala y recursos proyectados." },
+    3: { title: "Fase 03 // Enlace Directo", description: "Establece los parámetros de transmisión." }
+};
+
 export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     const nameInputRef = useRef<HTMLInputElement>(null);
+    const isMounted = useRef(true); // Ref para evitar fugas de memoria
+
     const [step, setStep] = useState(1);
     const [status, setStatus] = useState<FormStatus>("idle");
     const [loadingText, setLoadingText] = useState("Iniciando secuencia...");
+    const [localError, setLocalError] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         challenge: "",
@@ -27,133 +41,187 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         botField: ""
     });
 
+    // Control del ciclo de vida del componente
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
+    // Limpia errores locales al cambiar de fase
+    useEffect(() => {
+        setLocalError(null);
+    }, [step]);
+
+    // Interceptor seguro para cierres por atajos globales (Teclado Escape)
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") handleCloseIntent();
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen, step, formData]);
+
+    // Auto-focus predictivo en la fase de inputs estructurados
+    useEffect(() => {
+        if (step === 3 && status === "idle") {
+            const timer = setTimeout(() => nameInputRef.current?.focus(), 150);
+            return () => clearTimeout(timer);
+        }
+    }, [step, status]);
+
     const handleBack = () => {
         if (status === "idle") setStep((prev) => Math.max(1, prev - 1));
     };
 
-    useEffect(() => {
-        if (!isOpen) return;
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape") onClose();
-            if (e.key === "Backspace" && step > 1) {
-                if (document.activeElement?.tagName !== "INPUT") handleBack();
-            }
-            if (step === 1 && ["1", "2", "3"].includes(e.key)) {
-                const options = ["Trazabilidad y Visualización de Datos", "Escalabilidad en Pauta (Growth)", "Infraestructura Web y Performance"];
-                handleSelection("challenge", options[parseInt(e.key) - 1], 2);
-            }
-        };
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [isOpen, step, onClose]);
-
-    useEffect(() => {
-        if (step === 3 && status === "idle") {
-            setTimeout(() => nameInputRef.current?.focus(), 150);
-        }
-    }, [step, status]);
-
-    useEffect(() => {
-        if (status === "success") {
-            const timer = setTimeout(() => {
+    // Prevención de cierre accidental (UX): Evita perder datos si hay interacción
+    const handleCloseIntent = () => {
+        const hasInteracted = !!(formData.challenge || formData.volume || formData.budget || formData.name || formData.email);
+        if (hasInteracted && step < 3 && status === "idle") {
+            if (window.confirm("¿Seguro que deseas cerrar la terminal? Se perderá el progreso actual de calibración.")) {
                 onClose();
-                setTimeout(() => {
-                    setStatus("idle");
-                    setStep(1);
-                    setFormData({
-                        challenge: "", volume: "", budget: "", name: "",
-                        company: "", email: "", phone: "", url: "", botField: ""
-                    });
-                }, 500);
-            }, 4500);
-            return () => clearTimeout(timer);
+            }
+        } else {
+            onClose();
         }
-    }, [status, onClose]);
+    };
 
-    const handleSelection = (field: string, value: string, nextStep: number) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-        setStep(nextStep);
+    // Navegación asíncrona totalmente validada
+    const handleStepNavigation = (next: boolean) => {
+        if (!next) {
+            handleBack();
+            return;
+        }
+
+        if (step === 1) {
+            if (!formData.challenge) {
+                setLocalError("Selecciona una opción táctica o presiona [Omitir Fase].");
+                return;
+            }
+            setStep(2);
+        }
+
+        if (step === 2) {
+            if (!formData.volume || !formData.budget) {
+                setLocalError("Parámetros incompletos. Por favor, define ambos criterios operativos o selecciona [Omitir Fase].");
+                return;
+            }
+            setStep(3);
+        }
+    };
+
+    // Función de escape (CRO) inyectando tokens explícitos
+    const skipStep = () => {
+        if (step === 1) {
+            setFormData(prev => ({ ...prev, challenge: "No especificado" }));
+            setStep(2);
+        } else if (step === 2) {
+            setFormData(prev => ({
+                ...prev,
+                volume: prev.volume || "No especificado",
+                budget: "No especificado"
+            }));
+            setStep(3);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        // Prevención de doble clic
         if (status === "sending") return;
 
+        const cleanName = formData.name.trim();
+        const cleanCompany = formData.company.trim();
+        const cleanEmail = formData.email.trim();
+        const cleanPhone = formData.phone.trim();
+        const cleanUrl = formData.url.trim();
+
+        if (!cleanName || !cleanCompany || !cleanEmail || !cleanPhone) {
+            setLocalError("Error de Enlace: Los campos requeridos (*) no pueden contener únicamente espacios.");
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(cleanEmail)) {
+            setLocalError("Sintaxis inválida: Por favor ingresa un Email Corporativo real.");
+            return;
+        }
+
+        const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[\s/0-9]*$/;
+        if (cleanPhone.length < 6 || !phoneRegex.test(cleanPhone)) {
+            setLocalError("Sintaxis inválida: WhatsApp de enlace no parece un número de contacto válido.");
+            return;
+        }
+
         setStatus("sending");
-
-        const getGoogleClientId = () => {
-            try {
-                const match = document.cookie.match(/_ga=(.+?);/);
-                return match && match[1] ? match[1].split('.').slice(-2).join('.') : null;
-            } catch { return null; }
-        };
-
-        const googleClientId = getGoogleClientId();
         const eventId = `lead_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
         const phases = ["Estableciendo conexión segura...", "Encriptando metadatos...", "Transmitiendo señal a Marketnauta..."];
+
+        const payload = {
+            ...formData,
+            name: cleanName,
+            company: cleanCompany,
+            email: cleanEmail,
+            phone: cleanPhone,
+            url: cleanUrl,
+            eventId,
+            userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "Unknown"
+        };
 
         try {
             const apiCall = fetch('/api/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    eventId,
-                    googleClientId,
-                    userAgent: navigator.userAgent
-                }),
+                body: JSON.stringify(payload),
             });
 
             for (const phase of phases) {
+                if (!isMounted.current) return; // Abortar si el componente se desmontó
                 setLoadingText(phase);
-                await new Promise(res => setTimeout(res, 800));
+                await new Promise(res => setTimeout(res, 500));
             }
 
             const response = await apiCall;
+            if (!isMounted.current) return; // Doble validación post-fetch
 
             if (response.ok) {
                 setStatus("success");
 
-                // --- MEDICIÓN DE SEÑAL ACTUALIZADA ---
-
-                // 1. Meta Pixel
                 fbq.event('Lead', {
-                    content_name: formData.challenge,
+                    content_name: payload.challenge,
                     value: 0.00,
                     currency: 'USD',
                     eventID: eventId
                 });
 
-                // 2. Google Tag Manager (form_send)
                 if (typeof window !== "undefined") {
-                    window.dataLayer = window.dataLayer || [];
-                    window.dataLayer.push({
-                        event: 'form_send', // Activador configurado en GTM
+                    // Casteo a any para evitar el error estricto de TypeScript
+                    const w = window as any;
+                    w.dataLayer = w.dataLayer || [];
+                    w.dataLayer.push({
+                        event: 'form_send',
                         event_id: eventId,
                         form_type: 'contact_modal',
-                        lead_challenge: formData.challenge,
-                        lead_budget: formData.budget,
+                        lead_challenge: payload.challenge,
+                        lead_budget: payload.budget,
                         status: 'success'
                     });
                 }
 
-                // 3. GTM Helper (Lead Conversion para BigQuery)
                 gtm.pushToDataLayer({
                     event: 'lead_conversion',
                     event_id: eventId,
-                    lead_type: formData.challenge,
-                    lead_budget_range: formData.budget,
-                    lead_company_size: formData.volume,
+                    lead_type: payload.challenge,
+                    lead_budget_range: payload.budget,
+                    lead_company_size: payload.volume,
                     lead_location: 'Web_Terminal_v1'
                 });
-
             } else {
                 setStatus("error");
             }
         } catch {
-            setStatus("error");
+            if (isMounted.current) setStatus("error");
         }
     };
 
@@ -161,182 +229,140 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={onClose} className="absolute inset-0 bg-abisal-950/80 backdrop-blur-xl" />
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="relative w-full max-w-2xl glass-card rounded-[2rem] border border-white/10 bg-abisal-900/95 overflow-hidden shadow-[0_0_50px_rgba(0,229,255,0.15)] flex flex-col">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={handleCloseIntent} className="absolute inset-0 bg-abisal-950/80 backdrop-blur-xl" />
 
-                <div className="h-1 w-full bg-white/5">
-                    <motion.div className="h-full bg-marketnauta-primary" initial={{ width: "33%" }} animate={{ width: status === "success" ? "100%" : `${(step / 3) * 100}%` }} transition={{ duration: 0.5 }} />
-                </div>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.98, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="relative w-full max-w-2xl border border-white/10 bg-abisal-900/95 rounded-[2rem] overflow-hidden shadow-[0_0_60px_rgba(0,229,255,0.12)] flex flex-col justify-between min-h-[560px]"
+            >
+                <div>
+                    <div className="grid grid-cols-3 h-1.5 w-full bg-white/5 gap-1" role="progressbar" aria-valuenow={(step / 3) * 100} aria-valuemin={0} aria-valuemax={100}>
+                        {[1, 2, 3].map((s) => (
+                            <div key={s} className="relative w-full h-full bg-white/5 overflow-hidden">
+                                <motion.div
+                                    className="h-full bg-marketnauta-primary"
+                                    initial={{ x: "-100%" }}
+                                    animate={{ x: step >= s ? "0%" : "-100%" }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                />
+                            </div>
+                        ))}
+                    </div>
 
-                <div className="p-8 md:p-12">
-                    <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-50">
-                        <AnimatePresence>
-                            {step > 1 && status === "idle" && (
-                                <motion.button
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -10 }}
-                                    onClick={handleBack}
-                                    className="flex items-center gap-2 text-slate-500 hover:text-marketnauta-primary transition-colors font-mono text-[10px] uppercase tracking-widest"
-                                >
-                                    <ChevronLeft className="w-4 h-4" /> Volver
-                                </motion.button>
-                            )}
-                        </AnimatePresence>
-
-                        <button onClick={onClose} className="ml-auto text-slate-500 hover:text-white transition-colors">
+                    <div className="p-8 pb-0 flex justify-between items-start">
+                        <div className="space-y-1">
+                            <span className="flex items-center gap-2 text-marketnauta-primary font-mono text-[10px] uppercase tracking-[0.25em]">
+                                <Terminal className="w-3.5 h-3.5" /> {STEP_METADATA[step].title}
+                            </span>
+                            <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight">{STEP_METADATA[step].description}</h3>
+                        </div>
+                        <button onClick={handleCloseIntent} className="text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5" aria-label="Cerrar terminal">
                             <X className="w-5 h-5" />
                         </button>
                     </div>
+                </div>
+
+                <div className="px-8 flex-grow flex flex-col justify-center py-6">
+                    {localError && (
+                        <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs font-mono text-red-400 flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 shrink-0" /> {localError}
+                        </motion.div>
+                    )}
 
                     <AnimatePresence mode="wait">
                         {(status === "idle" || status === "sending") && (
-                            <form onSubmit={handleSubmit} key="form-ui">
-                                {/* SOLUCIÓN 404: Cuadrícula CSS Puro */}
-                                <div
-                                    className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                                    style={{
-                                        backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), 
-                                                          linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-                                        backgroundSize: '30px 30px'
-                                    }}
-                                />
-
-                                {/* HONEYPOT */}
+                            // Se agregó 'noValidate' para priorizar la validación manual sobre la de HTML5
+                            <form onSubmit={handleSubmit} className="w-full" noValidate>
                                 <div className="hidden" aria-hidden="true">
-                                    <input
-                                        type="text"
-                                        name="hp_field"
-                                        tabIndex={-1}
-                                        autoComplete="off"
-                                        value={formData.botField}
-                                        onChange={e => setFormData({ ...formData, botField: e.target.value })}
-                                    />
+                                    <input type="text" name="hp_field" tabIndex={-1} autoComplete="off" value={formData.botField} onChange={e => setFormData({ ...formData, botField: e.target.value })} />
                                 </div>
 
                                 {step === 1 && (
-                                    <motion.div key="step1" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="min-h-[400px]">
-                                        <div className="flex items-center gap-2 text-marketnauta-primary mt-4 mb-4 font-mono text-[10px] uppercase tracking-[0.3em]">
-                                            <Terminal className="w-4 h-4" /> Fase 01 // Calibración
-                                        </div>
-                                        <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-8">¿Qué área presenta el mayor punto ciego?</h3>
-                                        <div className="space-y-3">
-                                            {["Trazabilidad y Visualización de Datos", "Escalabilidad en Pauta (Growth)", "Infraestructura Web y Performance"].map((t, i) => (
-                                                <button
-                                                    key={t}
-                                                    type="button"
-                                                    onClick={() => handleSelection("challenge", t, 2)}
-                                                    className={`w-full p-5 rounded-2xl border text-left flex justify-between items-center group transition-all ${formData.challenge === t
-                                                        ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white'
-                                                        : 'border-white/5 bg-white/[0.02] text-slate-300 hover:bg-marketnauta-primary/10'
-                                                        }`}
-                                                >
-                                                    <span><span className="text-xs font-mono text-slate-500 mr-4">[{i + 1}]</span>{t}</span>
-                                                    <ChevronRight className={`w-4 h-4 text-marketnauta-primary transition-all ${formData.challenge === t ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
-                                                </button>
-                                            ))}
-                                        </div>
+                                    <motion.div key="step1" initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: -15 }} className="space-y-3">
+                                        {["Trazabilidad y Visualización de Datos", "Escalabilidad en Pauta (Growth)", "Infraestructura Web y Performance"].map((t) => (
+                                            <button
+                                                key={t} type="button"
+                                                onClick={() => { setFormData({ ...formData, challenge: t }); setStep(2); }}
+                                                className={`w-full p-4 rounded-xl border text-left flex justify-between items-center group transition-all duration-200 ${formData.challenge === t ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white' : 'border-white/5 bg-white/[0.02] text-slate-300 hover:border-white/20'}`}
+                                            >
+                                                <span className="text-sm font-medium">{t}</span>
+                                                <ChevronRight className="w-4 h-4 text-marketnauta-primary opacity-60 group-hover:opacity-100 transition-opacity" />
+                                            </button>
+                                        ))}
                                     </motion.div>
                                 )}
 
                                 {step === 2 && (
-                                    <motion.div key="step2" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="min-h-[400px]">
-                                        <div className="flex items-center gap-2 text-marketnauta-primary mt-4 mb-4 font-mono text-[10px] uppercase tracking-[0.3em]">
-                                            <Terminal className="w-4 h-4" /> Fase 02 // Dimensionamiento
-                                        </div>
-                                        <div className="space-y-8">
-                                            <div>
-                                                <label className="text-slate-500 text-xs font-mono uppercase tracking-widest mb-4 block">Escala de Operación</label>
-                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                                    {["Startup", "Pyme / Mediana", "Corporativa"].map((v) => (
-                                                        <button key={v} type="button" onClick={() => setFormData({ ...formData, volume: v })} className={`py-3 px-4 rounded-xl border text-sm transition-all ${formData.volume === v ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white' : 'border-white/5 bg-white/[0.02] text-slate-400'}`}>
-                                                            {v}
-                                                        </button>
-                                                    ))}
-                                                </div>
+                                    <motion.div key="step2" initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: -15 }} className="space-y-6">
+                                        <div className="space-y-3">
+                                            <span className="text-slate-500 text-[10px] font-mono uppercase tracking-wider block">Escala de Operación</span>
+                                            <div className="grid grid-cols-3 gap-2">
+                                                {["Startup", "Pyme / Mediana", "Corporativa"].map((v) => (
+                                                    <button key={v} type="button" onClick={() => { setFormData(prev => ({ ...prev, volume: v })); setLocalError(null); }} className={`py-2.5 px-3 rounded-lg border text-xs font-medium transition-all ${formData.volume === v ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white' : 'border-white/5 bg-white/[0.02] text-slate-400 hover:border-white/10'}`}>
+                                                        {v}
+                                                    </button>
+                                                ))}
                                             </div>
-                                            <div>
-                                                <label className="text-slate-500 text-xs font-mono uppercase tracking-widest mb-4 block flex items-center gap-2">
-                                                    <Fuel className="w-3 h-3" /> Asignación de Recursos Mensuales
-                                                </label>
-                                                <div className="space-y-2">
-                                                    {["Menos de S/ 2,500", "S/ 2,500 - S/ 6,000", "Más de S/ 6,000", "No invierto actualmente"].map((b) => (
-                                                        <button
-                                                            key={b}
-                                                            type="button"
-                                                            onClick={() => handleSelection("budget", b, 3)}
-                                                            className={`w-full py-3 px-6 rounded-full border text-left text-sm transition-all ${formData.budget === b
-                                                                ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white'
-                                                                : 'border-white/5 bg-white/[0.02] text-slate-300 hover:bg-marketnauta-primary/10'
-                                                                }`}
-                                                        >
-                                                            {b}
-                                                        </button>
-                                                    ))}
-                                                </div>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <span className="text-slate-500 text-[10px] font-mono uppercase tracking-wider block flex items-center gap-1.5"><Fuel className="w-3 h-3" /> Asignación Mensual</span>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {["Menos de S/ 2,500", "S/ 2,500 - S/ 6,000", "Más de S/ 6,000", "No invierto actualmente"].map((b) => (
+                                                    <button key={b} type="button" onClick={() => { setFormData(prev => ({ ...prev, budget: b })); setLocalError(null); }} className={`py-2.5 px-4 rounded-lg border text-left text-xs transition-all ${formData.budget === b ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white' : 'border-white/5 bg-white/[0.02] text-slate-300 hover:bg-marketnauta-primary/10'}`}>
+                                                        {b}
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
                                     </motion.div>
                                 )}
 
                                 {step === 3 && (
-                                    <motion.div key="step3" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="min-h-[450px] mt-4 flex flex-col">
-                                        <div className="mb-10">
-                                            <div className="flex items-center gap-2 text-marketnauta-primary mb-3 font-mono text-[10px] uppercase tracking-[0.3em]">
-                                                <Terminal className="w-4 h-4" /> Fase 03 // Enlace
-                                            </div>
-                                            <h3 className="text-2xl md:text-3xl font-display font-bold text-white">Datos de Transmisión</h3>
-                                        </div>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10 flex-grow">
+                                    <motion.div key="step3" initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {[
-                                                { id: "name", label: "Responsable", type: "text", k: "name", col: "md:col-span-1", auto: "name" },
-                                                { id: "company", label: "Compañía", type: "text", k: "company", col: "md:col-span-1", auto: "organization" },
-                                                { id: "email", label: "Email Corporativo", type: "email", k: "email", col: "md:col-span-2", auto: "email" },
-                                                { id: "phone", label: "WhatsApp de Enlace", type: "tel", k: "phone", col: "md:col-span-1", auto: "tel" },
-                                                { id: "url", label: "URL del Sitio", type: "text", k: "url", col: "md:col-span-1", auto: "url", mode: "url" as const }
+                                                { id: "name", label: "Responsable *", type: "text", k: "name", col: "md:col-span-1", auto: "name" },
+                                                { id: "company", label: "Compañía *", type: "text", k: "company", col: "md:col-span-1", auto: "organization" },
+                                                { id: "email", label: "Email Corporativo *", type: "email", k: "email", col: "md:col-span-2", auto: "email" },
+                                                { id: "phone", label: "WhatsApp de Enlace *", type: "tel", k: "phone", col: "md:col-span-1", auto: "tel" },
+                                                { id: "url", label: "URL del Sitio (Opcional)", type: "text", k: "url", col: "md:col-span-1", auto: "url" }
                                             ].map((field) => (
-                                                <div key={field.id} className={`relative group ${field.col}`}>
+                                                <div key={field.id} className={`relative ${field.col}`}>
                                                     <input
                                                         ref={field.id === "name" ? nameInputRef : null}
-                                                        type={field.type}
-                                                        id={field.id}
-                                                        placeholder=" "
-                                                        required={field.id !== "url"}
-                                                        autoComplete={field.auto}
-                                                        inputMode={field.mode}
+                                                        type={field.type} id={field.id} placeholder=" " required={field.id !== "url"} autoComplete={field.auto}
                                                         value={formData[field.k as keyof typeof formData]}
                                                         onChange={e => setFormData({ ...formData, [field.k]: e.target.value })}
-                                                        className="peer block w-full bg-transparent border-b border-white/10 py-2 text-white outline-none focus:border-marketnauta-primary transition-all duration-300"
+                                                        className="peer block w-full bg-transparent border-b border-white/10 py-1.5 text-sm text-white outline-none focus:border-marketnauta-primary transition-colors"
                                                     />
-                                                    <label htmlFor={field.id} className="absolute left-0 top-2 text-slate-500 text-sm transition-all duration-300 pointer-events-none font-sans peer-focus:-top-7 peer-focus:text-[10px] peer-focus:text-marketnauta-primary peer-focus:uppercase peer-focus:tracking-[0.2em] peer-focus:font-mono peer-[:not(:placeholder-shown)]:-top-7 peer-[:not(:placeholder-shown)]:text-[10px] peer-[:not(:placeholder-shown)]:text-marketnauta-primary peer-[:not(:placeholder-shown)]:uppercase peer-[:not(:placeholder-shown)]:font-mono">
+                                                    <label htmlFor={field.id} className="absolute left-0 top-1.5 text-slate-500 text-xs transition-all pointer-events-none peer-focus:-top-4 peer-focus:text-[9px] peer-focus:text-marketnauta-primary peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:text-[9px]">
                                                         {field.label}
                                                     </label>
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="mt-12">
+                                        <div className="pt-4">
                                             <SubmitButton status={status} loadingText={loadingText} />
+                                            <span className="flex items-center justify-center gap-1.5 text-[9px] font-mono text-slate-600 uppercase tracking-wider mt-3">
+                                                <ShieldCheck className="w-3.5 h-3.5 text-marketnauta-primary/60" /> Transmisión bajo protocolo cifrado SSL
+                                            </span>
                                         </div>
                                     </motion.div>
                                 )}
                             </form>
                         )}
+
                         {status === "success" && (
-                            <motion.div key="success-ui" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center py-12 px-6">
-                                <div className="relative mb-8">
-                                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1.2, opacity: 0 }} transition={{ duration: 1.5, repeat: Infinity }} className="absolute inset-0 rounded-full bg-marketnauta-primary/30" />
-                                    <div className="relative w-20 h-20 rounded-full bg-marketnauta-primary/10 border border-marketnauta-primary/40 flex items-center justify-center">
-                                        <CheckCircle2 className="w-10 h-10 text-marketnauta-primary" />
-                                    </div>
+                            <motion.div key="success-ui" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center text-center py-6">
+                                <div className="w-16 h-16 rounded-full bg-marketnauta-primary/10 border border-marketnauta-primary/30 flex items-center justify-center mb-4">
+                                    <CheckCircle2 className="w-8 h-8 text-marketnauta-primary" />
                                 </div>
-                                <h3 className="text-3xl font-display font-bold text-white mb-4">Señal Decodificada.</h3>
-                                <div className="w-full bg-white/[0.02] border border-white/5 rounded-2xl p-4 font-mono text-[10px] text-left">
-                                    <div className="flex justify-between text-slate-500 mb-2"><span>Status: Confirmed</span><span>{new Date().toLocaleTimeString()}</span></div>
-                                    <div className="text-marketnauta-primary/70 break-all">TX_HASH: {Math.random().toString(36).substring(2, 15).toUpperCase()}</div>
-                                </div>
-                                <p className="mt-8 text-[9px] text-slate-600 uppercase tracking-widest animate-pulse">Cerrando Terminal...</p>
+                                <h3 className="text-2xl font-bold text-white tracking-tight">Transmisión Exitosa</h3>
+                                <p className="text-xs text-slate-400 mt-2 max-w-sm">Nuestra terminal ha decodificado tus coordenadas corporativas. Activando protocolos de sincronización.</p>
                             </motion.div>
                         )}
+
                         {status === "error" && (
                             <motion.div key="error-ui" className="text-center py-12 flex flex-col items-center">
                                 <AlertCircle className="w-16 h-16 text-red-500 mb-6" />
@@ -346,6 +372,30 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                         )}
                     </AnimatePresence>
                 </div>
+
+                {status === "idle" && (
+                    <div className="p-6 bg-white/[0.01] border-t border-white/5 flex items-center justify-between min-h-[73px]">
+                        <div>
+                            {step > 1 && (
+                                <button type="button" onClick={() => handleStepNavigation(false)} className="flex items-center gap-1.5 text-slate-500 hover:text-white font-mono text-[10px] uppercase tracking-wider transition-colors">
+                                    <ChevronLeft className="w-3.5 h-3.5" /> Atrás
+                                </button>
+                            )}
+                        </div>
+                        <div>
+                            {step < 3 && (
+                                <div className="flex items-center gap-4">
+                                    <button type="button" onClick={skipStep} className="text-[10px] font-mono text-slate-600 hover:text-slate-400 transition-colors uppercase tracking-wider">
+                                        [ Omitir Fase ]
+                                    </button>
+                                    <button type="button" onClick={() => handleStepNavigation(true)} className="px-4 py-1.5 bg-white/5 hover:bg-white/10 text-white font-mono text-[10px] uppercase tracking-wider rounded-lg border border-white/5 transition-all flex items-center gap-1">
+                                        Siguiente <ChevronRight className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </motion.div>
         </div>
     );
