@@ -12,8 +12,10 @@ const contactSchema = z.object({
     volume: z.string().min(1),
     budget: z.string().min(1),
     name: z.string().min(2),
-    company: z.string().min(1),
-    email: z.string().email(),
+    // Permitimos que company sea opcional o un string vacío
+    company: z.string().optional().or(z.literal("")),
+    // Permitimos que el email sea opcional, vacío, o un email válido si se incluye
+    email: z.string().email().optional().or(z.literal("")),
     phone: z.string().min(5),
     // Cambiamos a string simple para que no falle si el usuario olvida el https://
     url: z.string().transform(val => val.trim()).optional(),
@@ -34,8 +36,9 @@ export async function POST(request: Request) {
 
         // 2. FILTRO HONEYPOT (Anti-Spam)
         if (body.botField && body.botField !== "") {
-            console.warn("[SECURITY]: Bloqueado por Honeypot.");
-            return NextResponse.json({ error: 'Signal rejected' }, { status: 400 });
+            console.warn("[SECURITY]: Bloqueado por Honeypot silenciado.");
+            // Devolvemos 200 para que los bots crean que tuvieron éxito y no busquen vulnerabilidades
+            return NextResponse.json({ success: true, eventId: "fake_event" }, { status: 200 });
         }
 
         const validation = contactSchema.safeParse(body);
@@ -47,6 +50,17 @@ export async function POST(request: Request) {
         const data = validation.data;
         const ip = request.headers.get('x-forwarded-for') || '0.0.0.0';
         const finalClientId = data.googleClientId || data.eventId;
+
+        // Preparamos la data de usuario para Meta (solo mandamos el email si el usuario lo ingresó)
+        const userData: any = {
+            ph: [hashData(data.phone)],
+            client_ip_address: ip,
+            client_user_agent: data.userAgent
+        };
+
+        if (data.email && data.email !== "") {
+            userData.em = [hashData(data.email)];
+        }
 
         // --- PROMESAS DE TRANSMISIÓN ---
 
@@ -61,12 +75,7 @@ export async function POST(request: Request) {
                     action_source: 'website',
                     event_id: data.eventId,
                     event_source_url: request.headers.get('referer') || 'https://marketnauta.com',
-                    user_data: {
-                        em: [hashData(data.email)],
-                        ph: [hashData(data.phone)],
-                        client_ip_address: ip,
-                        client_user_agent: data.userAgent // Usamos el del cliente enviado desde el form
-                    },
+                    user_data: userData, // Inyectamos el objeto dinámico
                     custom_data: {
                         content_name: data.challenge,
                         currency: 'USD',
@@ -97,16 +106,22 @@ export async function POST(request: Request) {
         // C. RESEND EMAIL 
         const emailHtml = await render(
             <ContactTemplate
-                name={data.name} company={data.company} email={data.email}
-                phone={data.phone} challenge={data.challenge} volume={data.volume}
-                budget={data.budget} url={data.url || "No proporcionada"}
+                name={data.name}
+                company={data.company || "No especificada"}
+                email={data.email || "No especificado"}
+                phone={data.phone}
+                challenge={data.challenge}
+                volume={data.volume}
+                budget={data.budget}
+                url={data.url || "No proporcionada"}
             />
         );
 
         const emailPromise = resend.emails.send({
             from: 'Marketnauta Ops <hola@marketnauta.com>',
             to: [process.env.CONTACT_EMAIL as string],
-            subject: `[NUEVA SEÑAL] - ${data.challenge} // ${data.company}`,
+            // Asunto dinámico por si no envían el nombre de la compañía
+            subject: `[NUEVA SEÑAL] - ${data.challenge} // ${data.company || 'Enlace Directo'}`,
             html: emailHtml,
             headers: { 'X-Entity-ID': data.eventId }
         });
