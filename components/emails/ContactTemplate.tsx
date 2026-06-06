@@ -5,9 +5,9 @@ interface ContactTemplateProps {
     email: string;
     phone: string;
     company: string;
-    challenge: string; // Sincronizado con el estado de tu formulario
-    volume: string;    // Sincronizado con el estado de tu formulario
-    budget: string;    // Sincronizado con el estado de tu formulario
+    challenge: string;
+    volume: string;
+    budget: string;
     url?: string;
 }
 
@@ -33,12 +33,30 @@ export function ContactTemplate({
                 <h2 style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px', margin: '0 0 10px 0' }}>
                     [01] IDENTIDAD_DEL_ENLACE
                 </h2>
-                {/* Reemplazamos el rgba por un color hexadecimal sólido (#0f172a) para máxima compatibilidad con Outlook/Gmail */}
                 <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '8px', border: '1px solid #1e293b' }}>
-                    <p style={{ margin: '6px 0', fontSize: '14px' }}><span style={{ color: '#64748b' }}>Responsable:</span> <strong style={{ color: '#ffffff' }}>{name}</strong></p>
-                    <p style={{ margin: '6px 0', fontSize: '14px' }}><span style={{ color: '#64748b' }}>Compañía:</span> <strong style={{ color: '#ffffff' }}>{company}</strong></p>
-                    <p style={{ margin: '6px 0', fontSize: '14px' }}><span style={{ color: '#64748b' }}>Email:</span> <a href={`mailto:${email}`} style={{ color: '#00E5FF', textDecoration: 'none' }}>{email}</a></p>
-                    <p style={{ margin: '6px 0', fontSize: '14px' }}><span style={{ color: '#64748b' }}>WhatsApp:</span> <a href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`} style={{ color: '#ffffff', textDecoration: 'none' }}>{phone}</a></p>
+                    <p style={{ margin: '6px 0', fontSize: '14px' }}>
+                        <span style={{ color: '#64748b' }}>Responsable:</span> <strong style={{ color: '#ffffff' }}>{name}</strong>
+                    </p>
+
+                    <p style={{ margin: '6px 0', fontSize: '14px' }}>
+                        <span style={{ color: '#64748b' }}>Compañía:</span>{' '}
+                        {/* Si no hay compañía, lo mostramos en gris para la estética de "Dato Vacío" */}
+                        <strong style={{ color: company === "No especificada" ? '#64748b' : '#ffffff' }}>{company}</strong>
+                    </p>
+
+                    <p style={{ margin: '6px 0', fontSize: '14px' }}>
+                        <span style={{ color: '#64748b' }}>Email:</span>{' '}
+                        {/* Si no hay email, quitamos el enlace 'mailto:' y lo mostramos en gris */}
+                        {email === "No especificado" ? (
+                            <span style={{ color: '#64748b', fontWeight: 'bold' }}>{email}</span>
+                        ) : (
+                            <a href={`mailto:${email}`} style={{ color: '#00E5FF', textDecoration: 'none', fontWeight: 'bold' }}>{email}</a>
+                        )}
+                    </p>
+
+                    <p style={{ margin: '6px 0', fontSize: '14px' }}>
+                        <span style={{ color: '#64748b' }}>WhatsApp:</span> <a href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`} style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 'bold' }}>{phone}</a>
+                    </p>
                 </div>
             </div>
 
