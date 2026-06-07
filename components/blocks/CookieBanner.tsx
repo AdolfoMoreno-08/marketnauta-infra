@@ -21,23 +21,27 @@ export default function CookieBanner() {
 
     const updateGTMConsent = (status: "granted" | "denied") => {
         if (typeof window !== "undefined") {
-            const gtag = (window as any).gtag;
-            const dataLayer = (window as any).dataLayer;
+            // 0. Salvaguarda: Aseguramos que dataLayer existe por si el componente carga antes que el script
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { window.dataLayer.push(arguments); }
 
-            if (gtag) {
-                gtag("consent", "update", {
-                    ad_storage: status,
-                    ad_user_data: status,
-                    ad_personalization: status,
-                    analytics_storage: status,
-                });
-            }
+            // 1. GOOGLE CONSENT MODE: Actualizamos los estados
+            gtag("consent", "update", {
+                ad_storage: status,
+                ad_user_data: status,
+                ad_personalization: status,
+                analytics_storage: status,
+            });
 
-            if (dataLayer) {
-                dataLayer.push({
-                    event: "consent_updated",
-                    consent_status: status,
-                });
+            // 2. GTM DATA LAYER: Disparamos el evento para activar etiquetas
+            window.dataLayer.push({
+                event: "consent_updated",
+                consent_status: status,
+            });
+
+            // 3. META PIXEL: Si el usuario acepta, otorgamos consentimiento explícito
+            if (status === "granted" && (window as any).fbq) {
+                (window as any).fbq('consent', 'grant');
             }
         }
     };
