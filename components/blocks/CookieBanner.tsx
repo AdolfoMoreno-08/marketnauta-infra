@@ -22,8 +22,12 @@ export default function CookieBanner() {
     const updateGTMConsent = (status: "granted" | "denied") => {
         if (typeof window !== "undefined") {
             // 0. Salvaguarda: Aseguramos que dataLayer existe por si el componente carga antes que el script
-            window.dataLayer = window.dataLayer || [];
-            function gtag() { window.dataLayer.push(arguments); }
+            (window as any).dataLayer = (window as any).dataLayer || [];
+            
+            // CORRECCIÓN TYPESCRIPT: Agregamos ...args: any[]
+            function gtag(...args: any[]) { 
+                (window as any).dataLayer.push(arguments); 
+            }
 
             // 1. GOOGLE CONSENT MODE: Actualizamos los estados
             gtag("consent", "update", {
@@ -34,7 +38,7 @@ export default function CookieBanner() {
             });
 
             // 2. GTM DATA LAYER: Disparamos el evento para activar etiquetas
-            window.dataLayer.push({
+            (window as any).dataLayer.push({
                 event: "consent_updated",
                 consent_status: status,
             });
