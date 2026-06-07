@@ -1,15 +1,11 @@
 "use client";
-import { useState } from "react";// 1. Importamos useState
+
 import { motion } from "framer-motion";
 import { TrendingUp, Target, Zap, ArrowRight, Rocket, Activity, BarChart3, Network, Crosshair } from "lucide-react";
 import GrowthChart from "@/components/blocks/GrowthChart";
-import ContactModal from "@/components/blocks/ContactForm";// 2. Importamos tu Modal
+import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el componente unificado
 
-// 3. Ya no necesitamos recibir props, la página se manda sola
 export default function GrowthPage() {
-    // 4. Creamos el estado para controlar el modal
-    const [isContactOpen, setIsContactOpen] = useState(false);
-
     const fadeInUp = {
         initial: { opacity: 0, y: 30 },
         whileInView: { opacity: 1, y: 0 },
@@ -19,12 +15,7 @@ export default function GrowthPage() {
 
     return (
         <div className="min-h-screen bg-[#030712] overflow-x-hidden relative">
-            {/* 5. Agregamos el Modal aquí arriba, invisible hasta que isContactOpen sea true */}
-            <ContactModal
-                isOpen={isContactOpen}
-                onClose={() => setIsContactOpen(false)}
-            />
-
+            
             {/* BACKGROUND: Océano de Datos & Resplandores */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-marketnauta-primary/10 rounded-full blur-[150px]" />
@@ -66,15 +57,19 @@ export default function GrowthPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            {/* 6. Actualizamos el onClick del botón del Hero */}
-                            <button onClick={() => setIsContactOpen(true)} className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3">
+                            {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
+                            <TrackedCTA 
+                                href="?modal=exploracion" 
+                                eventName="hero_activar_motor_escala"
+                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
+                            >
                                 Activar Motor de Escala
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            </TrackedCTA>
                         </div>
                     </motion.div>
 
-                    {/* GROWTH TERMINAL CON PERSPECTIVA 3D */}
+                    {/* GROWTH TERMINAL */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, rotateY: 10, rotateX: 5 }}
                         animate={{ opacity: 1, scale: 1, rotateY: 5, rotateX: 0 }}
@@ -82,8 +77,6 @@ export default function GrowthPage() {
                         className="relative group perspective-1000"
                     >
                         <div className="absolute -inset-4 bg-gradient-to-l from-marketnauta-primary/20 to-purple-600/20 rounded-[2.5rem] blur-2xl opacity-40 group-hover:opacity-70 transition duration-1000" />
-
-                        {/* Contenedor estilo Ventana de Software */}
                         <div className="relative glass-card rounded-2xl border border-white/10 bg-abisal-900/90 shadow-2xl overflow-hidden transform transition-transform duration-700 group-hover:rotate-y-0">
                             <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
                                 <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
@@ -183,7 +176,7 @@ export default function GrowthPage() {
                 </div>
             </section>
 
-            {/* 4. CTA FINAL: EL FARO MINIMALISTA */}
+{/* CTA FINAL */}
             <section className="py-32 px-6 relative z-10 flex justify-center">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -197,14 +190,18 @@ export default function GrowthPage() {
                     <p className="text-lg text-slate-400 mb-12 max-w-xl mx-auto relative z-10">
                         Hablemos de tus objetivos de escala. Analizaremos tu pauta actual y trazaremos la ruta hacia tu siguiente nivel de eficiencia.
                     </p>
-                    {/* 7. Actualizamos el onClick del botón final */}
-                    <button onClick={() => setIsContactOpen(true)} className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3">
-                        Solicitar Plan de Propulsión
+                    
+                    {/* --- AQUÍ USAMOS TrackedCTA --- */}
+                    <TrackedCTA 
+                        href="?modal=exploracion" 
+                        eventName="footer_consultar_factibilidad"
+                        className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3"
+                    >
+                        Consultar Factibilidad Técnica
                         <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-                    </button>
+                    </TrackedCTA>
                 </motion.div>
             </section>
-
         </div>
     );
 }
