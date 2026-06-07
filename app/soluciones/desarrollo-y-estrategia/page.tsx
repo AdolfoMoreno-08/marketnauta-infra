@@ -1,16 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Code2, Cpu, Globe, Zap, ArrowRight, Layers, Layout, Database, ShieldCheck } from "lucide-react";
 import CodeVisualizer from "@/components/blocks/CodeVisualizer";
-import ContactModal from "@/components/blocks/ContactForm";
+import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el botón inteligente
 
-// 1. Quitamos las props, la página se maneja sola
 export default function DesarrolloEstrategiaPage() {
-    // 2. Creamos el estado para el modal
-    const [isContactOpen, setIsContactOpen] = useState(false);
-
     const fadeInUp = {
         initial: { opacity: 0, y: 30 },
         whileInView: { opacity: 1, y: 0 },
@@ -20,12 +15,6 @@ export default function DesarrolloEstrategiaPage() {
 
     return (
         <div className="min-h-screen bg-[#030712] overflow-x-hidden relative">
-
-            {/* 3. Agregamos el Formulario Modal invisible */}
-            <ContactModal
-                isOpen={isContactOpen}
-                onClose={() => setIsContactOpen(false)}
-            />
 
             {/* BACKGROUND: Red Neuronal / Data Grid */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -68,15 +57,18 @@ export default function DesarrolloEstrategiaPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            {/* 4. Conectamos el botón de apertura del Modal */}
-                            <button onClick={() => setIsContactOpen(true)} className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3">
+                            {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
+                            <TrackedCTA 
+                                href="?modal=exploracion" 
+                                eventName="hero_desplegar_arquitectura"
+                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3"
+                            >
                                 Desplegar Arquitectura
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            </TrackedCTA>
                         </div>
                     </motion.div>
 
-                    {/* CODE VISUALIZER CON PERSPECTIVA 3D */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, rotateY: -10, rotateX: 5 }}
                         animate={{ opacity: 1, scale: 1, rotateY: -5, rotateX: 0 }}
@@ -169,7 +161,7 @@ export default function DesarrolloEstrategiaPage() {
                 </div>
             </section>
 
-            {/* 3. CTA FINAL: EL FARO DE INGENIERÍA */}
+{/* 3. CTA FINAL: EL FARO DE INGENIERÍA */}
             <section className="py-32 px-6 relative z-10 flex justify-center">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -177,7 +169,6 @@ export default function DesarrolloEstrategiaPage() {
                     viewport={{ once: true }}
                     className="max-w-4xl text-center relative"
                 >
-                    {/* Resplandor central (El Faro) */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-emerald-600/20 blur-[100px] pointer-events-none" />
 
                     <h2 className="text-4xl md:text-6xl font-display font-bold mb-6 text-white relative z-10">Construye el Futuro <br /> de tu Plataforma.</h2>
@@ -185,11 +176,15 @@ export default function DesarrolloEstrategiaPage() {
                         Hablemos de tu próximo desafío técnico. Diseñamos la infraestructura inquebrantable que sostendrá tu crecimiento por los próximos 5 años.
                     </p>
 
-                    {/* 5. Conectamos el botón final */}
-                    <button onClick={() => setIsContactOpen(true)} className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3">
+                    {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
+                    <TrackedCTA 
+                        href="?modal=exploracion" 
+                        eventName="footer_consultar_factibilidad"
+                        className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3"
+                    >
                         Consultar Factibilidad Técnica
                         <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-                    </button>
+                    </TrackedCTA>
                 </motion.div>
             </section>
         </div>
