@@ -7,6 +7,7 @@ import FooterWrapper from "@/components/blocks/FooterWrapper";
 import FBPixelTracking from "@/components/tracking/FBPixelTracking";
 import CookieBanner from "@/components/blocks/CookieBanner";
 import { Suspense } from "react";
+import ContactForm from "@/components/blocks/ContactForm"; 
 
 export const metadata: Metadata = {
   title: "Marketnauta | Dirección Estratégica en el Océano de Datos",
