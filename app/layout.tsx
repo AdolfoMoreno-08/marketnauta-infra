@@ -33,21 +33,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Prioridad máxima y síncrona) */}
-        <script
+        {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Prioridad máxima) */}
+        {/* Usamos next/script con beforeInteractive para asegurar ejecución previa a GTM */}
+        <Script
+          id="consent-mode-default"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
 
-              // 1.1 Intentar recuperar consentimiento previo de localStorage inmediatamente
+              // 1.1 Recuperar consentimiento previo
               var initialConsent = 'denied';
               try {
                 var saved = localStorage.getItem('cookie_consent');
                 if (saved === 'granted') initialConsent = 'granted';
               } catch (e) {}
 
-              // 1.2 Establecer el estado por defecto antes de que cargue GTM
+              // 1.2 Estado por defecto de Google Consent Mode v2
               gtag('consent', 'default', {
                 'ad_storage': initialConsent,
                 'analytics_storage': initialConsent,
@@ -75,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
-        {/* 3. META PIXEL */}
+        {/* 3. META PIXEL CON CONSENTIMIENTO REQUERIDO */}
         <Script
           id="fb-pixel-base"
           strategy="afterInteractive"
@@ -89,6 +92,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
+              
+              // Bloquear cookies del pixel por defecto hasta que el usuario acepte
+              fbq('consent', 'revoke');
               fbq('init', '1723830311936647');
             `,
           }}
@@ -127,7 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <FooterWrapper />
 
-        {/* El banner gestiona el gtag('consent', 'update', ...) */}
+        {/* El banner gestiona el gtag('consent', 'update', ...) y ahora también Meta Pixel */}
         <CookieBanner />
 
       </body>
