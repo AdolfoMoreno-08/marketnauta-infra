@@ -5,7 +5,7 @@ import {
     Search, Database, BarChart3, ArrowRight, ShieldCheck, Zap, Layers, LineChart
 } from "lucide-react";
 import AuditoriaDashboard from "@/components/blocks/AuditoriaDashboard";
-import TrackedCTA from "@/components/blocks/TrackedCTA"; // <-- Importamos el botón inteligente
+import TrackedCTA from "@/components/ui/TrackedCTA"; // 1. Importamos el CTA con tracking
 
 export default function AuditoriaPage() {
     const fadeInUp = {
@@ -35,6 +35,7 @@ export default function AuditoriaPage() {
             {/* 1. SECCIÓN HERO: EL ESCANEO */}
             <section className="relative pt-32 pb-24 px-6 z-10">
                 <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative">
+
                     <motion.div
                         animate={{ y: [0, 500, 0], opacity: [0, 0.5, 0] }}
                         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -65,11 +66,11 @@ export default function AuditoriaPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
+                            {/* 2. Reemplazamos el button por TrackedCTA */}
                             <TrackedCTA 
                                 href="?modal=auditoria" 
                                 eventName="hero_iniciar_auditoria"
-                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3"
+                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
                             >
                                 Iniciar Auditoría de Sistema
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
