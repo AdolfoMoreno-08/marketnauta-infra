@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, Mail, Globe, ArrowUpRight, Cpu } from "lucide-react";
-import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el nuevo componente
+import TrackedCTA from "@/components/blocks/TrackedCTA"; // <-- Importamos el nuevo componente
 
 const LinkedinIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
