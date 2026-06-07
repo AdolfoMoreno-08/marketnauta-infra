@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { TrendingUp, Target, Zap, ArrowRight, Rocket, Activity, BarChart3, Network, Crosshair } from "lucide-react";
 import GrowthChart from "@/components/blocks/GrowthChart";
-import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el componente unificado
+import TrackedCTA from "@/components/ui/TrackedCTA"; // Importamos el CTA con tracking
 
 export default function GrowthPage() {
     const fadeInUp = {
@@ -57,7 +57,7 @@ export default function GrowthPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
+                            {/* Reemplazamos el button por TrackedCTA */}
                             <TrackedCTA 
                                 href="?modal=exploracion" 
                                 eventName="hero_activar_motor_escala"
@@ -69,7 +69,7 @@ export default function GrowthPage() {
                         </div>
                     </motion.div>
 
-                    {/* GROWTH TERMINAL */}
+                    {/* GROWTH TERMINAL CON PERSPECTIVA 3D */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, rotateY: 10, rotateX: 5 }}
                         animate={{ opacity: 1, scale: 1, rotateY: 5, rotateX: 0 }}
@@ -77,6 +77,7 @@ export default function GrowthPage() {
                         className="relative group perspective-1000"
                     >
                         <div className="absolute -inset-4 bg-gradient-to-l from-marketnauta-primary/20 to-purple-600/20 rounded-[2.5rem] blur-2xl opacity-40 group-hover:opacity-70 transition duration-1000" />
+
                         <div className="relative glass-card rounded-2xl border border-white/10 bg-abisal-900/90 shadow-2xl overflow-hidden transform transition-transform duration-700 group-hover:rotate-y-0">
                             <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
                                 <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
