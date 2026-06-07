@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Compass, Menu, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el nuevo componente
+import TrackedCTA from "@/components/blocks/TrackedCTA"; // <-- Importamos el nuevo componente
 
 // Eliminamos la interfaz NavbarProps ya que no necesitamos onContactClick
 
