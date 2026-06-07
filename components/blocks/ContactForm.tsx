@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+// 1. IMPORTANTE: Agregamos useSearchParams, useRouter y usePathname
+import { useSearchParams, useRouter, usePathname } from "next/navigation"; 
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, CheckCircle2, X, Terminal, AlertCircle, Fuel, ShieldCheck } from "lucide-react";
 import SubmitButton from "@/components/blocks/SubmitButton";
@@ -20,7 +22,17 @@ const STEP_METADATA: Record<number, StepConfig> = {
     3: { title: "Fase 03 // Enlace Directo", description: "Establece los parámetros de transmisión." }
 };
 
-export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+// 2. YA NO RECIBE PROPS. El componente se gestiona solo.
+export default function ContactForm() {
+    // 3. Lógica de URL (El "Cerebro")
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+    const modalType = searchParams.get("modal"); // Lee ?modal=loquesea de la URL
+
+    // Si hay un parámetro 'modal', el formulario está abierto.
+    const isOpen = !!modalType; 
+
     const nameInputRef = useRef<HTMLInputElement>(null);
     const isMounted = useRef(true);
 
@@ -48,9 +60,29 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         };
     }, []);
 
+    // 4. Si el modalType (la URL) trae "auditoria", auto-seleccionamos el primer paso
+    useEffect(() => {
+        if (modalType === "auditoria") {
+            setFormData(prev => ({ ...prev, challenge: "Trazabilidad y Visualización de Datos" }));
+        } else if (modalType === "exploracion") {
+            setFormData(prev => ({ ...prev, challenge: "Escalabilidad en Pauta (Growth)" }));
+        }
+    }, [modalType]);
+
     useEffect(() => {
         setLocalError(null);
     }, [step]);
+
+    // 5. Cierre mediante URL
+    const closeForm = () => {
+        router.replace(pathname, { scroll: false }); // Quita el ?modal=... sin recargar la página
+        // Resetear el estado después de que la animación termine
+        setTimeout(() => {
+            setStep(1);
+            setStatus("idle");
+            setFormData({ challenge: "", volume: "", budget: "", name: "", company: "", email: "", phone: "", url: "", botField: "" });
+        }, 500);
+    };
 
     useEffect(() => {
         if (!isOpen) return;
@@ -76,10 +108,10 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         const hasInteracted = !!(formData.challenge || formData.volume || formData.budget || formData.name || formData.email);
         if (hasInteracted && step < 3 && status === "idle") {
             if (window.confirm("¿Seguro que deseas cerrar la terminal? Se perderá el progreso actual de calibración.")) {
-                onClose();
+                closeForm();
             }
         } else {
-            onClose();
+            closeForm();
         }
     };
 
@@ -98,7 +130,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         }
 
         if (step === 2) {
-            // Solo exigimos la Asignación Mensual (budget)
             if (!formData.budget) {
                 setLocalError("Falta la Asignación Mensual. Por favor, define este criterio o selecciona [Omitir Fase].");
                 return;
@@ -131,13 +162,11 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
         const cleanPhone = formData.phone.trim();
         const cleanUrl = formData.url.trim();
 
-        // Validación: Solo Nombre y WhatsApp son estrictamente obligatorios
         if (!cleanName || !cleanPhone) {
             setLocalError("Error de Enlace: Nombre y WhatsApp son coordenadas obligatorias.");
             return;
         }
 
-        // Validación condicional del email: Si el usuario escribe algo, validamos que sea un email real
         if (cleanEmail !== "") {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(cleanEmail)) {
@@ -158,7 +187,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
 
         const payload = {
             ...formData,
-            volume: formData.volume || "No especificado", // Inyectamos fallback si viene vacío
+            volume: formData.volume || "No especificado",
             name: cleanName,
             company: cleanCompany,
             email: cleanEmail,
@@ -187,6 +216,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
             if (response.ok) {
                 setStatus("success");
 
+                // Tu excelente configuración de Tracking se mantiene intacta
                 fbq.event('Lead', {
                     content_name: payload.challenge,
                     value: 0.00,
@@ -293,7 +323,8 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                 {step === 2 && (
                                     <motion.div key="step2" initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: -15 }} className="space-y-6">
                                         <div className="space-y-3">
-                                            <span className="text-slate-500 text-[10px] font-mono uppercase tracking-wider block">Escala de Operación (Opcional)</span>                                            <div className="grid grid-cols-3 gap-2">
+                                            <span className="text-slate-500 text-[10px] font-mono uppercase tracking-wider block">Escala de Operación (Opcional)</span>
+                                            <div className="grid grid-cols-3 gap-2">
                                                 {["Startup", "Pyme / Mediana", "Corporativa"].map((v) => (
                                                     <button key={v} type="button" onClick={() => { setFormData(prev => ({ ...prev, volume: v })); setLocalError(null); }} className={`py-2.5 px-3 rounded-lg border text-xs font-medium transition-all ${formData.volume === v ? 'border-marketnauta-primary bg-marketnauta-primary/10 text-white' : 'border-white/5 bg-white/[0.02] text-slate-400 hover:border-white/10'}`}>
                                                         {v}
@@ -318,7 +349,6 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                     <motion.div key="step3" initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {[
-                                                // req: true para los obligatorios, req: false para los opcionales
                                                 { id: "name", label: "Responsable *", type: "text", k: "name", col: "md:col-span-1", auto: "name", req: true },
                                                 { id: "company", label: "Compañía (Opcional)", type: "text", k: "company", col: "md:col-span-1", auto: "organization", req: false },
                                                 { id: "email", label: "Email (Opcional)", type: "email", k: "email", col: "md:col-span-2", auto: "email", req: false },
@@ -329,7 +359,7 @@ export default function ContactForm({ isOpen, onClose }: { isOpen: boolean; onCl
                                                     <input
                                                         ref={field.id === "name" ? nameInputRef : null}
                                                         type={field.type} id={field.id} placeholder=" "
-                                                        required={field.req} // Se aplica la propiedad req
+                                                        required={field.req}
                                                         autoComplete={field.auto}
                                                         value={formData[field.k as keyof typeof formData]}
                                                         onChange={e => setFormData({ ...formData, [field.k]: e.target.value })}
