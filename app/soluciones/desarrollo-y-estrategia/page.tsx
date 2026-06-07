@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Code2, Cpu, Globe, Zap, ArrowRight, Layers, Layout, Database, ShieldCheck } from "lucide-react";
 import CodeVisualizer from "@/components/blocks/CodeVisualizer";
-import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el botón inteligente
+import TrackedCTA from "@/components/ui/TrackedCTA"; // Importamos el CTA con tracking
 
 export default function DesarrolloEstrategiaPage() {
     const fadeInUp = {
@@ -57,11 +57,11 @@ export default function DesarrolloEstrategiaPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
+                            {/* Reemplazamos el button por TrackedCTA */}
                             <TrackedCTA 
                                 href="?modal=exploracion" 
                                 eventName="hero_desplegar_arquitectura"
-                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3"
+                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
                             >
                                 Desplegar Arquitectura
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -69,6 +69,7 @@ export default function DesarrolloEstrategiaPage() {
                         </div>
                     </motion.div>
 
+                    {/* CODE VISUALIZER */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, rotateY: -10, rotateX: 5 }}
                         animate={{ opacity: 1, scale: 1, rotateY: -5, rotateX: 0 }}
