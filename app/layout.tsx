@@ -6,8 +6,8 @@ import NavbarWrapper from "@/components/blocks/NavbarWrapper";
 import FooterWrapper from "@/components/blocks/FooterWrapper";
 import FBPixelTracking from "@/components/tracking/FBPixelTracking";
 import CookieBanner from "@/components/blocks/CookieBanner";
+import ContactForm from "@/components/blocks/ContactForm"; // Importamos el modal centralizado
 import { Suspense } from "react";
-import ContactForm from "@/components/blocks/ContactForm"; 
 
 export const metadata: Metadata = {
   title: "Marketnauta | Dirección Estratégica en el Océano de Datos",
@@ -133,6 +133,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
 
         <FooterWrapper />
+
+        {/* --- NUEVO: MODAL MAESTRO BASADO EN URL --- */}
+        {/* El suspense es obligatorio para que useSearchParams no rompa el SSG de Next.js */}
+        <Suspense fallback={null}>
+          <ContactForm />
+        </Suspense>
 
         {/* El banner gestiona el gtag('consent', 'update', ...) y ahora también Meta Pixel */}
         <CookieBanner />
