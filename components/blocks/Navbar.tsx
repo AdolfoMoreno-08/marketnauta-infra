@@ -4,12 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Compass, Menu, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el nuevo componente
 
-interface NavbarProps {
-    onContactClick: () => void;
-}
+// Eliminamos la interfaz NavbarProps ya que no necesitamos onContactClick
 
-export default function Navbar({ onContactClick }: NavbarProps) {
+export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -65,13 +64,15 @@ export default function Navbar({ onContactClick }: NavbarProps) {
 
                 {/* ACCIONES */}
                 <div className="flex items-center gap-5 relative z-[110]">
-                    <button
-                        onClick={onContactClick}
+                    {/* --- NUEVO: TrackedCTA en Desktop --- */}
+                    <TrackedCTA 
+                        href="?modal=exploracion" 
+                        eventName="nav_agendar_exploracion"
                         className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-abisal-950 text-[11px] font-bold uppercase tracking-wider hover:bg-marketnauta-primary transition-all duration-300 active:scale-95 shadow-lg"
                     >
                         Agendar Exploración
                         <ArrowRight className="w-3 h-3" />
-                    </button>
+                    </TrackedCTA>
 
                     <button
                         className="md:hidden text-white p-2 bg-white/5 rounded-full border border-white/10 active:scale-90 transition-all"
@@ -91,7 +92,6 @@ export default function Navbar({ onContactClick }: NavbarProps) {
                         exit={{ opacity: 0, y: -20 }}
                         className="fixed inset-0 w-full h-screen bg-abisal-950 flex flex-col justify-center px-10 md:hidden"
                     >
-                        {/* SOLUCIÓN AL 404: Reemplazo de grid.svg por gradiente CSS puro */}
                         <div
                             className="absolute inset-0 opacity-[0.03] pointer-events-none"
                             style={{
@@ -126,12 +126,15 @@ export default function Navbar({ onContactClick }: NavbarProps) {
                                 ))}
                             </div>
 
-                            <button
-                                onClick={() => { setIsMobileMenuOpen(false); onContactClick(); }}
-                                className="mt-10 w-full py-6 rounded-2xl bg-marketnauta-primary text-abisal-950 font-black uppercase text-xs tracking-[0.2em] shadow-2xl"
+                            {/* --- NUEVO: TrackedCTA en Mobile --- */}
+                            <TrackedCTA 
+                                href="?modal=exploracion"
+                                eventName="mobile_menu_contacto"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="mt-10 flex justify-center items-center w-full py-6 rounded-2xl bg-marketnauta-primary text-abisal-950 font-black uppercase text-xs tracking-[0.2em] shadow-2xl"
                             >
                                 Contactar Ahora
-                            </button>
+                            </TrackedCTA>
                         </div>
                     </motion.div>
                 )}
