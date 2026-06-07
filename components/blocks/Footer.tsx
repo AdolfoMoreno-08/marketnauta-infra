@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, Mail, Globe, ArrowUpRight, Cpu } from "lucide-react";
+import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el nuevo componente
 
 const LinkedinIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -12,9 +13,7 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-interface FooterProps {
-    onContactClick?: () => void;
-}
+// Eliminamos la interfaz FooterProps
 
 const footerLinks = {
     soluciones: [
@@ -33,7 +32,7 @@ const footerLinks = {
     ],
 };
 
-export default function Footer({ onContactClick }: FooterProps) {
+export default function Footer() {
     const pathname = usePathname();
 
     const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string | undefined) => {
@@ -74,7 +73,6 @@ export default function Footer({ onContactClick }: FooterProps) {
                                 Market<span className="text-marketnauta-primary">nauta</span>
                             </span>
                         </Link>
-                        {/* Subimos de text-sm a text-[15px] y slate-400 */}
                         <p className="text-slate-300 text-[15px] leading-relaxed max-w-xs font-light">
                             Ingeniería de crecimiento y performance de alta fidelidad. Convertimos la complejidad técnica en ventajas competitivas.
                         </p>
@@ -88,7 +86,6 @@ export default function Footer({ onContactClick }: FooterProps) {
                         </div>
                     </div>
 
-                    {/* Columnas de Links: Subimos a text-[15px] y slate-400 */}
                     <div className="space-y-6">
                         <h4 className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Soluciones</h4>
                         <ul className="space-y-4">
@@ -109,9 +106,14 @@ export default function Footer({ onContactClick }: FooterProps) {
                             {footerLinks.empresa.map((link) => (
                                 <li key={link.name}>
                                     {link.href === "trigger-contact" ? (
-                                        <button onClick={onContactClick} className="text-slate-400 hover:text-white text-[15px] transition-all font-light">
+                                        {/* --- NUEVO: TrackedCTA en el Footer --- */}
+                                        <TrackedCTA 
+                                            href="?modal=exploracion" 
+                                            eventName="footer_contacto"
+                                            className="text-slate-400 hover:text-white text-[15px] transition-all font-light"
+                                        >
                                             {link.name}
-                                        </button>
+                                        </TrackedCTA>
                                     ) : (
                                         <Link href={link.href} onClick={(e) => handleScroll(e, link.id)} className="text-slate-400 hover:text-white text-[15px] transition-all font-light">
                                             {link.name}
@@ -122,7 +124,6 @@ export default function Footer({ onContactClick }: FooterProps) {
                         </ul>
                     </div>
 
-                    {/* Infraestructura: Ajuste de legibilidad */}
                     <div className="space-y-6">
                         <h4 className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Infraestructura</h4>
                         <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.04] space-y-3">
@@ -145,7 +146,6 @@ export default function Footer({ onContactClick }: FooterProps) {
                     </div>
                 </div>
 
-                {/* Bottom Bar: Copyright & Legal - Subimos a text-[11px] y slate-500 */}
                 <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
                         <p className="text-slate-500 text-[11px] font-mono uppercase tracking-[0.2em]">
