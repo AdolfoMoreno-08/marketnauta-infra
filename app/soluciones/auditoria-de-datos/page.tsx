@@ -1,18 +1,13 @@
 "use client";
 
-import { useState } from "react"; // 1. Importamos useState
 import { motion } from "framer-motion";
 import {
     Search, Database, BarChart3, ArrowRight, ShieldCheck, Zap, Layers, LineChart
 } from "lucide-react";
 import AuditoriaDashboard from "@/components/blocks/AuditoriaDashboard";
-import ContactModal from "@/components/blocks/ContactForm"; // 2. Importamos tu Modal
+import TrackedCTA from "@/components/ui/TrackedCTA"; // <-- Importamos el botón inteligente
 
-// 3. Ya no necesitamos recibir props, la página se manda sola
 export default function AuditoriaPage() {
-    // 4. Creamos el estado para controlar el modal
-    const [isContactOpen, setIsContactOpen] = useState(false);
-
     const fadeInUp = {
         initial: { opacity: 0, y: 30 },
         whileInView: { opacity: 1, y: 0 },
@@ -22,12 +17,6 @@ export default function AuditoriaPage() {
 
     return (
         <div className="min-h-screen bg-[#030712] overflow-x-hidden relative">
-
-            {/* 5. Agregamos el Modal aquí arriba, invisible hasta que isContactOpen sea true */}
-            <ContactModal
-                isOpen={isContactOpen}
-                onClose={() => setIsContactOpen(false)}
-            />
 
             {/* BACKGROUND: Océano de Datos & Resplandores */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -46,7 +35,6 @@ export default function AuditoriaPage() {
             {/* 1. SECCIÓN HERO: EL ESCANEO */}
             <section className="relative pt-32 pb-24 px-6 z-10">
                 <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative">
-
                     <motion.div
                         animate={{ y: [0, 500, 0], opacity: [0, 0.5, 0] }}
                         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -77,11 +65,15 @@ export default function AuditoriaPage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-                            {/* 6. Actualizamos el onClick del botón del Hero */}
-                            <button onClick={() => setIsContactOpen(true)} className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3">
+                            {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
+                            <TrackedCTA 
+                                href="?modal=auditoria" 
+                                eventName="hero_iniciar_auditoria"
+                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3"
+                            >
                                 Iniciar Auditoría de Sistema
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            </TrackedCTA>
                         </div>
                     </motion.div>
 
@@ -175,7 +167,7 @@ export default function AuditoriaPage() {
             </section>
 
             {/* 4. CIERRE DE CONVERSIÓN: EL FARO MINIMALISTA */}
-            <section className="py-32 px-6 relative z-10 flex justify-center">
+<section className="py-32 px-6 relative z-10 flex justify-center">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -189,14 +181,16 @@ export default function AuditoriaPage() {
                         Agenda una sesión de exploración. Analizaremos tu arquitectura actual y trazaremos el mapa hacia la trazabilidad total.
                     </p>
 
-                    {/* 7. Actualizamos el onClick del botón final */}
-                    <button onClick={() => setIsContactOpen(true)} className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3">
+                    <TrackedCTA 
+                        href="?modal=auditoria" 
+                        eventName="footer_iniciar_auditoria"
+                        className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3"
+                    >
                         Solicitar Auditoría de Infraestructura
                         <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-                    </button>
+                    </TrackedCTA>
                 </motion.div>
             </section>
-
         </div>
     );
 }
