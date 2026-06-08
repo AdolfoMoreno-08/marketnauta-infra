@@ -5,7 +5,7 @@ import {
     Search, Database, BarChart3, ArrowRight, ShieldCheck, Zap, Layers, LineChart
 } from "lucide-react";
 import AuditoriaDashboard from "@/components/blocks/AuditoriaDashboard";
-import TrackedCTA from "@/components/ui/TrackedCTA"; // 1. Importamos el CTA con tracking
+import TrackedCTA from "@/components/blocks/TrackedCTA"; // 1. Importamos el CTA con tracking
 
 export default function AuditoriaPage() {
     const fadeInUp = {
