@@ -23,10 +23,10 @@ export default function CookieBanner() {
         if (typeof window !== "undefined") {
             // 0. Salvaguarda: Aseguramos que dataLayer existe por si el componente carga antes que el script
             (window as any).dataLayer = (window as any).dataLayer || [];
-            
+
             // CORRECCIÓN TYPESCRIPT: Agregamos ...args: any[]
-            function gtag(...args: any[]) { 
-                (window as any).dataLayer.push(arguments); 
+            function gtag(...args: any[]) {
+                (window as any).dataLayer.push(arguments);
             }
 
             // 1. GOOGLE CONSENT MODE: Actualizamos los estados
