@@ -106,16 +106,20 @@ export default function Footer() {
                             {footerLinks.empresa.map((link) => (
                                 <li key={link.name}>
                                     {link.href === "trigger-contact" ? (
-                                        {/* --- NUEVO: TrackedCTA en el Footer --- */}
-                                        <TrackedCTA 
-                                            href="?modal=exploracion" 
+                                        // Usamos el componente TrackedCTA directamente
+                                        <TrackedCTA
+                                            href="?modal=exploracion"
                                             eventName="footer_contacto"
                                             className="text-slate-400 hover:text-white text-[15px] transition-all font-light"
                                         >
                                             {link.name}
                                         </TrackedCTA>
                                     ) : (
-                                        <Link href={link.href} onClick={(e) => handleScroll(e, link.id)} className="text-slate-400 hover:text-white text-[15px] transition-all font-light">
+                                        <Link
+                                            href={link.href}
+                                            onClick={(e) => handleScroll(e, link.id)}
+                                            className="text-slate-400 hover:text-white text-[15px] transition-all font-light"
+                                        >
                                             {link.name}
                                         </Link>
                                     )}
@@ -165,6 +169,6 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer >
     );
 }
