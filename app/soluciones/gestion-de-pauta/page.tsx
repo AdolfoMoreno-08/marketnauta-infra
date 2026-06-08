@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { TrendingUp, Target, Zap, ArrowRight, Rocket, Activity, BarChart3, Network, Crosshair } from "lucide-react";
 import GrowthChart from "@/components/blocks/GrowthChart";
-import TrackedCTA from "@/components/ui/TrackedCTA"; // Importamos el CTA con tracking
+import TrackedCTA from "@/components/blocks/TrackedCTA"; // Importamos el CTA con tracking
 
 export default function GrowthPage() {
     const fadeInUp = {
