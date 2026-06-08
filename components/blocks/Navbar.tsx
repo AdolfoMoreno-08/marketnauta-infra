@@ -65,8 +65,8 @@ export default function Navbar() {
                 {/* ACCIONES */}
                 <div className="flex items-center gap-5 relative z-[110]">
                     {/* --- NUEVO: TrackedCTA en Desktop --- */}
-                    <TrackedCTA 
-                        href="?modal=exploracion" 
+                    <TrackedCTA
+                        href="?modal=exploracion"
                         eventName="nav_agendar_exploracion"
                         className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-abisal-950 text-[11px] font-bold uppercase tracking-wider hover:bg-marketnauta-primary transition-all duration-300 active:scale-95 shadow-lg"
                     >
@@ -127,7 +127,7 @@ export default function Navbar() {
                             </div>
 
                             {/* --- NUEVO: TrackedCTA en Mobile --- */}
-                            <TrackedCTA 
+                            <TrackedCTA
                                 href="?modal=exploracion"
                                 eventName="mobile_menu_contacto"
                                 onClick={() => setIsMobileMenuOpen(false)}
