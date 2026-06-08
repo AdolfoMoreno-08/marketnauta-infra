@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Code2, Cpu, Globe, Zap, ArrowRight, Layers, Layout, Database, ShieldCheck } from "lucide-react";
 import CodeVisualizer from "@/components/blocks/CodeVisualizer";
-import TrackedCTA from "@/components/ui/TrackedCTA"; // Importamos el CTA con tracking
+import TrackedCTA from "@/components/block/TrackedCTA"; // Importamos el CTA con tracking
 
 export default function DesarrolloEstrategiaPage() {
     const fadeInUp = {
