@@ -15,7 +15,7 @@ export default function GrowthPage() {
 
     return (
         <div className="min-h-screen bg-[#030712] overflow-x-hidden relative">
-            
+
             {/* BACKGROUND: Océano de Datos & Resplandores */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-marketnauta-primary/10 rounded-full blur-[150px]" />
@@ -58,8 +58,8 @@ export default function GrowthPage() {
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             {/* Reemplazamos el button por TrackedCTA */}
-                            <TrackedCTA 
-                                href="?modal=exploracion" 
+                            <TrackedCTA
+                                href="?modal=exploracion"
                                 eventName="hero_activar_motor_escala"
                                 className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
                             >
@@ -177,7 +177,7 @@ export default function GrowthPage() {
                 </div>
             </section>
 
-{/* CTA FINAL */}
+            {/* CTA FINAL */}
             <section className="py-32 px-6 relative z-10 flex justify-center">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -191,10 +191,10 @@ export default function GrowthPage() {
                     <p className="text-lg text-slate-400 mb-12 max-w-xl mx-auto relative z-10">
                         Hablemos de tus objetivos de escala. Analizaremos tu pauta actual y trazaremos la ruta hacia tu siguiente nivel de eficiencia.
                     </p>
-                    
+
                     {/* --- AQUÍ USAMOS TrackedCTA --- */}
-                    <TrackedCTA 
-                        href="?modal=exploracion" 
+                    <TrackedCTA
+                        href="?modal=exploracion"
                         eventName="footer_consultar_factibilidad"
                         className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3"
                     >
