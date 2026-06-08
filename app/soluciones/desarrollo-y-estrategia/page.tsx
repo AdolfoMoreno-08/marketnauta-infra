@@ -58,8 +58,8 @@ export default function DesarrolloEstrategiaPage() {
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             {/* Reemplazamos el button por TrackedCTA */}
-                            <TrackedCTA 
-                                href="?modal=exploracion" 
+                            <TrackedCTA
+                                href="?modal=exploracion"
                                 eventName="hero_desplegar_arquitectura"
                                 className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
                             >
@@ -162,7 +162,7 @@ export default function DesarrolloEstrategiaPage() {
                 </div>
             </section>
 
-{/* 3. CTA FINAL: EL FARO DE INGENIERÍA */}
+            {/* 3. CTA FINAL: EL FARO DE INGENIERÍA */}
             <section className="py-32 px-6 relative z-10 flex justify-center">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -178,8 +178,8 @@ export default function DesarrolloEstrategiaPage() {
                     </p>
 
                     {/* --- AQUÍ ESTÁ EL CAMBIO CLAVE --- */}
-                    <TrackedCTA 
-                        href="?modal=exploracion" 
+                    <TrackedCTA
+                        href="?modal=exploracion"
                         eventName="footer_consultar_factibilidad"
                         className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3"
                     >
