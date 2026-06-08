@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 // 1. IMPORTANTE: Agregamos useSearchParams, useRouter y usePathname
-import { useSearchParams, useRouter, usePathname } from "next/navigation"; 
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, CheckCircle2, X, Terminal, AlertCircle, Fuel, ShieldCheck } from "lucide-react";
 import SubmitButton from "@/components/blocks/SubmitButton";
@@ -31,7 +31,7 @@ export default function ContactForm() {
     const modalType = searchParams.get("modal"); // Lee ?modal=loquesea de la URL
 
     // Si hay un parámetro 'modal', el formulario está abierto.
-    const isOpen = !!modalType; 
+    const isOpen = !!modalType;
 
     const nameInputRef = useRef<HTMLInputElement>(null);
     const isMounted = useRef(true);
