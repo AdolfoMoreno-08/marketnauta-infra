@@ -67,8 +67,8 @@ export default function AuditoriaPage() {
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             {/* 2. Reemplazamos el button por TrackedCTA */}
-                            <TrackedCTA 
-                                href="?modal=auditoria" 
+                            <TrackedCTA
+                                href="?modal=auditoria"
                                 eventName="hero_iniciar_auditoria"
                                 className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
                             >
@@ -168,7 +168,7 @@ export default function AuditoriaPage() {
             </section>
 
             {/* 4. CIERRE DE CONVERSIÓN: EL FARO MINIMALISTA */}
-<section className="py-32 px-6 relative z-10 flex justify-center">
+            <section className="py-32 px-6 relative z-10 flex justify-center">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -182,8 +182,8 @@ export default function AuditoriaPage() {
                         Agenda una sesión de exploración. Analizaremos tu arquitectura actual y trazaremos el mapa hacia la trazabilidad total.
                     </p>
 
-                    <TrackedCTA 
-                        href="?modal=auditoria" 
+                    <TrackedCTA
+                        href="?modal=auditoria"
                         eventName="footer_iniciar_auditoria"
                         className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3"
                     >
