@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Compass, Activity, ShieldCheck } from "lucide-react";
 import SolutionsGrid from "@/components/blocks/SolutionsGrid";
 import Methodology from "@/components/blocks/Methodology";
 import SuccessCases from "@/components/blocks/SuccessCases";
-import ContactModal from "@/components/blocks/ContactForm";
+import TrackedCTA from "@/components/blocks/TrackedCTA";
+
+
 
 export default function Home() {
-  const [isContactOpen, setIsContactOpen] = useState(false);
-
   // Scroll suave compensando la altura del Navbar
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
     e.preventDefault();
@@ -31,11 +30,6 @@ export default function Home() {
 
   return (
     <div className="bg-abisal-950 overflow-x-hidden">
-
-      <ContactModal
-        isOpen={isContactOpen}
-        onClose={() => setIsContactOpen(false)}
-      />
 
       {/* 1. HERO SECTION: Optimizado para Mobile-First */}
       <div className="relative min-h-[100svh] md:min-h-[95vh] flex flex-col items-center justify-center px-6 overflow-hidden pt-20 md:pt-24">
@@ -166,13 +160,15 @@ export default function Home() {
             Nuestro equipo de ingeniería trazará tu ruta de crecimiento basada en evidencia técnica y datos reales.
           </p>
 
-          <button
-            onClick={() => setIsContactOpen(true)}
+          <TrackedCTA
+            href="?modal=auditoria"
+            eventName="home_footer_auditoria_tactica"
             className="w-full sm:w-auto relative z-10 group inline-flex items-center justify-center gap-4 px-8 md:px-12 py-5 md:py-7 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-lg md:text-xl hover:shadow-neon-long transition-all duration-300 active:scale-95 shadow-neon-short"
           >
             <Compass className="w-6 h-6 group-hover:rotate-90 transition-transform duration-700" />
             AUDITORÍA TÁCTICA
-          </button>
+          </TrackedCTA>
+
           <div className="mt-12 flex items-center justify-center gap-8 opacity-30 grayscale">
             <ShieldCheck className="w-6 h-6 text-white" />
             <Activity className="w-6 h-6 text-white" />
