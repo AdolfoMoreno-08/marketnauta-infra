@@ -6,13 +6,17 @@ import { Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 interface SubmitButtonProps {
     status: "idle" | "sending" | "success" | "error";
     loadingText?: string;
+    disabled?: boolean; // 1. AÑADIMOS LA PROPIEDAD AQUÍ
 }
 
-export default function SubmitButton({ status, loadingText = "Procesando..." }: SubmitButtonProps) {
+export default function SubmitButton({ status, loadingText = "Procesando...", disabled = false }: SubmitButtonProps) {
+    // 2. Evaluamos si el botón debe estar deshabilitado por el componente padre O por su propio estado
+    const isDisabled = disabled || status === "sending" || status === "success";
+
     return (
         <motion.button
             type="submit"
-            disabled={status === "sending" || status === "success"}
+            disabled={isDisabled}
             // Animación de Glow Exterior (Se aplica al botón para que no se corte)
             animate={{
                 boxShadow:
@@ -24,7 +28,9 @@ export default function SubmitButton({ status, loadingText = "Procesando..." }: 
                 scale: status === "success" ? 1.02 : 1,        // Ligera expansión al triunfar
             }}
             transition={{ duration: 0.5 }}
-            className="relative w-full py-5 rounded-xl font-bold text-lg transition-all duration-500 overflow-hidden group border border-white/5"
+            // 3. UX: Cambiamos la opacidad y el cursor si está deshabilitado
+            className={`relative w-full py-5 rounded-xl font-bold text-lg transition-all duration-500 overflow-hidden group border border-white/5 ${isDisabled ? "opacity-60 cursor-not-allowed grayscale-[20%]" : "cursor-pointer hover:shadow-lg"
+                }`}
         >
             {/* Fondo dinámico según estado */}
             <motion.div
@@ -38,8 +44,10 @@ export default function SubmitButton({ status, loadingText = "Procesando..." }: 
                 }}
             />
 
-            {/* Efecto de Brillo en Hover (Sweep) */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
+            {/* Efecto de Brillo en Hover (Sweep) - Lo ocultamos si está desactivado */}
+            {!isDisabled && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10" />
+            )}
 
             <div className="relative z-20 flex items-center justify-center gap-3 text-abisal-950">
                 <AnimatePresence mode="wait">
@@ -52,7 +60,7 @@ export default function SubmitButton({ status, loadingText = "Procesando..." }: 
                             className="flex items-center gap-3"
                         >
                             Transmitir Señal
-                            <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            <Send className={`w-5 h-5 transition-transform ${isDisabled ? '' : 'group-hover:translate-x-1 group-hover:-translate-y-1'}`} />
                         </motion.div>
                     )}
 
