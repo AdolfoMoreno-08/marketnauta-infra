@@ -12,11 +12,11 @@ interface TrackedCTAProps {
     isExternal?: boolean;
 }
 
-export default function TrackedCTA({ 
-    href, 
-    onClick, 
-    children, 
-    eventName, 
+export default function TrackedCTA({
+    href,
+    onClick,
+    children,
+    eventName,
     className = "",
     isExternal = false
 }: TrackedCTAProps) {
@@ -44,8 +44,8 @@ export default function TrackedCTA({
 
     if (href) {
         return (
-            <Link 
-                href={href} 
+            <Link
+                href={href}
                 onClick={handleInteraction}
                 className={className}
                 target={isExternal ? "_blank" : "_self"}
