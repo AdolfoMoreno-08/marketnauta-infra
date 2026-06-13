@@ -77,17 +77,17 @@ export default function Footer() {
                             Ingeniería de crecimiento y performance de alta fidelidad. Convertimos la complejidad técnica en ventajas competitivas.
                         </p>
                         <div className="flex gap-3">
-                            <Link href="#" className="w-10 h-10 rounded-xl border border-white/20 bg-white/[0.03] flex items-center justify-center text-slate-300 hover:text-marketnauta-primary hover:border-marketnauta-primary/30 transition-all duration-300">
+                            <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Perfil de LinkedIn de Marketnauta" className="w-10 h-10 rounded-xl border border-white/20 bg-white/[0.03] flex items-center justify-center text-slate-300 hover:text-marketnauta-primary hover:border-marketnauta-primary/30 transition-all duration-300">
                                 <LinkedinIcon className="w-5 h-5" />
                             </Link>
-                            <Link href="#" className="w-10 h-10 rounded-xl border border-white/20 bg-white/[0.03] flex items-center justify-center text-slate-300 hover:text-white hover:border-white/40 transition-all duration-300">
+                            <Link href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="Perfil de X (Twitter) de Marketnauta" className="w-10 h-10 rounded-xl border border-white/20 bg-white/[0.03] flex items-center justify-center text-slate-300 hover:text-white hover:border-white/40 transition-all duration-300">
                                 <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                             </Link>
                         </div>
                     </div>
 
                     <div className="space-y-6">
-                        <h4 className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Soluciones</h4>
+                        <p className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Soluciones</p>
                         <ul className="space-y-4">
                             {footerLinks.soluciones.map((link) => (
                                 <li key={link.name}>
@@ -101,7 +101,7 @@ export default function Footer() {
                     </div>
 
                     <div className="space-y-6">
-                        <h4 className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Protocolo</h4>
+                        <p className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Protocolo</p>
                         <ul className="space-y-4">
                             {footerLinks.empresa.map((link) => (
                                 <li key={link.name}>
@@ -129,7 +129,7 @@ export default function Footer() {
                     </div>
 
                     <div className="space-y-6">
-                        <h4 className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Infraestructura</h4>
+                        <p className="text-white font-mono text-[12px] uppercase tracking-[0.3em] font-bold">Infraestructura</p>
                         <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.04] space-y-3">
                             <div className="flex items-center gap-3">
                                 <div className="relative flex h-2 w-2">

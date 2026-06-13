@@ -38,7 +38,7 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
                 {/* BRANDING */}
-                <Link href="/" className="flex items-center gap-3 group relative z-[110]">
+                <Link href="/" aria-label="Volver al inicio - Marketnauta" className="flex items-center gap-3 group relative z-[110]">
                     <div className="relative">
                         <Compass className="w-8 h-8 text-marketnauta-primary group-hover:rotate-180 transition-transform duration-1000 ease-[0.22,1,0.36,1]" />
                         <div className="absolute inset-0 bg-marketnauta-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -77,6 +77,7 @@ export default function Navbar() {
                     <button
                         className="md:hidden text-white p-2 bg-white/5 rounded-full border border-white/10 active:scale-90 transition-all"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label={isMobileMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
                     >
                         {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>

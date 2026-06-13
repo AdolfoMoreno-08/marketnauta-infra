@@ -25,7 +25,7 @@ const contactSchema = z.object({
     botField: z.string().optional().nullable()
 });
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "re_123");
 
 const hashData = (data: string) =>
     crypto.createHash('sha256').update(data.trim().toLowerCase()).digest('hex');

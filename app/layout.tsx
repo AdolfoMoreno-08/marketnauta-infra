@@ -10,8 +10,12 @@ import ContactForm from "@/components/blocks/ContactForm"; // Importamos el moda
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.marketnauta.com"),
   title: "Marketnauta | Dirección Estratégica en el Océano de Datos",
   description: "Transformamos el ruido digital en mapas de crecimiento claros mediante ingeniería de datos y performance marketing.",
+  alternates: {
+    canonical: "https://www.marketnauta.com",
+  },
   openGraph: {
     title: "Marketnauta | Ingeniería de Datos y Growth",
     description: "Transformamos el ruido digital en ventajas competitivas.",
@@ -19,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Marketnauta",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Marketnauta Dashboard Architecture",

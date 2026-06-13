@@ -30,9 +30,9 @@ export default function AuditoriaDashboard() {
                         <span className="w-1.5 h-1.5 bg-marketnauta-primary rounded-full animate-pulse" />
                         <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-mono">System.Telemetría_v4.0</p>
                     </div>
-                    <h4 className="text-3xl font-display font-bold text-white tracking-tighter">
+                    <div className="text-3xl font-display font-bold text-white tracking-tighter">
                         $43,290.<span className="text-slate-500 text-xl">00</span>
-                    </h4>
+                    </div>
                 </div>
                 <div className="text-right font-mono">
                     <p className="text-[9px] text-slate-500 uppercase mb-1">Efficiency_Rate</p>
