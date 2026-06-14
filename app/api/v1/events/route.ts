@@ -15,7 +15,7 @@ const eventSchema = z.object({
   session_id: z.string().optional(),
   user_id: z.string().optional(),
   page: z.string().optional(),
-  properties: z.record(z.unknown()).optional(),
+  properties: z.record(z.string(), z.unknown()).optional(),
   timestamp: z.number().optional(),
 });
 

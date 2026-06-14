@@ -18,7 +18,7 @@ const leadSchema = z.object({
   challenge: z.string().min(3),
   budget: z.string().optional(),
   source_page: z.string().optional(),
-  custom_fields: z.record(z.unknown()).optional(),
+  custom_fields: z.record(z.string(), z.unknown()).optional(),
 });
 
 // Tenants hardcodeados temporalmente — mover a DB cuando se active Neon

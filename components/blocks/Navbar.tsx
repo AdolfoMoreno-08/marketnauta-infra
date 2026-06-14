@@ -4,9 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Compass, Menu, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import TrackedCTA from "@/components/blocks/TrackedCTA"; // <-- Importamos el nuevo componente
-
-// Eliminamos la interfaz NavbarProps ya que no necesitamos onContactClick
+import TrackedCTA from "@/components/blocks/TrackedCTA";
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -30,21 +28,37 @@ export default function Navbar() {
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${isScrolled
-                ? 'py-4 bg-abisal-950/80 backdrop-blur-xl border-b border-white/5 shadow-2xl'
-                : 'py-6 md:py-10 bg-transparent'
-                }`}
+            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${
+                isScrolled
+                    ? 'py-3 bg-abisal-950/85 backdrop-blur-xl shadow-2xl'
+                    : 'py-6 md:py-10 bg-transparent'
+            }`}
         >
+            {/* Border gradient — visible only when scrolled */}
+            <div
+                className="absolute bottom-0 left-0 right-0 h-px transition-opacity duration-700 pointer-events-none"
+                style={{
+                    opacity: isScrolled ? 1 : 0,
+                    background: "linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.4) 30%, rgba(0,119,255,0.6) 50%, rgba(0,229,255,0.4) 70%, transparent 100%)",
+                    boxShadow: isScrolled ? "0 0 20px rgba(0,229,255,0.2)" : "none",
+                }}
+            />
+
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
                 {/* BRANDING */}
                 <Link href="/" aria-label="Volver al inicio - Marketnauta" className="flex items-center gap-3 group relative z-[110]">
                     <div className="relative">
-                        <Compass className="w-8 h-8 text-marketnauta-primary group-hover:rotate-180 transition-transform duration-1000 ease-[0.22,1,0.36,1]" />
-                        <div className="absolute inset-0 bg-marketnauta-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <Compass
+                            className="w-8 h-8 text-marketnauta-primary group-hover:rotate-180 transition-transform duration-1000 ease-[0.22,1,0.36,1]"
+                            style={{
+                                filter: "drop-shadow(0 0 8px rgba(0,229,255,0.6))",
+                            }}
+                        />
+                        <div className="absolute inset-0 bg-marketnauta-primary/25 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
                     <span className="font-display text-xl md:text-2xl font-bold tracking-[-0.02em] text-white">
-                        Market<span className="text-marketnauta-primary">nauta</span>
+                        Market<span className="text-marketnauta-primary" style={{ textShadow: "0 0 12px rgba(0,229,255,0.4)" }}>nauta</span>
                     </span>
                 </Link>
 
@@ -64,11 +78,10 @@ export default function Navbar() {
 
                 {/* ACCIONES */}
                 <div className="flex items-center gap-5 relative z-[110]">
-                    {/* --- NUEVO: TrackedCTA en Desktop --- */}
                     <TrackedCTA
                         href="?modal=exploracion"
                         eventName="nav_agendar_exploracion"
-                        className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-abisal-950 text-[11px] font-bold uppercase tracking-wider hover:bg-marketnauta-primary transition-all duration-300 active:scale-95 shadow-lg"
+                        className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-abisal-950 text-[11px] font-bold uppercase tracking-wider hover:bg-marketnauta-primary hover:shadow-neon-short transition-all duration-300 active:scale-95 shadow-lg"
                     >
                         Agendar Exploración
                         <ArrowRight className="w-3 h-3" />
@@ -96,8 +109,7 @@ export default function Navbar() {
                         <div
                             className="absolute inset-0 opacity-[0.03] pointer-events-none"
                             style={{
-                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), 
-                                                  linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
                                 backgroundSize: '40px 40px'
                             }}
                         />
@@ -127,12 +139,11 @@ export default function Navbar() {
                                 ))}
                             </div>
 
-                            {/* --- NUEVO: TrackedCTA en Mobile --- */}
                             <TrackedCTA
                                 href="?modal=exploracion"
                                 eventName="mobile_menu_contacto"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="mt-10 flex justify-center items-center w-full py-6 rounded-2xl bg-marketnauta-primary text-abisal-950 font-black uppercase text-xs tracking-[0.2em] shadow-2xl"
+                                className="mt-10 flex justify-center items-center w-full py-6 rounded-2xl bg-marketnauta-primary text-abisal-950 font-black uppercase text-xs tracking-[0.2em] shadow-neon-short"
                             >
                                 Contactar Ahora
                             </TrackedCTA>
