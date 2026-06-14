@@ -126,6 +126,24 @@ export async function POST(request: Request) {
             headers: { 'X-Entity-ID': data.eventId }
         });
 
+        // D. LEAD QUALIFIER — fire-and-forget tras captura exitosa
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.marketnauta.com";
+        fetch(`${baseUrl}/api/agents/qualify`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: data.name,
+                company: data.company,
+                email: data.email,
+                phone: data.phone,
+                challenge: data.challenge,
+                budget: data.budget,
+                volume: data.volume,
+                url: data.url,
+                source: "contact_form",
+            }),
+        }).catch((e) => console.error("[send] Qualify trigger failed:", e));
+
         // --- EJECUCIÓN Y MANEJO DE RESULTADOS ---
         const results = await Promise.allSettled([emailPromise, capiPromise, googlePromise]);
 
@@ -137,7 +155,7 @@ export async function POST(request: Request) {
             console.error("[RESEND ERROR]:", JSON.stringify(errorDetail));
         }
 
-        // Siempre devolvemos 200 porque Meta y Google suelen tener éxito 
+        // Siempre devolvemos 200 porque Meta y Google suelen tener éxito
         // (y no queremos asustar al usuario con un error 500)
         return NextResponse.json({
             success: true,

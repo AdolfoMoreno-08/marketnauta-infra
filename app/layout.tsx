@@ -7,6 +7,7 @@ import FooterWrapper from "@/components/blocks/FooterWrapper";
 import FBPixelTracking from "@/components/tracking/FBPixelTracking";
 import CookieBanner from "@/components/blocks/CookieBanner";
 import ContactForm from "@/components/blocks/ContactForm"; // Importamos el modal centralizado
+import ChatWidget from "@/components/chat/ChatWidget";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -195,6 +196,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* El banner gestiona el gtag('consent', 'update', ...) y ahora también Meta Pixel */}
         <CookieBanner />
+
+        {/* BOT DE ATENCIÓN AL CLIENTE — aparece en todas las páginas públicas */}
+        <ChatWidget />
 
       </body>
     </html>
