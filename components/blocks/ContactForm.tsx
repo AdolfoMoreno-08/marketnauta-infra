@@ -180,6 +180,17 @@ export default function ContactForm() {
         setLocalError(null);
     }, [step, status]);
 
+    const getGoogleClientId = (): string | null => {
+        try {
+            const match = document.cookie.split(';').find(c => c.trim().startsWith('_ga='));
+            if (match) {
+                const parts = match.trim().split('=')[1].split('.');
+                if (parts.length >= 4) return `${parts[2]}.${parts[3]}`;
+            }
+        } catch { }
+        return null;
+    };
+
     const triggerErrorShake = (msg: string) => {
         setLocalError(msg);
         setShakeKey(prev => prev + 1);
@@ -242,6 +253,7 @@ export default function ContactForm() {
             email: cleanEmail,
             phone: cleanPhone,
             eventId,
+            googleClientId: getGoogleClientId(),
             userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "Unknown"
         };
 

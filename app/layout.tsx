@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Marketnauta | Ingeniería de Datos y Growth",
     description: "Transformamos el ruido digital en ventajas competitivas.",
-    url: "https://marketnauta.com",
+    url: "https://www.marketnauta.com",
     siteName: "Marketnauta",
     images: [
       {
@@ -32,12 +32,61 @@ export const metadata: Metadata = {
     locale: "es_PE",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Marketnauta | Ingeniería de Datos y Growth",
+    description: "Transformamos el ruido digital en ventajas competitivas mediante ingeniería de datos y performance marketing.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
+        {/* SCHEMA.ORG JSON-LD: Organization + WebSite */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://www.marketnauta.com/#organization",
+                  "name": "Marketnauta",
+                  "url": "https://www.marketnauta.com",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.marketnauta.com/logo.svg",
+                    "width": 200,
+                    "height": 60,
+                  },
+                  "description": "Agencia de ingeniería de datos y performance marketing en Perú. Transformamos el ruido digital en ventajas competitivas mediante BigQuery, Meta CAPI y Growth Engineering.",
+                  "areaServed": "PE",
+                  "knowsAbout": [
+                    "Data Engineering",
+                    "Performance Marketing",
+                    "BigQuery",
+                    "Web Development",
+                    "Conversion Rate Optimization",
+                    "Server-Side Tracking",
+                  ],
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://www.marketnauta.com/#website",
+                  "url": "https://www.marketnauta.com",
+                  "name": "Marketnauta",
+                  "publisher": {
+                    "@id": "https://www.marketnauta.com/#organization",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
+
         {/* 1. CONFIGURACIÓN DE CONSENTIMIENTO (Prioridad máxima) */}
         {/* Usamos next/script con beforeInteractive para asegurar ejecución previa a GTM */}
         <Script
