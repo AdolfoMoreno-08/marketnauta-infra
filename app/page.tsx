@@ -8,6 +8,7 @@ import Methodology from "@/components/blocks/Methodology";
 import SuccessCases from "@/components/blocks/SuccessCases";
 import PainSection from "@/components/blocks/PainSection";
 import TelemetryWidget from "@/components/blocks/TelemetryWidget";
+import ClaudeEngineSection from "@/components/blocks/ClaudeEngineSection";
 import TrackedCTA from "@/components/blocks/TrackedCTA";
 
 function MouseReactiveGrid() {
@@ -217,22 +218,27 @@ export default function Home() {
         <TelemetryWidget />
       </section>
 
-      {/* ═══ 4. SOLUCIONES ══════════════════════════════════════ */}
+      {/* ═══ 4. CLAUDE ENGINE ═══════════════════════════════════ */}
+      <section id="motor-claude" className="scroll-mt-20">
+        <ClaudeEngineSection />
+      </section>
+
+      {/* ═══ 5. SOLUCIONES ══════════════════════════════════════ */}
       <section id="soluciones" className="scroll-mt-20 border-t border-white/[0.04] py-4 md:py-12">
         <SolutionsGrid />
       </section>
 
-      {/* ═══ 5. METODOLOGÍA ═════════════════════════════════════ */}
+      {/* ═══ 6. METODOLOGÍA ═════════════════════════════════════ */}
       <section id="metodologia" className="scroll-mt-20 border-t border-white/[0.04] py-4 md:py-12">
         <Methodology />
       </section>
 
-      {/* ═══ 6. CASOS DE ÉXITO ══════════════════════════════════ */}
+      {/* ═══ 7. CASOS DE ÉXITO ══════════════════════════════════ */}
       <section id="casos-exito" className="scroll-mt-20 border-t border-white/[0.04] py-10 md:py-12">
         <SuccessCases />
       </section>
 
-      {/* ═══ 7. CTA FINAL ═══════════════════════════════════════ */}
+      {/* ═══ 8. CTA FINAL ═══════════════════════════════════════ */}
       <section className="py-24 md:py-40 px-6 relative border-t border-white/[0.04] bg-abisal-900/10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-marketnauta-primary/[0.06] blur-[130px] pointer-events-none" />
 
