@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { runLeadQualifier } from "@/agents/lead-qualifier";
 import type { LeadData } from "@/agents/lead-qualifier";
+import { rateLimit } from "@/lib/api/guard";
+import { logQualification } from "@/lib/observability/track";
 import { z } from "zod";
 
 const qualifySchema = z.object({
@@ -20,6 +22,15 @@ const qualifySchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    // Las llamadas internas autenticadas (ej: /api/v1/leads) hacen bypass del
+    // rate limit. El resto se limita por IP para frenar abuso externo directo.
+    const internalKey = process.env.DASHBOARD_API_KEY;
+    const isTrustedInternal = !!internalKey && req.headers.get("x-internal-key") === internalKey;
+    if (!isTrustedInternal) {
+      const limited = rateLimit(req, { name: "qualify", limit: 12, windowMs: 60_000 });
+      if (limited) return limited;
+    }
+
     if (!process.env.ANTHROPIC_API_KEY) {
       // Sin key configurada: retorna calificación básica sin IA
       return NextResponse.json({
@@ -54,7 +65,14 @@ export async function POST(req: Request) {
 
     const result = await runLeadQualifier(leadData);
 
-    console.log(`[Qualify] Lead: ${leadData.name} | Score: ${result.score} | Tier: ${result.tier} | Routing: ${result.routingDecision}`);
+    // Persistimos la decisión de calificación (antes se descartaba con un console.log).
+    logQualification({
+      score: result.score,
+      tier: result.tier,
+      routingDecision: result.routingDecision,
+      source: leadData.source,
+      name: leadData.name,
+    });
 
     return NextResponse.json(result);
   } catch (err: unknown) {

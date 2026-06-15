@@ -24,9 +24,13 @@ export async function runDataAnalystAgent(
   const toolsUsed: string[] = [];
   const platformsQueried: string[] = [];
 
-  // Construir contexto de tenant si está disponible
-  const tenantContext = tenantId
-    ? `\nCONTEXTO ACTIVO: Analizando datos del cliente tenant_id=${tenantId}`
+  // Construir contexto de tenant si está disponible.
+  // Sanitizamos el tenantId antes de interpolarlo en el system prompt: solo
+  // permitimos identificadores alfanuméricos para evitar inyección de prompt
+  // (un tenantId con saltos de línea / instrucciones podría alterar el system).
+  const safeTenantId = tenantId?.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 64);
+  const tenantContext = safeTenantId
+    ? `\nCONTEXTO ACTIVO: Analizando datos del cliente tenant_id=${safeTenantId}`
     : "";
 
   let currentMessages: Anthropic.MessageParam[] = messages.map((m) => ({

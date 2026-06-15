@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { runDataAnalystAgent } from "@/agents/data-analyst";
 import type { AnalysisMessage } from "@/agents/data-analyst";
+import { guardInternal } from "@/lib/api/guard";
+import { logAIInteraction } from "@/lib/observability/track";
 import { z } from "zod";
+
+// Las integraciones (GA4 service-account/ADC) usan crypto y fs → runtime nodejs.
+export const runtime = "nodejs";
 
 const analyzeSchema = z.object({
   messages: z.array(
@@ -13,19 +18,12 @@ const analyzeSchema = z.object({
   tenantId: z.string().optional(),
 });
 
-// Middleware de autenticación interna simple (expandir con Clerk en producción)
-function isAuthorized(req: Request): boolean {
-  const apiKey = req.headers.get("x-internal-key");
-  const dashboardKey = process.env.DASHBOARD_API_KEY;
-  if (!dashboardKey) return true; // Desarrollo sin clave
-  return apiKey === dashboardKey;
-}
-
 export async function POST(req: Request) {
   try {
-    if (!isAuthorized(req)) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-    }
+    // Endpoint interno (el más caro: Sonnet, 4096 tokens, fan-out multi-plataforma).
+    // FAIL-CLOSED: sin DASHBOARD_API_KEY configurada → 503, nunca abierto.
+    const unauthorized = guardInternal(req);
+    if (unauthorized) return unauthorized;
 
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
@@ -44,6 +42,15 @@ export async function POST(req: Request) {
     const { messages, tenantId } = validation.data;
 
     const result = await runDataAnalystAgent(messages as AnalysisMessage[], tenantId);
+
+    logAIInteraction({
+      agent: "data-analyst",
+      tenantId,
+      durationMs: result.durationMs,
+      tools: result.toolsUsed,
+      success: true,
+      meta: { platformsQueried: result.platformsQueried, hasReport: result.hasReport },
+    });
 
     return NextResponse.json({
       text: result.text,

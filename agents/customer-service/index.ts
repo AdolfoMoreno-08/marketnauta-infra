@@ -30,8 +30,14 @@ export async function runCustomerServiceAgent(
 
   let finalText = "";
 
-  // Bucle agéntico — maneja llamadas a herramientas automáticamente
-  while (true) {
+  // Bucle agéntico — maneja llamadas a herramientas automáticamente.
+  // Tope de seguridad: evita un bucle infinito si el modelo nunca emite end_turn
+  // (alucina tool_use en cada turno) → protege contra timeout y coste descontrolado.
+  let iterations = 0;
+  const MAX_ITERATIONS = 6;
+
+  while (iterations < MAX_ITERATIONS) {
+    iterations++;
     const response = await anthropic.messages.create({
       model: MODELS.BALANCED,
       max_tokens: 1500,
@@ -83,6 +89,13 @@ export async function runCustomerServiceAgent(
     } else {
       break;
     }
+  }
+
+  // Fallback: si el bucle se agotó en un turno de herramienta sin texto final,
+  // devolvemos un mensaje seguro en lugar de una respuesta vacía.
+  if (!finalText.trim()) {
+    finalText =
+      "Disculpa, necesito un momento para procesar eso. ¿Podrías reformular tu pregunta o darme un poco más de contexto sobre lo que buscas?";
   }
 
   return {

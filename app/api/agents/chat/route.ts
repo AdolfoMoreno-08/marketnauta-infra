@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { runCustomerServiceAgent } from "@/agents/customer-service";
 import type { ChatMessage } from "@/agents/customer-service";
+import { rateLimit } from "@/lib/api/guard";
+import { logAIInteraction } from "@/lib/observability/track";
 import { z } from "zod";
 
 const chatSchema = z.object({
@@ -15,6 +17,10 @@ const chatSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    // Rate limit: el bot está expuesto en todas las páginas públicas.
+    const limited = rateLimit(req, { name: "chat", limit: 10, windowMs: 60_000 });
+    if (limited) return limited;
+
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
         { error: "Bot no disponible en este momento. Configura ANTHROPIC_API_KEY." },
@@ -32,6 +38,14 @@ export async function POST(req: Request) {
     const { messages } = validation.data;
 
     const result = await runCustomerServiceAgent(messages as ChatMessage[]);
+
+    logAIInteraction({
+      agent: "customer-service",
+      durationMs: result.durationMs,
+      tools: result.toolsUsed,
+      success: true,
+      meta: { leadCreated: result.leadCreated },
+    });
 
     return NextResponse.json({
       text: result.text,
