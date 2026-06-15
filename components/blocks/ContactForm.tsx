@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, CheckCircle2, X, Terminal, AlertCircle, Fuel, ShieldCheck, WifiOff, XCircle } from "lucide-react";
+import { ChevronRight, ChevronLeft, CheckCircle2, X, Terminal, AlertCircle, Fuel, ShieldCheck, WifiOff, XCircle, CalendarClock } from "lucide-react";
 import SubmitButton from "@/components/blocks/SubmitButton";
 import * as fbq from "@/lib/fpixel";
 import * as gtm from "@/lib/gtm";
@@ -493,6 +493,30 @@ export default function ContactForm() {
                                 </div>
                                 <h3 className="text-3xl font-bold text-white tracking-tight mb-3">Enlace Exitoso</h3>
                                 <p className="text-sm text-slate-400 max-w-sm leading-relaxed">Nuestra terminal ha decodificado tus coordenadas corporativas. Un especialista iniciará el protocolo de sincronización pronto.</p>
+
+                                {/* Agendamiento de llamada (Google Appointment Scheduling).
+                                    Solo se muestra si NEXT_PUBLIC_BOOKING_URL está configurada. */}
+                                {process.env.NEXT_PUBLIC_BOOKING_URL && (
+                                    <>
+                                        <a
+                                            href={process.env.NEXT_PUBLIC_BOOKING_URL}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => {
+                                                try {
+                                                    gtm.pushToDataLayer({ event: "schedule_call_click", source: "contact_modal_success" });
+                                                } catch { }
+                                            }}
+                                            className="mt-8 inline-flex items-center gap-2.5 px-7 py-4 min-h-[48px] rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-sm hover:shadow-neon-long transition-all duration-300 active:scale-95"
+                                        >
+                                            <CalendarClock className="w-5 h-5" />
+                                            Agendar llamada con Enrique
+                                        </a>
+                                        <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.15em] mt-3">
+                                            Reunión vía Google Meet · confirmación por email a ambos
+                                        </p>
+                                    </>
+                                )}
                             </motion.div>
                         )}
 
