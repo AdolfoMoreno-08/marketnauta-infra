@@ -8,6 +8,7 @@
 */
 
 import { NextResponse } from "next/server";
+import { logSatelliteEvent } from "@/lib/observability/track";
 import { z } from "zod";
 
 const eventSchema = z.object({
@@ -60,13 +61,14 @@ export async function POST(req: Request) {
       const event = validation.data;
       const isHighValue = HIGH_VALUE_EVENTS.includes(event.event_name);
 
-      // Log para debugging (en producción → insertar en DB)
-      console.log(`[v1/events] tenant=${tenantName} event=${event.event_name} high_value=${isHighValue}`);
-
-      // Si es evento de alto valor, disparar análisis de contexto (en prod → queue)
-      if (isHighValue && event.properties) {
-        console.log(`[v1/events] High-value event: ${event.event_name}`, event.properties);
-      }
+      // Registro estructurado (NDJSON) → exportable a BigQuery vía log-drain.
+      logSatelliteEvent({
+        tenant: tenantName,
+        eventName: event.event_name,
+        highValue: isHighValue,
+        sessionId: event.session_id,
+        page: event.page,
+      });
 
       results.push({
         status: "received",

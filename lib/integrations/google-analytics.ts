@@ -256,10 +256,24 @@ async function getADCToken(credentialsPath: string): Promise<string> {
 }
 
 async function getServiceAccountToken(serviceAccountKeyJson: string): Promise<string> {
-  const key = JSON.parse(serviceAccountKeyJson);
+  // Firma RS256 real con el módulo crypto de Node (runtime nodejs).
+  const crypto = await import("crypto");
+  const key = JSON.parse(serviceAccountKeyJson) as {
+    client_email: string;
+    private_key: string;
+  };
   const now = Math.floor(Date.now() / 1000);
-  const header = btoa(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-  const payload = btoa(
+
+  // base64url: los JWT NO admiten base64 estándar (+ / =).
+  const b64url = (input: string | Buffer) =>
+    Buffer.from(input)
+      .toString("base64")
+      .replace(/=/g, "")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_");
+
+  const header = b64url(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+  const payload = b64url(
     JSON.stringify({
       iss: key.client_email,
       scope: "https://www.googleapis.com/auth/analytics.readonly",
@@ -269,17 +283,28 @@ async function getServiceAccountToken(serviceAccountKeyJson: string): Promise<st
     })
   );
 
-  // Nota: la firma RS256 requiere crypto.subtle en Edge Runtime
-  // En producción usar google-auth-library o implementación completa
+  // Firma criptográfica del JWT (esto faltaba: antes iba "SIGNATURE_PLACEHOLDER").
+  const signingInput = `${header}.${payload}`;
+  const signatureBuf = crypto
+    .createSign("RSA-SHA256")
+    .update(signingInput)
+    .sign(key.private_key);
+  const assertion = `${signingInput}.${b64url(signatureBuf)}`;
+
   const res = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion: `${header}.${payload}.SIGNATURE_PLACEHOLDER`,
+      assertion,
     }),
   });
 
-  const data = await res.json() as { access_token: string };
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`Service Account token falló: ${JSON.stringify(err)}`);
+  }
+
+  const data = (await res.json()) as { access_token: string };
   return data.access_token;
 }

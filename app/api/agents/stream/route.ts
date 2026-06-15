@@ -13,6 +13,8 @@
 */
 
 import { anthropic, MODELS } from "@/lib/ai/client";
+import { rateLimit } from "@/lib/api/guard";
+import { logAIInteraction } from "@/lib/observability/track";
 import type Anthropic from "@anthropic-ai/sdk";
 
 export const runtime = "nodejs";
@@ -255,6 +257,10 @@ async function* demoEvents(prompt: string): AsyncGenerator<StreamEvent> {
 // ─── HANDLER PRINCIPAL ────────────────────────────────────────────────────────
 
 export async function POST(req: Request) {
+  // Rate limit: endpoint público de demo del motor.
+  const limited = rateLimit(req, { name: "stream", limit: 6, windowMs: 60_000 });
+  if (limited) return limited;
+
   let promptText = "";
   try {
     const body = await req.json();
@@ -298,7 +304,10 @@ export async function POST(req: Request) {
         while (iterations < MAX_ITER) {
           iterations++;
 
-          const response = await anthropic.messages.create({
+          // Streaming real: usamos .stream() y reenviamos cada delta de texto
+          // conforme el modelo lo genera (antes se esperaba la respuesta completa
+          // y se troceaba carácter a carácter, lo que anulaba el streaming).
+          const stream = anthropic.messages.stream({
             model: MODELS.FAST,
             max_tokens: 1024,
             system: SYSTEM_PROMPT,
@@ -306,6 +315,11 @@ export async function POST(req: Request) {
             messages,
           });
 
+          stream.on("text", (delta) => {
+            send(controller, { t: "text", d: delta });
+          });
+
+          const response = await stream.finalMessage();
           totalTokens += response.usage?.output_tokens ?? 0;
 
           if (response.stop_reason === "tool_use") {
@@ -350,29 +364,36 @@ export async function POST(req: Request) {
             continue;
           }
 
-          // end_turn: stream text blocks
-          for (const block of response.content) {
-            if (block.type === "text") {
-              // Transmitir token a token
-              for (const char of block.text) {
-                send(controller, { t: "text", d: char });
-              }
-            }
-          }
+          // end_turn: el texto ya se transmitió en vivo vía stream.on("text").
           break;
         }
 
+        const uniqueTools = [...new Set(toolsUsed)];
         send(controller, {
           t: "done",
           stats: {
             tokens: totalTokens,
             ms: Date.now() - startTime,
-            tools: [...new Set(toolsUsed)],
+            tools: uniqueTools,
           },
+        });
+
+        logAIInteraction({
+          agent: "stream-engine",
+          tokens: totalTokens,
+          durationMs: Date.now() - startTime,
+          tools: uniqueTools,
+          success: true,
         });
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Error del motor";
         send(controller, { t: "error", msg });
+        logAIInteraction({
+          agent: "stream-engine",
+          durationMs: Date.now() - startTime,
+          success: false,
+          meta: { error: msg.slice(0, 200) },
+        });
       } finally {
         controller.close();
       }
