@@ -67,6 +67,15 @@ export default function ContactForm() {
         };
     }, []);
 
+    // 1.b Bloqueo de scroll del fondo mientras el modal está abierto
+    // (evita scroll-chaining / rubber-banding del body detrás del backdrop en iOS)
+    useEffect(() => {
+        if (!isOpen) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => { document.body.style.overflow = prev; };
+    }, [isOpen]);
+
     // 2. Recuperación de Local Storage (Auto-Guardado)
     useEffect(() => {
         if (isOpen && isMounted.current) {
@@ -264,6 +273,25 @@ export default function ContactForm() {
                 body: JSON.stringify(payload),
             });
 
+            // CRM (HubSpot) — fire-and-forget en paralelo. No bloquea el éxito
+            // del formulario; si el CRM falla, el lead igual llega por email.
+            fetch('/api/crm/lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: cleanName,
+                    email: cleanEmail,
+                    phone: cleanPhone,
+                    company: formData.company,
+                    url: formData.url,
+                    challenge: formData.challenge,
+                    budget: formData.budget,
+                    volume: payload.volume,
+                    source: 'contact_modal',
+                    botField: formData.botField,
+                }),
+            }).catch(() => { /* silencioso: el CRM es complementario */ });
+
             for (const phase of phases) {
                 if (!isMounted.current) return;
                 setLoadingText(phase);
@@ -304,7 +332,7 @@ export default function ContactForm() {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={handleCloseIntent} className="absolute inset-0 bg-abisal-950/80 backdrop-blur-xl" />
 
             <motion.div
@@ -351,7 +379,7 @@ export default function ContactForm() {
                             </span>
                             <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{STEP_METADATA[step].description}</h3>
                         </div>
-                        <button onClick={handleCloseIntent} className="text-slate-500 hover:text-white transition-colors p-1.5 rounded-xl hover:bg-white/5 ml-4" aria-label="Cerrar terminal"><X className="w-5 h-5" /></button>
+                        <button onClick={handleCloseIntent} className="text-slate-500 hover:text-white transition-colors p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-white/5 ml-2" aria-label="Cerrar terminal"><X className="w-5 h-5" /></button>
                     </div>
                 </div>
 
@@ -486,7 +514,7 @@ export default function ContactForm() {
                     <div className="p-4 sm:p-6 bg-abisal-950/40 border-t border-white/5 flex items-center justify-between shrink-0">
                         <div>
                             {step > 1 && (
-                                <button type="button" onClick={() => handleStepNavigation(false)} className="flex items-center gap-1.5 text-slate-500 hover:text-white font-mono text-[10px] uppercase tracking-wider transition-colors px-2 py-1">
+                                <button type="button" onClick={() => handleStepNavigation(false)} className="flex items-center gap-1.5 text-slate-500 hover:text-white font-mono text-[10px] uppercase tracking-wider transition-colors px-3 py-2.5 min-h-[44px]">
                                     <ChevronLeft className="w-3.5 h-3.5" /> Atrás
                                 </button>
                             )}
