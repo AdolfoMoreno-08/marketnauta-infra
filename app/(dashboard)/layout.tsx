@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* NAV */}
         <nav className="flex-grow px-3 py-4 space-y-0.5">
           <Link
-            href="/(dashboard)"
+            href="/overview"
             className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.04] transition-all text-sm group"
           >
             <LayoutDashboard className="w-4 h-4 group-hover:text-marketnauta-primary transition-colors" />
