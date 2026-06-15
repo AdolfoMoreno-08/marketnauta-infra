@@ -278,8 +278,16 @@ export async function POST(req: Request) {
       const startTime = Date.now();
 
       try {
-        // ── MODO DEMO (sin API key real) ──────────────────────────────────────
-        if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY.length < 10) {
+        // ── MODO SIMULACIÓN (por defecto — ahorro de tokens) ──────────────────
+        // El motor en vivo corre en demo salvo que STREAM_LIVE_AI="true" Y haya
+        // API key. Así producción no gasta tokens reales en esta sección.
+        // Para reactivar IA real: setear STREAM_LIVE_AI=true en Vercel.
+        const streamLiveAI =
+          process.env.STREAM_LIVE_AI === "true" &&
+          !!process.env.ANTHROPIC_API_KEY &&
+          process.env.ANTHROPIC_API_KEY.length >= 10;
+
+        if (!streamLiveAI) {
           for await (const event of demoEvents(promptText)) {
             send(controller, event);
           }

@@ -31,14 +31,20 @@ export async function POST(req: Request) {
       if (limited) return limited;
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
-      // Sin key configurada: retorna calificación básica sin IA
+    // ── MODO SIMULACIÓN (por defecto — ahorro de tokens) ──────────────────
+    // La calificación corre sin IA salvo que QUALIFY_LIVE_AI="true" Y haya API
+    // key. Así producción no gasta tokens reales aquí. Para reactivar IA real:
+    // setear QUALIFY_LIVE_AI=true en Vercel.
+    const qualifyLiveAI = process.env.QUALIFY_LIVE_AI === "true" && !!process.env.ANTHROPIC_API_KEY;
+
+    if (!qualifyLiveAI) {
+      // Calificación heurística simulada (sin IA)
       return NextResponse.json({
         score: 50,
         tier: "WARM",
         routingDecision: "EMAIL_SEQUENCE_A",
         scoreBreakdown: { budgetScore: 15, challengeScore: 20, companySizeScore: 10, contactDataScore: 5 },
-        salesNote: "Calificación automática sin IA activa.",
+        salesNote: "Calificación automática (modo simulación, sin IA).",
         durationMs: 0,
       });
     }

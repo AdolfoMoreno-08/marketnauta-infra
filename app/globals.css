@@ -44,14 +44,22 @@
 @layer components {
 
   /* ── GLASSMORPHISM ──────────────────────────────────────────── */
+  /* En móvil: fondo sólido translúcido (sin backdrop-filter → coste GPU ~0).
+     El backdrop-filter solo se activa en >=768px, donde el coste es asumible. */
   .glass-card {
-    background: rgba(11, 19, 43, 0.4);
-    backdrop-filter: blur(12px) saturate(180%);
+    background: rgba(11, 19, 43, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
       0 4px 30px rgba(0, 0, 0, 0.15),
       inset 0 0 20px rgba(0, 229, 255, 0.02);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .glass-card {
+      background: rgba(11, 19, 43, 0.4);
+      backdrop-filter: blur(12px) saturate(180%);
+    }
   }
 
   .glass-card:hover {
@@ -183,4 +191,23 @@ input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px var(--color-abisal-950) inset !important;
   caret-color: white;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Defensa global contra scroll horizontal por capas decorativas grandes */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* Accesibilidad (WCAG 2.3.3): respeta "reducir movimiento" del sistema.
+   Anula animaciones y loops infinitos (Framer Motion también lo respeta). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

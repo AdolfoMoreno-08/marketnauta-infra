@@ -88,7 +88,7 @@ export default function Navbar() {
                     </TrackedCTA>
 
                     <button
-                        className="md:hidden text-white p-2 bg-white/5 rounded-full border border-white/10 active:scale-90 transition-all"
+                        className="md:hidden flex items-center justify-center text-white p-3 min-w-[44px] min-h-[44px] bg-white/5 rounded-full border border-white/10 active:scale-90 transition-all"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         aria-label={isMobileMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
                     >

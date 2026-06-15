@@ -97,7 +97,7 @@ function SparkLine({ data, color, direction }: { data: number[]; color: string; 
 export default function SuccessCases() {
     return (
         <section className="py-10 md:py-16 px-6 relative bg-abisal-950 overflow-hidden">
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-marketnauta-primary/[0.04] blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%)" }} />
 
             <div className="max-w-7xl mx-auto relative z-10">
                 {/* Header */}
@@ -149,9 +149,8 @@ export default function SuccessCases() {
                             whileHover={{ y: -4 }}
                             className="group relative p-7 md:p-10 rounded-[2.5rem] overflow-hidden cursor-default"
                             style={{
-                                background: `linear-gradient(135deg, rgba(11,19,43,0.6) 0%, ${item.color} 100%)`,
+                                background: `linear-gradient(135deg, rgba(11,19,43,0.85) 0%, ${item.color} 100%)`,
                                 border: `1px solid ${item.borderColor}`,
-                                backdropFilter: "blur(12px)",
                                 transition: "border-color 0.3s ease, box-shadow 0.3s ease",
                             }}
                             onMouseEnter={(e) => {

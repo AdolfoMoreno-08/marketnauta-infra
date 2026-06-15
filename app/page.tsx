@@ -41,18 +41,24 @@ function MouseReactiveGrid() {
           backgroundSize: "48px 48px",
         }}
       />
-      {/* Mouse-reactive glow */}
+      {/* Mouse-reactive glow — radial-gradient (sin filtro blur → coste GPU ~0) */}
       <motion.div
-        className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]"
+        className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           left: glowX,
           top: glowY,
-          background: "radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(0,229,255,0.10) 0%, transparent 65%)",
         }}
       />
-      {/* Static ambient glows */}
-      <div className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-marketnauta-secondary/[0.04] rounded-full blur-[160px]" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-marketnauta-primary/[0.03] rounded-full blur-[100px]" />
+      {/* Static ambient glows — radial-gradient en vez de blur-[160px]/blur-[100px] */}
+      <div
+        className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full"
+        style={{ background: "radial-gradient(circle, rgba(0,119,255,0.06) 0%, transparent 65%)" }}
+      />
+      <div
+        className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full"
+        style={{ background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%)" }}
+      />
     </div>
   );
 }
@@ -240,7 +246,7 @@ export default function Home() {
 
       {/* ═══ 8. CTA FINAL ═══════════════════════════════════════ */}
       <section className="py-24 md:py-40 px-6 relative border-t border-white/[0.04] bg-abisal-900/10">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-marketnauta-primary/[0.06] blur-[130px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 65%)" }} />
 
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}

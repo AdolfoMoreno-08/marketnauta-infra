@@ -75,7 +75,7 @@ export default function Methodology() {
         <section ref={sectionRef} className="py-8 md:py-14 px-6 relative overflow-hidden bg-abisal-950">
             {/* Background glow */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-marketnauta-secondary/[0.04] rounded-full blur-[100px]" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full" style={{ background: "radial-gradient(ellipse, rgba(0,119,255,0.06) 0%, transparent 65%)" }} />
             </div>
 
             <div className="max-w-7xl mx-auto relative">

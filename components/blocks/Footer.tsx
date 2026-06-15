@@ -56,7 +56,7 @@ export default function Footer() {
                 }}
             />
 
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[200px] bg-marketnauta-primary/[0.04] blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[200px] pointer-events-none" style={{ background: "radial-gradient(ellipse, rgba(0,229,255,0.06) 0%, transparent 65%)" }} />
 
             <div className="max-w-7xl mx-auto relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
