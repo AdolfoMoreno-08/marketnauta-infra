@@ -87,7 +87,7 @@ export default function TelemetryWidget() {
                     step={1000}
                     value={monthlySpend}
                     onChange={(e) => setMonthlySpend(Number(e.target.value))}
-                    className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+                    className="telemetry-slider w-full h-1.5 rounded-full appearance-none cursor-pointer"
                     style={{
                       background: `linear-gradient(to right, #00E5FF ${((monthlySpend - 1000) / 199000) * 100}%, rgba(255,255,255,0.1) 0%)`,
                     }}
@@ -117,7 +117,7 @@ export default function TelemetryWidget() {
                     step={1}
                     value={attrLoss}
                     onChange={(e) => setAttrLoss(Number(e.target.value))}
-                    className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+                    className="telemetry-slider w-full h-1.5 rounded-full appearance-none cursor-pointer"
                     style={{
                       background: `linear-gradient(to right, #FF6B35 ${((attrLoss - 5) / 75) * 100}%, rgba(255,255,255,0.1) 0%)`,
                     }}
@@ -229,8 +229,8 @@ export default function TelemetryWidget() {
         </motion.div>
       </div>
 
-      <style jsx>{`
-        input[type='range']::-webkit-slider-thumb {
+      <style dangerouslySetInnerHTML={{ __html: `
+        .telemetry-slider::-webkit-slider-thumb {
           -webkit-appearance: none;
           width: 18px;
           height: 18px;
@@ -240,7 +240,7 @@ export default function TelemetryWidget() {
           box-shadow: 0 0 8px rgba(0,229,255,0.5);
           border: 2px solid rgba(0,229,255,0.6);
         }
-        input[type='range']::-moz-range-thumb {
+        .telemetry-slider::-moz-range-thumb {
           width: 18px;
           height: 18px;
           border-radius: 50%;
@@ -248,7 +248,7 @@ export default function TelemetryWidget() {
           cursor: pointer;
           border: 2px solid rgba(0,229,255,0.6);
         }
-      `}</style>
+      ` }} />
     </section>
   );
 }

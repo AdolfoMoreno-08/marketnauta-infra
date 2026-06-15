@@ -78,14 +78,19 @@ export async function queryGA4(params: Record<string, unknown>): Promise<GA4Resp
     params.end_date as string | undefined
   );
 
-  // Sin credenciales → devuelve datos demo con nota clara
-  if (!propertyId || !serviceAccountKey) {
+  // Soporte ADC via GOOGLE_APPLICATION_CREDENTIALS si no hay service account JSON
+  const adcPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  const hasCredentials = propertyId && (serviceAccountKey || adcPath);
+
+  if (!hasCredentials) {
     return buildDemoResponse(propertyId ?? "NOT_CONFIGURED", dateResolved, params);
   }
 
   try {
-    // Obtener access token via Service Account
-    const token = await getServiceAccountToken(serviceAccountKey);
+    // Obtener access token: service account JSON → ADC file → error
+    const token = serviceAccountKey
+      ? await getServiceAccountToken(serviceAccountKey)
+      : await getADCToken(adcPath!);
 
     // Construir request para GA4 Data API v1
     const metricsMap: Record<string, string> = {
@@ -141,7 +146,7 @@ export async function queryGA4(params: Record<string, unknown>): Promise<GA4Resp
     const message = err instanceof Error ? err.message : String(err);
     return {
       property_id: propertyId,
-      date_range: dateResolved,
+      date_range: { start: dateResolved.startDate, end: dateResolved.endDate },
       rows: [],
       totals: {},
       row_count: 0,
@@ -213,6 +218,41 @@ function buildDemoResponse(
     sampled: false,
     status: "demo",
   };
+}
+
+// Soporta credenciales ADC tipo "authorized_user" (gcloud auth application-default login)
+async function getADCToken(credentialsPath: string): Promise<string> {
+  const fs = await import("fs");
+  const raw = fs.readFileSync(credentialsPath, "utf8");
+  const creds = JSON.parse(raw) as {
+    type: string;
+    client_id: string;
+    client_secret: string;
+    refresh_token: string;
+  };
+
+  if (creds.type !== "authorized_user") {
+    throw new Error(`ADC tipo no soportado: ${creds.type}`);
+  }
+
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: creds.client_id,
+      client_secret: creds.client_secret,
+      refresh_token: creds.refresh_token,
+      grant_type: "refresh_token",
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json() as { error: string };
+    throw new Error(`ADC token refresh falló: ${err.error}`);
+  }
+
+  const data = await res.json() as { access_token: string };
+  return data.access_token;
 }
 
 async function getServiceAccountToken(serviceAccountKeyJson: string): Promise<string> {
