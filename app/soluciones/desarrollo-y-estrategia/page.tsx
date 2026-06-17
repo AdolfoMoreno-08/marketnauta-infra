@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import DesarrolloEstrategiaPageContent from "@/components/blocks/DesarrolloEstrategiaPageContent";
+import JsonLd from "@/components/JsonLd";
+import { serviceJsonLd, breadcrumbJsonLd } from "@/lib/jsonld";
+import { getLayer } from "@/lib/solutions";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.marketnauta.com"),
@@ -33,5 +36,15 @@ export const metadata: Metadata = {
 };
 
 export default function DesarrolloEstrategiaPage() {
-    return <DesarrolloEstrategiaPageContent />;
+    return (
+        <>
+            <JsonLd data={serviceJsonLd(getLayer(2)!)} />
+            <JsonLd data={breadcrumbJsonLd([
+                { name: "Inicio", url: "/" },
+                { name: "Soluciones", url: "/#soluciones" },
+                { name: "Infraestructura de Conversión", url: "/soluciones/desarrollo-y-estrategia" },
+            ])} />
+            <DesarrolloEstrategiaPageContent />
+        </>
+    );
 }

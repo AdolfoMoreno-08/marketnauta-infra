@@ -22,8 +22,10 @@ export default function Navbar() {
 
     const navLinks = [
         { name: 'Auditoría', href: '/soluciones/auditoria-de-datos' },
+        { name: 'Conversión', href: '/soluciones/desarrollo-y-estrategia' },
+        { name: 'Retención', href: '/soluciones/activacion-y-retencion' },
+        { name: 'Predicción', href: '/soluciones/inteligencia-predictiva' },
         { name: 'Growth', href: '/soluciones/gestion-de-pauta' },
-        { name: 'Estrategia', href: '/soluciones/desarrollo-y-estrategia' },
     ];
 
     return (

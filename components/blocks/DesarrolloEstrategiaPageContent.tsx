@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Code2, Cpu, Globe, Zap, ArrowRight, Layers, Layout, Database, ShieldCheck } from "lucide-react";
 import CodeVisualizer from "@/components/blocks/CodeVisualizer";
 import TrackedCTA from "@/components/blocks/TrackedCTA";
+import RelatedServices from "@/components/blocks/RelatedServices";
 
 export default function DesarrolloEstrategiaPageContent() {
     const fadeInUp = {
@@ -177,6 +178,8 @@ export default function DesarrolloEstrategiaPageContent() {
                     </TrackedCTA>
                 </motion.div>
             </section>
+
+            <RelatedServices step={2} />
         </div>
     );
 }

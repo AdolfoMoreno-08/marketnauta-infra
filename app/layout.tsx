@@ -5,6 +5,7 @@ import "./globals.css";
 import NavbarWrapper from "@/components/blocks/NavbarWrapper";
 import FooterWrapper from "@/components/blocks/FooterWrapper";
 import FBPixelTracking from "@/components/tracking/FBPixelTracking";
+import LinkTracker from "@/components/tracking/LinkTracker";
 import CookieBanner from "@/components/blocks/CookieBanner";
 import ContactForm from "@/components/blocks/ContactForm"; // Importamos el modal centralizado
 import ChatWidget from "@/components/chat/ChatWidget";
@@ -179,6 +180,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <FBPixelTracking />
         </Suspense>
+
+        {/* Listener delegado de enlaces internos → dataLayer → sGTM (GA4 + CAPI) */}
+        <LinkTracker />
 
         <NavbarWrapper />
 

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { TrendingUp, Target, Zap, ArrowRight, Rocket, Activity, BarChart3, Network, Crosshair } from "lucide-react";
 import GrowthChart from "@/components/blocks/GrowthChart";
 import TrackedCTA from "@/components/blocks/TrackedCTA";
+import RelatedServices from "@/components/blocks/RelatedServices";
 
 export default function GestionPautaPageContent() {
     const fadeInUp = {
@@ -191,6 +192,8 @@ export default function GestionPautaPageContent() {
                     </TrackedCTA>
                 </motion.div>
             </section>
+
+            <RelatedServices step={5} />
         </div>
     );
 }

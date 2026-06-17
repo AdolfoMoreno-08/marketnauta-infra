@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Database, TrendingUp, Code2, ArrowUpRight, Cpu } from "lucide-react";
+import { Database, TrendingUp, Code2, ArrowUpRight, Cpu, MessageCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState, useRef, useCallback } from "react";
 
@@ -36,11 +36,35 @@ const solutions = [
         description: "Ecosistemas web en el Edge diseñados para velocidad extrema y conversión masiva.",
         icon: Code2,
         href: "/soluciones/desarrollo-y-estrategia",
-        className: "md:col-span-3",
+        className: "md:col-span-1",
         stats: "99/100 Core Web Vitals",
         accentColor: "rgba(16,185,129,0.08)",
         accentBorder: "rgba(16,185,129,0.35)",
         iconColor: "text-emerald-400",
+    },
+    {
+        title: "Activación & Retención",
+        tag: "RETENTION",
+        description: "WhatsApp CRM, recuperación de carritos y email por comportamiento sobre tu propio dato.",
+        icon: MessageCircle,
+        href: "/soluciones/activacion-y-retencion",
+        className: "md:col-span-1",
+        stats: "Recupera +40% carritos",
+        accentColor: "rgba(255,107,53,0.08)",
+        accentBorder: "rgba(255,107,53,0.4)",
+        iconColor: "text-marketnauta-orange",
+    },
+    {
+        title: "Inteligencia Predictiva",
+        tag: "PREDICTIVE",
+        description: "Modelos de churn, recompra y recomendación con IA. La capa premium sobre tu dato.",
+        icon: Sparkles,
+        href: "/soluciones/inteligencia-predictiva",
+        className: "md:col-span-1",
+        stats: "Anticipa la recompra",
+        accentColor: "rgba(0,119,255,0.1)",
+        accentBorder: "rgba(0,119,255,0.4)",
+        iconColor: "text-marketnauta-secondary",
     },
 ];
 
@@ -81,6 +105,8 @@ function SolutionCard({
                 href={item.href}
                 onMouseMove={onMouseMove}
                 onMouseLeave={onMouseLeave}
+                data-evt="internal_link_click"
+                data-link-position="content"
                 className="group relative h-full border-glow glass-card p-6 md:p-8 rounded-[2rem] bg-white/[0.01] flex flex-col justify-between min-h-[280px] block overflow-hidden active:scale-[0.98] transition-all duration-300"
             >
                 {/* Mouse-tracking glow */}

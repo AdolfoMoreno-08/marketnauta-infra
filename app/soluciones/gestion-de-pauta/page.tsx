@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import GestionPautaPageContent from "@/components/blocks/GestionPautaPageContent";
+import JsonLd from "@/components/JsonLd";
+import { serviceJsonLd, breadcrumbJsonLd } from "@/lib/jsonld";
+import { getLayer } from "@/lib/solutions";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.marketnauta.com"),
@@ -33,5 +36,15 @@ export const metadata: Metadata = {
 };
 
 export default function GestionPautaPage() {
-    return <GestionPautaPageContent />;
+    return (
+        <>
+            <JsonLd data={serviceJsonLd(getLayer(5)!)} />
+            <JsonLd data={breadcrumbJsonLd([
+                { name: "Inicio", url: "/" },
+                { name: "Soluciones", url: "/#soluciones" },
+                { name: "Motor de Performance", url: "/soluciones/gestion-de-pauta" },
+            ])} />
+            <GestionPautaPageContent />
+        </>
+    );
 }

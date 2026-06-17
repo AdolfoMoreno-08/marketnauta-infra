@@ -16,8 +16,10 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
 const footerLinks = {
     soluciones: [
         { name: "Auditoría de Datos", href: "/soluciones/auditoria-de-datos" },
-        { name: "Gestión de Pauta", href: "/soluciones/gestion-de-pauta" },
-        { name: "Desarrollo & Estrategia", href: "/soluciones/desarrollo-y-estrategia" },
+        { name: "Infraestructura de Conversión", href: "/soluciones/desarrollo-y-estrategia" },
+        { name: "Activación & Retención", href: "/soluciones/activacion-y-retencion" },
+        { name: "Inteligencia Predictiva", href: "/soluciones/inteligencia-predictiva" },
+        { name: "Motor de Performance", href: "/soluciones/gestion-de-pauta" },
     ],
     empresa: [
         { name: "Metodología", href: "/#metodologia", id: "metodologia" },

@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import AuditoriaDashboard from "@/components/blocks/AuditoriaDashboard";
 import TrackedCTA from "@/components/blocks/TrackedCTA";
+import RelatedServices from "@/components/blocks/RelatedServices";
 
 export default function AuditoriaPageContent() {
     const fadeInUp = {
@@ -186,6 +187,8 @@ export default function AuditoriaPageContent() {
                     </TrackedCTA>
                 </motion.div>
             </section>
+
+            <RelatedServices step={1} />
         </div>
     );
 }
