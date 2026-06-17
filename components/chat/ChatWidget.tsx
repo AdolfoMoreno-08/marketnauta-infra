@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Compass, Terminal, Loader2, Bot } from "lucide-react";
 import ChatBubble from "./ChatBubble";
+import { pushToDataLayer, newEventId } from "@/lib/gtm";
 
 interface Message {
   role: "user" | "assistant";
@@ -48,6 +49,11 @@ export default function ChatWidget() {
     setInput("");
     setIsLoading(true);
 
+    // Primer mensaje del usuario = inicio real de conversación
+    if (messages.length <= 1) {
+      pushToDataLayer({ event: "chat_message", event_id: newEventId(), chat_first: true });
+    }
+
     try {
       const res = await fetch("/api/agents/chat", {
         method: "POST",
@@ -66,7 +72,10 @@ export default function ChatWidget() {
         { role: "assistant", content: data.text, timestamp: new Date() },
       ]);
 
-      if (data.leadCreated) setLeadCreated(true);
+      if (data.leadCreated) {
+        setLeadCreated(true);
+        pushToDataLayer({ event: "chat_lead", event_id: newEventId(), source: "chat_widget" });
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -221,7 +230,10 @@ export default function ChatWidget() {
 
       {/* FLOATING BUTTON */}
       <motion.button
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => setIsOpen((prev) => {
+          if (!prev) pushToDataLayer({ event: "chat_open", event_id: newEventId() });
+          return !prev;
+        })}
         className="fixed bottom-6 right-6 z-[90] w-14 h-14 rounded-full bg-marketnauta-primary flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.4)] hover:shadow-[0_0_50px_rgba(0,229,255,0.6)] transition-shadow"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}

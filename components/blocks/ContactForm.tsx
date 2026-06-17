@@ -73,8 +73,17 @@ export default function ContactForm() {
         if (!isOpen) return;
         const prev = document.body.style.overflow;
         document.body.style.overflow = "hidden";
+        gtm.pushToDataLayer({ event: "form_start", event_id: gtm.newEventId(), modal_type: modalType ?? "contacto" });
         return () => { document.body.style.overflow = prev; };
-    }, [isOpen]);
+    }, [isOpen, modalType]);
+
+    // form_step: progreso por fase del formulario (omite la fase inicial)
+    const stepReady = useRef(false);
+    useEffect(() => {
+        if (!isOpen) { stepReady.current = false; return; }
+        if (!stepReady.current) { stepReady.current = true; return; }
+        gtm.pushToDataLayer({ event: "form_step", event_id: gtm.newEventId(), form_step: step });
+    }, [step, isOpen]);
 
     // 2. Recuperación de Local Storage (Auto-Guardado)
     useEffect(() => {

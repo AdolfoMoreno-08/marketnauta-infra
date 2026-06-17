@@ -53,6 +53,25 @@ export default function LinkTracker() {
       const a = (e.target as HTMLElement | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
       if (!a) return;
       const href = a.getAttribute("href") || "";
+
+      // Eventos de contacto (WhatsApp / email / teléfono) — detección central por href.
+      const lower = href.toLowerCase();
+      const contactEvent =
+        lower.startsWith("mailto:") ? "email_click" :
+        lower.startsWith("tel:") ? "tel_click" :
+        (lower.includes("wa.me") || lower.includes("whatsapp.com") || lower.includes("api.whatsapp")) ? "whatsapp_click" :
+        null;
+      if (contactEvent) {
+        pushToDataLayer({
+          event: contactEvent,
+          event_id: genId(),
+          channel: contactEvent.replace("_click", ""),
+          link_url: href,
+          from_layer: layerOfPath(pathname),
+        });
+        return;
+      }
+
       const toStep = a.dataset.toLayer ? Number(a.dataset.toLayer) : layerOfHref(href);
       if (toStep == null) return; // solo enlaces internos de la escalera
 

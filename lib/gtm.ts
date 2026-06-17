@@ -8,3 +8,7 @@ export const pushToDataLayer = (data: DataLayerEvent) => {
         (window as any).dataLayer.push(data);
     }
 };
+
+// event_id consistente para deduplicar pixel ↔ CAPI en todos los destinos.
+export const newEventId = () =>
+    `evt_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;

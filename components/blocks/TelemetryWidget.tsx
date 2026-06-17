@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Calculator, TrendingUp, ArrowRight } from "lucide-react";
 import TrackedCTA from "./TrackedCTA";
+import { pushToDataLayer, newEventId } from "@/lib/gtm";
 
 function formatCurrency(n: number): string {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -21,6 +22,24 @@ export default function TelemetryWidget() {
   );
   const lostAnnually = lostMonthly * 12;
   const recoverable = Math.round(lostMonthly * 0.72);
+
+  // calculator_used (zero-party): se dispara tras interacción del usuario,
+  // con debounce, para capturar inversión/fuga estimada sin spamear eventos.
+  const interacted = useRef(false);
+  useEffect(() => {
+    if (!interacted.current) { interacted.current = true; return; }
+    const t = setTimeout(() => {
+      pushToDataLayer({
+        event: "calculator_used",
+        event_id: newEventId(),
+        calc_spend: monthlySpend,
+        calc_loss: lostMonthly,
+        calc_recoverable: recoverable,
+        attr_loss_pct: attrLoss,
+      });
+    }, 1200);
+    return () => clearTimeout(t);
+  }, [monthlySpend, attrLoss, lostMonthly, recoverable]);
 
   return (
     <section className="relative py-24 md:py-32 px-6">
