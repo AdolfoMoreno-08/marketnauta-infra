@@ -109,7 +109,7 @@ export default function ChatWidget() {
             // ↓ Separado del botón flotante con bottom-20, ancho más contenido
             className="fixed bottom-20 right-6 z-[90] w-[340px] max-w-[calc(100vw-32px)]"
           >
-            <div className="flex flex-col h-[480px] max-h-[calc(100vh-96px)] rounded-2xl overflow-hidden border border-white/10 bg-abisal-900/98 shadow-[0_8px_40px_rgba(0,0,0,0.4),0_0_60px_rgba(0,229,255,0.06)] backdrop-blur-2xl">
+            <div className="flex flex-col h-[480px] max-h-[calc(100vh-160px)] rounded-2xl overflow-hidden border border-white/10 bg-abisal-900/98 shadow-[0_8px_40px_rgba(0,0,0,0.4),0_0_60px_rgba(0,229,255,0.06)] backdrop-blur-2xl">
 
               {/* HEADER */}
               <div className="flex-shrink-0 px-4 py-3 border-b border-white/5 flex items-center justify-between bg-abisal-950/60">
