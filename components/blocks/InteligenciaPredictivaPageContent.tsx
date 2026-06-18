@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { motion, useMotionValue, useTransform, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import {
     Sparkles, TrendingDown, Users, Tag, ArrowRight, Brain
 } from "lucide-react";
@@ -12,52 +12,9 @@ import {
 import Link from "next/link";
 import TrackedCTA from "@/components/blocks/TrackedCTA";
 import RelatedServices from "@/components/blocks/RelatedServices";
-import Breadcrumbs from "@/components/blocks/Breadcrumbs";
 
 interface FaqItem { q: string; a: string; }
 interface Props { faqs: FaqItem[]; }
-
-// ─── Mouse-reactive hero grid ───────────────────────────────────────────────
-function HeroGrid() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const mouseX = useMotionValue(0.5);
-    const mouseY = useMotionValue(0.5);
-    const glowX = useTransform(mouseX, [0, 1], ["20%", "80%"]);
-    const glowY = useTransform(mouseY, [0, 1], ["20%", "80%"]);
-
-    useEffect(() => {
-        const el = containerRef.current;
-        if (!el) return;
-        const onMove = (e: MouseEvent) => {
-            const r = el.getBoundingClientRect();
-            mouseX.set((e.clientX - r.left) / r.width);
-            mouseY.set((e.clientY - r.top) / r.height);
-        };
-        el.addEventListener("mousemove", onMove);
-        return () => el.removeEventListener("mousemove", onMove);
-    }, [mouseX, mouseY]);
-
-    return (
-        <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute inset-0 opacity-[0.025]" style={{
-                backgroundImage: `linear-gradient(rgba(0,229,255,0.8) 1px, transparent 1px),
-                                  linear-gradient(90deg, rgba(0,229,255,0.8) 1px, transparent 1px)`,
-                backgroundSize: "48px 48px",
-            }} />
-            <motion.div
-                className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-                style={{
-                    left: glowX, top: glowY,
-                    background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 65%)",
-                }}
-            />
-            <div className="absolute top-[35%] left-[55%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full"
-                style={{ background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 65%)" }} />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full"
-                style={{ background: "radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%)" }} />
-        </div>
-    );
-}
 
 // ─── Prediction dashboard chart ─────────────────────────────────────────────
 const predData = [
@@ -136,8 +93,8 @@ function PredictionDashboard() {
             <div className="px-6 pb-5 grid grid-cols-3 gap-3">
                 {[
                     { v: "RECOMPRA", l: "Señal alta", c: "text-marketnauta-primary" },
-                    { v: "NEUTRO", l: "Señal media", c: "text-slate-400" },
-                    { v: "CHURN", l: "Señal de fuga", c: "text-red-400" },
+                    { v: "NEUTRO",   l: "Señal media", c: "text-slate-400" },
+                    { v: "CHURN",   l: "Señal de fuga", c: "text-red-400" },
                 ].map((m, i) => (
                     <div key={i} className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-center">
                         <p className={`text-sm font-bold font-mono ${m.c}`}>{m.v}</p>
@@ -170,58 +127,77 @@ const cardVariant = {
 // ─── Main component ─────────────────────────────────────────────────────────
 export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
 
-    const heroWords = ["Deja de reaccionar.", "Empieza a", "anticipar."];
+    const heroLines = ["Deja de reaccionar.", "Empieza a anticipar."];
 
     return (
         <div className="min-h-screen bg-abisal-950 overflow-x-hidden relative">
 
+            {/* ── PAGE BACKGROUND ───────────────────────────────────────────── */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+                <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-marketnauta-primary/10 rounded-full blur-[150px]" />
+                <div className="absolute top-[40%] right-[-10%] w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[150px]" />
+                <div className="absolute bottom-[10%] left-[30%] w-[400px] h-[400px] bg-marketnauta-secondary/5 rounded-full blur-[150px]" />
+                <div className="absolute inset-0 opacity-[0.02]" style={{
+                    backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px),
+                                      linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                    backgroundSize: "40px 40px",
+                }} />
+            </div>
+
             {/* ── HERO ──────────────────────────────────────────────────────── */}
-            <div className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden">
-                <HeroGrid />
+            <section className="relative pt-32 pb-24 px-6 z-10">
+                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative">
 
-                <Breadcrumbs items={[
-                    { label: "Inicio", href: "/" },
-                    { label: "Soluciones", href: "/#soluciones" },
-                    { label: "Inteligencia Predictiva" },
-                ]} />
-
-                <div className="relative z-10 max-w-7xl mx-auto px-6 pt-8 pb-24 grid lg:grid-cols-2 gap-16 items-center w-full">
+                    {/* Scan line decorativa */}
+                    <motion.div
+                        animate={{ y: [0, 500, 0], opacity: [0, 0.5, 0] }}
+                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                        className="absolute left-0 top-0 w-full h-[1px] bg-gradient-to-r from-transparent via-marketnauta-primary/50 to-transparent pointer-events-none hidden lg:block"
+                    />
 
                     {/* Left col */}
-                    <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
-
-                        {/* Badge */}
-                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                    <motion.div
+                        initial={{ opacity: 0, x: -40 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                        {/* Badge — alineado al patrón del sitio */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.3 }}
-                            className="mb-8 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-xl shadow-neon-short">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-400" />
-                            </span>
-                            <span className="text-[10px] text-indigo-400 uppercase tracking-[0.3em] font-mono font-bold">
-                                Prediction Engine // ANTICIPAR · Capa 4
-                            </span>
+                            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-marketnauta-primary/5 border border-marketnauta-primary/20 text-marketnauta-primary text-[10px] font-mono uppercase tracking-[0.2em] mb-8"
+                        >
+                            <Brain className="w-3 h-3 text-marketnauta-primary animate-pulse" />
+                            Prediction Engine // ANTICIPAR · Capa 4
                         </motion.div>
 
-                        {/* H1 staggered */}
+                        {/* H1 con stagger — patrón title-gradient + text-white del sitio */}
                         <h1 className="text-5xl md:text-7xl lg:text-[5rem] font-display font-bold leading-[1.05] tracking-tighter mb-8">
-                            {heroWords.map((word, i) => (
+                            {heroLines.map((line, i) => (
                                 <motion.span key={i}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.45 + i * 0.16, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                                    className={`block ${i < 1 ? "title-gradient" : "text-white"}`}>
-                                    {i === 2
-                                        ? <span className="relative">{word}<span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-marketnauta-primary to-transparent opacity-60" /></span>
-                                        : word}
+                                    transition={{ delay: 0.45 + i * 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                                    className="block"
+                                >
+                                    {i === 0
+                                        ? <span className="title-gradient">{line}</span>
+                                        : <span className="text-white relative">
+                                            {line}
+                                            <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-marketnauta-primary to-transparent opacity-50" />
+                                          </span>
+                                    }
                                 </motion.span>
                             ))}
                         </h1>
 
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                            transition={{ delay: 1.05, duration: 0.8 }}
-                            className="text-lg md:text-xl text-slate-400 mb-10 font-light leading-relaxed max-w-xl">
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.95, duration: 0.8 }}
+                            className="text-lg md:text-xl text-slate-400 mb-10 font-light leading-relaxed max-w-xl"
+                        >
                             La capa de mayor margen y la más difícil de copiar: requiere el dato que ya
                             administramos para ti. Sobre tu información en{" "}
                             <span className="text-white font-medium">BigQuery</span> construimos modelos que
@@ -229,54 +205,57 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                             decisiones, no en reportes.
                         </motion.p>
 
-                        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1.2, duration: 0.6 }}
-                            className="flex flex-col sm:flex-row gap-4">
-                            <TrackedCTA href="?modal=auditoria" eventName="hero_predictiva_cta"
-                                className="w-fit group inline-flex items-center gap-3 px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:shadow-neon-long transition-all duration-300 active:scale-95">
+                        <motion.div
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 1.1, duration: 0.6 }}
+                            className="flex flex-col sm:flex-row gap-4"
+                        >
+                            <TrackedCTA
+                                href="?modal=auditoria"
+                                eventName="hero_predictiva_cta"
+                                className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
+                            >
                                 Explorar modelos predictivos
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </TrackedCTA>
-                        </motion.div>
-
-                        {/* KPI bar */}
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-                            className="mt-12 flex items-center gap-8 flex-wrap">
-                            {[
-                                { val: "87.4%", label: "precisión del modelo" },
-                                { val: "2.3×", label: "ticket con recomendadores" },
-                                { val: "<30d", label: "tiempo al primer modelo" },
-                            ].map((m) => (
-                                <div key={m.label} className="text-center">
-                                    <p className="text-2xl md:text-3xl font-display font-black text-white">{m.val}</p>
-                                    <p className="text-xs text-slate-500 font-mono tracking-widest uppercase mt-1">{m.label}</p>
-                                </div>
-                            ))}
                         </motion.div>
                     </motion.div>
 
                     {/* Right col — chart */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, rotateY: -8, rotateX: 4 }}
-                        animate={{ opacity: 1, scale: 1, rotateY: -3, rotateX: 0 }}
-                        transition={{ duration: 1.4, delay: 0.25, ease: "easeOut" }}
-                        className="relative group perspective-1000">
-                        <div className="absolute -inset-4 rounded-[2.5rem] blur-2xl opacity-40 group-hover:opacity-65 transition duration-1000"
-                            style={{ background: "radial-gradient(ellipse, rgba(99,102,241,0.25) 0%, rgba(0,229,255,0.1) 100%)" }} />
+                        initial={{ opacity: 0, scale: 0.95, rotateY: -10, rotateX: 5 }}
+                        animate={{ opacity: 1, scale: 1, rotateY: -5, rotateX: 0 }}
+                        transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+                        className="relative group perspective-1000"
+                    >
+                        <div className="absolute -inset-4 bg-gradient-to-r from-marketnauta-primary/20 to-blue-600/20 rounded-[2.5rem] blur-2xl opacity-40 group-hover:opacity-70 transition duration-1000" />
                         <div className="relative transform transition-transform duration-700">
                             <PredictionDashboard />
                         </div>
                     </motion.div>
                 </div>
+            </section>
 
-                {/* Scroll indicator */}
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-600 z-10">
-                    <span className="text-[10px] font-mono tracking-widest uppercase">Scroll</span>
-                    <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
-                        className="w-px h-8 bg-gradient-to-b from-slate-600 to-transparent" />
-                </motion.div>
-            </div>
+            {/* ── STATS STRIP ───────────────────────────────────────────────── */}
+            <section className="py-12 px-6 relative z-10 border-y border-white/[0.06]">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div {...fadeUp}
+                        className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.06]"
+                    >
+                        {[
+                            { val: "87.4%",    label: "Precisión del modelo de churn" },
+                            { val: "2.3×",     label: "Incremento de ticket con recomendadores IA" },
+                            { val: "<30 días", label: "Tiempo al primer modelo calibrado" },
+                        ].map((s) => (
+                            <div key={s.label} className="py-8 px-10 text-center">
+                                <p className="text-4xl md:text-5xl font-display font-black text-white mb-2">{s.val}</p>
+                                <p className="text-xs text-slate-500 font-mono uppercase tracking-widest">{s.label}</p>
+                            </div>
+                        ))}
+                    </motion.div>
+                </div>
+            </section>
 
             {/* ── PAIN POINTS ───────────────────────────────────────────────── */}
             <section className="py-24 px-6 relative z-10">
@@ -332,8 +311,7 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                         {/* ANTICIPAR_01 — Recomendadores IA (large) */}
                         <motion.div variants={cardVariant} whileHover={{ y: -4, transition: { duration: 0.2 } }}
                             className="md:col-span-8 p-6 md:p-10 rounded-[2rem] glass-card border border-marketnauta-primary/20 bg-abisal-900/60 relative overflow-hidden group flex flex-col md:flex-row items-center gap-10">
-                            <div className="absolute inset-0"
-                                style={{ background: "radial-gradient(ellipse at top right, rgba(99,102,241,0.07), transparent 70%)" }} />
+                            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,229,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                             <div className="flex-1 relative z-10">
                                 <Sparkles className="w-8 h-8 text-marketnauta-primary mb-5" />
                                 <span className="text-[10px] font-mono text-marketnauta-primary uppercase tracking-widest block mb-2">ANTICIPAR_01 // Core</span>
@@ -346,11 +324,11 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                                 </p>
                             </div>
                             <div className="w-full md:w-40 shrink-0 grid gap-3 relative z-10">
-                                <div className="p-4 glass-card rounded-2xl text-center border-marketnauta-primary/20">
+                                <div className="p-4 glass-card rounded-2xl text-center border border-marketnauta-primary/20">
                                     <p className="text-3xl font-bold text-white font-mono">2.3×</p>
                                     <p className="text-[9px] text-marketnauta-primary uppercase tracking-widest font-mono mt-1">Ticket Prom.</p>
                                 </div>
-                                <div className="p-4 glass-card rounded-2xl text-center border-white/5">
+                                <div className="p-4 glass-card rounded-2xl text-center border border-white/5">
                                     <p className="text-2xl font-bold text-white font-mono">AI</p>
                                     <p className="text-[9px] text-slate-500 uppercase tracking-widest font-mono mt-1">Sobre tu dato</p>
                                 </div>
@@ -383,7 +361,8 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                         <motion.div variants={cardVariant} whileHover={{ y: -4, transition: { duration: 0.2 } }}
                             className="md:col-span-7 p-6 md:p-10 rounded-[2rem] glass-card border border-marketnauta-primary/10 bg-abisal-900/60 relative overflow-hidden group">
                             <div className="absolute inset-0 opacity-[0.025]" style={{
-                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px),
+                                                  linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
                                 backgroundSize: "40px 40px",
                             }} />
                             <div className="relative z-10">
@@ -436,10 +415,9 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
 
             {/* ── CTA ───────────────────────────────────────────────────────── */}
             <section className="py-32 px-6 relative z-10 flex justify-center">
-                <motion.div initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }}
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }} className="max-w-4xl text-center relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full pointer-events-none"
-                        style={{ background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 65%)" }} />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-marketnauta-primary/20 blur-[100px] pointer-events-none" />
                     <span className="terminal-badge mb-8 inline-flex relative z-10">
                         <span className="w-1.5 h-1.5 rounded-full bg-marketnauta-primary animate-pulse" />
                         Listo para comenzar
@@ -453,9 +431,10 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                         tu dato en BigQuery en decisiones de negocio con ventaja competitiva real.
                     </p>
                     <TrackedCTA href="?modal=auditoria" eventName="footer_inteligencia_predictiva"
-                        className="relative z-10 inline-flex items-center gap-4 px-10 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-lg hover:shadow-neon-long transition-all duration-300 active:scale-95 shadow-neon-short group">
+                        className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3">
                         <Brain className="w-6 h-6 group-hover:scale-110 transition-transform" />
                         Explorar modelos predictivos
+                        <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                     </TrackedCTA>
                 </motion.div>
             </section>
