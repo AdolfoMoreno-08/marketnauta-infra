@@ -447,8 +447,7 @@ export default function ContactForm() {
                                 )}
 
                                 {step === 3 && (
-                                pt-5 (padding-top)
-                                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+                                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6 pt-5">
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-7">
                                             {[
                                                 { id: "name", label: "Responsable *", type: "text", k: "name", col: "sm:col-span-1", max: 60 },
