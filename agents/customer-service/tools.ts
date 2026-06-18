@@ -10,7 +10,7 @@ export const CUSTOMER_SERVICE_TOOLS: Anthropic.Tool[] = [
       properties: {
         service: {
           type: "string",
-          enum: ["auditoria-datos", "gestion-pauta", "desarrollo-estrategia"],
+          enum: ["auditoria-datos", "gestion-pauta", "desarrollo-estrategia", "activacion-retencion", "inteligencia-predictiva"],
           description: "El servicio sobre el que el usuario pregunta",
         },
       },
@@ -38,7 +38,7 @@ export const CUSTOMER_SERVICE_TOOLS: Anthropic.Tool[] = [
         },
         service_interest: {
           type: "string",
-          enum: ["auditoria-datos", "gestion-pauta", "desarrollo-estrategia", "multiple"],
+          enum: ["auditoria-datos", "gestion-pauta", "desarrollo-estrategia", "activacion-retencion", "inteligencia-predictiva", "multiple"],
           description: "Servicio de mayor interés detectado",
         },
         urgency: {
@@ -182,6 +182,44 @@ function getServiceDetails(service: string) {
       ideal_client: "Empresas que necesitan presencia web enterprise como activo estratégico",
       timeline: "6-12 semanas según complejidad",
     },
+    "activacion-retencion": {
+      name: "Activación & Retención",
+      tagline: "El tráfico ya lo pagaste. Ahora recupéralo.",
+      pain_points: [
+        "El 40% de carritos se abandona sin ningún intento de recuperación",
+        "Email masivo con 10% de apertura, no personalizado por comportamiento",
+        "WhatsApp sin automatización: respuestas manuales lentas que pierden ventas",
+        "Dependencia total de la pauta para generar recompra",
+      ],
+      deliverables: [
+        "WhatsApp Business como CRM: flujos automáticos con intervención humana en momentos críticos",
+        "Secuencias de recuperación de carritos por email + WhatsApp segmentadas por intención",
+        "Email por comportamiento: bienvenida, post-compra, reactivación medidos server-side",
+        "Personalización dinámica de contenido según segmento y origen de tráfico",
+        "Todo construido sobre el dato propio en BigQuery — sin migrar de plataforma",
+      ],
+      ideal_client: "Ecommerce con tráfico pagado activo que quiere subir conversión y LTV sin aumentar pauta",
+      timeline: "4-6 semanas para activar los primeros flujos",
+    },
+    "inteligencia-predictiva": {
+      name: "Inteligencia Predictiva",
+      tagline: "Deja de reaccionar. Empieza a anticipar.",
+      pain_points: [
+        "Detectas el churn cuando el cliente ya se fue — reactivarlo cuesta 5× más",
+        "Audiencias genéricas por demografía, no por patrón real de compra",
+        "Recomendaciones de producto manuales o inexistentes, ticket promedio estancado",
+        "Precios fijos en picos de alta demanda (Black Friday peruano)",
+      ],
+      deliverables: [
+        "Modelo de churn: scoring de probabilidad de fuga con alertas para el equipo",
+        "Modelo de recompra: identifica quién está listo para volver a comprar",
+        "Recomendadores con IA: cross-sell y up-sell automático que sube el ticket 2.3×",
+        "Clustering de clientes por patrón de compra real para campañas hiperdirigidas",
+        "Inteligencia de precios: pricing dinámico según competencia y estacionalidad",
+      ],
+      ideal_client: "Empresas con dato histórico en BigQuery que quieren convertirlo en ventaja competitiva",
+      timeline: "6-10 semanas para calibrar y desplegar el primer modelo",
+    },
   };
   return details[service] ?? { error: "Servicio no encontrado" };
 }
@@ -225,13 +263,16 @@ async function createLeadFromChat(input: Record<string, unknown>) {
 }
 
 function scheduleCallback(input: Record<string, unknown>) {
+  const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL;
   return {
     success: true,
-    message: `Sesión de exploración confirmada para ${input.contact_name}`,
+    message: `Sesión de exploración lista para ${input.contact_name}`,
     contact_method: input.contact_method,
     preferred_time: input.preferred_time ?? "A coordinar por el equipo",
-    next_step:
-      "Un especialista de Marketnauta se pondrá en contacto en las próximas 2-4 horas hábiles.",
+    booking_url: bookingUrl ?? null,
+    next_step: bookingUrl
+      ? `Agenda directamente en: ${bookingUrl}`
+      : "Un especialista de Marketnauta se pondrá en contacto en las próximas 2-4 horas hábiles.",
   };
 }
 

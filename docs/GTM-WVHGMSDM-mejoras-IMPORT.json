@@ -201,6 +201,21 @@
                     "value": "{{DLV - event_id}}"
                   }
                 ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "modal_type"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{DLV - modal_type}}"
+                  }
+                ]
               }
             ]
           },
@@ -760,6 +775,26 @@
                 ]
               }
             ]
+          }
+        ],
+        "fingerprint": "0"
+      },
+      {
+        "accountId": "6352997913",
+        "containerId": "251160356",
+        "variableId": "113",
+        "name": "DLV - modal_type",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "modal_type"
           }
         ],
         "fingerprint": "0"

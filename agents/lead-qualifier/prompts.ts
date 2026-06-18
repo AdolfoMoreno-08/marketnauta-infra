@@ -15,10 +15,12 @@ PRESUPUESTO (40 puntos máximo):
 - "No especificado"         → 15 pts (Intermedio hasta calificar)
 
 DESAFÍO / PUNTO DE DOLOR (30 puntos máximo):
-- "Trazabilidad y Visualización de Datos" → 30 pts (Alta complejidad técnica = mayor ticket)
-- "Escalabilidad en Pauta (Growth)"       → 25 pts (Inversión activa = presupuesto real)
-- "Infraestructura Web y Performance"     → 20 pts (Proyecto acotado = menor LTV)
-- "Múltiples desafíos"                    → 28 pts (Mayor oportunidad de upsell)
+- "Trazabilidad y Visualización de Datos" → 30 pts (MEDIR: base de toda la escalera, mayor complejidad = mayor ticket)
+- "Inteligencia Predictiva (churn/IA)"    → 28 pts (ANTICIPAR: requiere dato maduro = cliente avanzado, LTV alto)
+- "Múltiples desafíos"                    → 29 pts (Mayor oportunidad de upsell por toda la escalera)
+- "Escalabilidad en Pauta (Growth)"       → 25 pts (ESCALAR: inversión activa = presupuesto real)
+- "Activación & Retención (CRM/WhatsApp)" → 22 pts (RETENER: ROI rápido, buen entry-point para subir escalera)
+- "Infraestructura Web y Performance"     → 20 pts (CONVERTIR: proyecto acotado = menor LTV recurrente)
 
 TAMAÑO DE EMPRESA (20 puntos máximo):
 - "Corporativa"    → 20 pts
@@ -53,8 +55,8 @@ DISQUALIFIED (<30): Bajo potencial inmediato
 OUTPUT REQUERIDO
 ═══════════════════════════════════════════
 
-Usa la herramienta score_and_route para producir el output estructurado.
-Usa enrich_lead_data si detectas datos insuficientes para calificar.
+Usa score_and_route para producir el output estructurado.
+Si los datos son ambiguos o el caso es atípico, usa flag_for_review en su lugar.
 Añade siempre una nota estratégica para el equipo de ventas (max 2 oraciones).
 
 REGLAS:
