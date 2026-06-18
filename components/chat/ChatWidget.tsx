@@ -12,6 +12,14 @@ interface Message {
   timestamp: Date;
 }
 
+const stripMarkdown = (text: string) =>
+  text
+    .replace(/\*\*(.+?)\*\*/g, "$1")  // **bold**
+    .replace(/\*(.+?)\*/g, "$1")      // *italic*
+    .replace(/`(.+?)`/g, "$1")        // `code`
+    .replace(/^#{1,6}\s/gm, "")       // # headings
+    .trim();
+
 const GREETING: Message = {
   role: "assistant",
   content: "Hola, soy el Asistente de Navegación de Marketnauta. Estoy aquí para ayudarte a trazar el rumbo correcto en el océano de datos. ¿En qué puedo guiarte hoy?",
@@ -68,7 +76,7 @@ export default function ChatWidget() {
 
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.text, timestamp: new Date() },
+        { role: "assistant", content: stripMarkdown(data.text), timestamp: new Date() },
       ]);
 
       if (data.leadCreated) {
