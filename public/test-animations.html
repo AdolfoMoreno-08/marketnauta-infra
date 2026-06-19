@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Animaciones - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fillGauge {
+            from {
+                stroke-dashoffset: 314px;
+            }
+            to {
+                stroke-dashoffset: 0px;
+            }
+        }
+
+        @keyframes fillGauge91 {
+            from { stroke-dashoffset: 314px; }
+            to { stroke-dashoffset: 29px; }
+        }
+
+        @keyframes fillGauge47 {
+            from { stroke-dashoffset: 314px; }
+            to { stroke-dashoffset: 166px; }
+        }
+
+        @keyframes fillGauge8 {
+            from { stroke-dashoffset: 314px; }
+            to { stroke-dashoffset: 289px; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gauge-circle-1 {
+            animation: fillGauge91 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .gauge-circle-2 {
+            animation: fillGauge47 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .gauge-circle-3 {
+            animation: fillGauge8 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .gauge-number {
+            animation: fadeIn 0.6s ease-out 0.8s both;
+        }
+
+        .metric-card {
+            animation: slideUp 0.4s ease-out both;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 1.2s; }
+        .metric-card:nth-child(2) { animation-delay: 1.3s; }
+        .metric-card:nth-child(3) { animation-delay: 1.4s; }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950">
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <div class="w-full max-w-4xl">
+            <h1 class="text-white text-2xl mb-6 font-bold">Test de Animaciones - Inteligencia Predictiva</h1>
+
+            <!-- Dashboard Card -->
+            <div class="rounded-[2rem] border border-white/10 bg-gradient-to-b from-slate-900/90 to-slate-950/90 overflow-hidden shadow-2xl backdrop-blur-xl">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-white/5">
+                    <div class="flex items-center gap-2">
+                        <div class="flex gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 pulse"></div>
+                        </div>
+                        <span class="ml-2 text-[10px] text-slate-500 font-mono uppercase">ML_Prediction_Engine.v2</span>
+                    </div>
+                    <div class="px-3 py-1.5 rounded bg-emerald-500/10 border border-emerald-500/30">
+                        <span class="text-emerald-400 font-mono text-[10px]">✓ 87.4% accuracy</span>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-8">
+                    <!-- Gauges Row -->
+                    <div class="grid grid-cols-3 gap-12 mb-12">
+                        <!-- Gauge 1: Recompra (91%) -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-[120px] h-[120px] mb-4">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <defs>
+                                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#00E5FF" />
+                                            <stop offset="100%" stopColor="#0077FF" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" />
+                                    <circle class="gauge-circle-1" cx="60" cy="60" r="50" fill="none" stroke="url(#grad1)" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" style="transform: rotate(-90deg); transform-origin: 60px 60px;" />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-cyan-400 font-mono gauge-number">91%</span>
+                                </div>
+                            </div>
+                            <p class="text-[9px] font-mono text-slate-500 uppercase">Recompra</p>
+                        </div>
+
+                        <!-- Gauge 2: Neutro (63%) -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-[120px] h-[120px] mb-4">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <defs>
+                                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#00E5FF" />
+                                            <stop offset="100%" stopColor="#0077FF" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" />
+                                    <circle class="gauge-circle-2" cx="60" cy="60" r="50" fill="none" stroke="url(#grad2)" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" style="transform: rotate(-90deg); transform-origin: 60px 60px;" />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-cyan-400 font-mono gauge-number">63%</span>
+                                </div>
+                            </div>
+                            <p class="text-[9px] font-mono text-slate-500 uppercase">Neutro</p>
+                        </div>
+
+                        <!-- Gauge 3: Churn (8%) -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-[120px] h-[120px] mb-4">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <defs>
+                                        <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#00E5FF" />
+                                            <stop offset="100%" stopColor="#0077FF" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" />
+                                    <circle class="gauge-circle-3" cx="60" cy="60" r="50" fill="none" stroke="url(#grad3)" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" style="transform: rotate(-90deg); transform-origin: 60px 60px;" />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-cyan-400 font-mono gauge-number">8%</span>
+                                </div>
+                            </div>
+                            <p class="text-[9px] font-mono text-slate-500 uppercase">Churn</p>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="metric-card p-4 rounded-xl bg-cyan-400/5 border border-cyan-400/20 text-center">
+                            <p class="text-lg font-bold font-mono text-cyan-400">91%</p>
+                            <p class="text-[8px] font-mono text-slate-600 uppercase mt-1">Recompra</p>
+                        </div>
+                        <div class="metric-card p-4 rounded-xl bg-cyan-400/5 border border-cyan-400/20 text-center">
+                            <p class="text-lg font-bold font-mono text-cyan-400">63%</p>
+                            <p class="text-[8px] font-mono text-slate-600 uppercase mt-1">Neutro</p>
+                        </div>
+                        <div class="metric-card p-4 rounded-xl bg-cyan-400/5 border border-cyan-400/20 text-center">
+                            <p class="text-lg font-bold font-mono text-cyan-400">8%</p>
+                            <p class="text-[8px] font-mono text-slate-600 uppercase mt-1">Churn</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="mt-8 p-4 rounded-lg bg-slate-900/50 border border-slate-700">
+                <p class="text-slate-300 text-sm">
+                    <strong>✓ Animación ejecutada:</strong> Los gauges deben llenarse en 2 segundos, los números aparecen con delay 0.8s, y las cards suben con delay staggered.
+                </p>
+                <p class="text-slate-400 text-xs mt-2">
+                    Si ves esta página con animaciones suave, significa que la versión en producción también funciona correctamente.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
