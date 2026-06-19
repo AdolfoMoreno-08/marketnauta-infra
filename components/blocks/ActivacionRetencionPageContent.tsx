@@ -213,11 +213,9 @@ function RetentionFunnelChart() {
     </motion.p>
     
     <div className="h-[200px] w-full rounded-lg bg-white/[0.01] border border-white/5 p-4">
-        {/* 1. Condicionamos el renderizado para que no se monte vacío ni con escalas erróneas */}
+        {/* Condicionamos el renderizado y usamos width 99% (Hack de Recharts) */}
         {inView && (
-            {/* 2. Cambiamos width a "99%" (Hack oficial de Recharts para evitar colapsos) */}
             <ResponsiveContainer width="99%" height="100%">
-                {/* 3. Pasamos funnelData directamente */}
                 <ComposedChart data={funnelData} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
                     <defs>
                         <linearGradient id="recoveredGrad" x1="0" y1="0" x2="0" y2="1">
