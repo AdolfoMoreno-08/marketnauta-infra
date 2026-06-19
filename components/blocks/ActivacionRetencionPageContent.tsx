@@ -162,7 +162,7 @@ function RetentionFunnelChart() {
     if (!mounted) return <div className="min-h-[480px]" />;
 
     return (
-        <div className="glass-card rounded-[2rem] border border-white/10 bg-abisal-900/90 overflow-hidden shadow-2xl">
+        <div ref={ref} className="glass-card rounded-[2rem] border border-white/10 bg-abisal-900/90 overflow-hidden shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
                 <div className="flex items-center gap-2">
