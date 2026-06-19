@@ -26,81 +26,159 @@ const predData = [
     { semana: "W6", recompra: 91, neutro: 63, churn: 8 },
 ];
 
+// Animated gauge component
+function AnimatedGauge({ value, label }: { value: number; label: string }) {
+    return (
+        <motion.div className="flex flex-col items-center relative">
+            <svg width="120" height="120" viewBox="0 0 120 120" className="relative">
+                <defs>
+                    <linearGradient id={`gauge-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#00E5FF" />
+                        <stop offset="100%" stopColor="#0077FF" />
+                    </linearGradient>
+                </defs>
+                {/* Background circle */}
+                <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                {/* Progress circle */}
+                <motion.circle
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    fill="none"
+                    stroke={`url(#gauge-${label})`}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    initial={{ strokeDasharray: "0 314" }}
+                    animate={{ strokeDasharray: `${(value / 100) * 314} 314` }}
+                    transition={{ duration: 2, ease: [0.34, 1.56, 0.64, 1] }}
+                    style={{ transformOrigin: "60px 60px", transform: "rotate(-90deg)" }}
+                />
+            </svg>
+            <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+                className="absolute inset-0 flex items-center justify-center"
+            >
+                <span className="text-2xl font-bold text-marketnauta-primary font-mono">{value}%</span>
+            </motion.div>
+            <p className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-3">{label}</p>
+        </motion.div>
+    );
+}
+
 function PredictionDashboard() {
     const [mounted, setMounted] = useState(false);
     const ref = useRef(null);
     const inView = useInView(ref, { once: true, margin: "-80px" });
 
     useEffect(() => { setMounted(true); }, []);
-    if (!mounted) return <div className="min-h-[340px]" />;
+    if (!mounted) return <div className="min-h-[480px]" />;
 
     return (
         <div className="glass-card rounded-[2rem] border border-white/10 bg-abisal-900/90 overflow-hidden shadow-2xl">
+            {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
                 <div className="flex items-center gap-2">
                     <div className="flex gap-1.5">
                         <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
                         <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-marketnauta-primary animate-pulse" />
+                        <motion.div
+                            className="w-2.5 h-2.5 rounded-full bg-marketnauta-primary"
+                            animate={{ opacity: [1, 0.4, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        />
                     </div>
                     <span className="ml-2 text-[10px] text-slate-500 font-mono uppercase tracking-widest">
-                        Churn_Prediction_Model.py
+                        ML_Prediction_Engine.v2
                     </span>
                 </div>
-                <div className="px-2 py-1 rounded bg-marketnauta-primary/5 border border-marketnauta-primary/20">
-                    <span className="text-marketnauta-primary font-mono text-[10px] font-bold">87.4% accuracy</span>
-                </div>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    className="px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/30"
+                >
+                    <span className="text-emerald-400 font-mono text-[10px] font-bold">✓ 87.4% accuracy</span>
+                </motion.div>
             </div>
 
-            <div className="p-6 pb-2" ref={ref}>
-                <div className="h-[220px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={inView ? predData : []} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
-                            <defs>
-                                <linearGradient id="recompraGrad" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#00E5FF" stopOpacity={0.25} />
-                                    <stop offset="95%" stopColor="#00E5FF" stopOpacity={0} />
-                                </linearGradient>
-                                <linearGradient id="neutroGrad" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.15} />
-                                    <stop offset="95%" stopColor="#94a3b8" stopOpacity={0} />
-                                </linearGradient>
-                                <linearGradient id="churnGrad" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#f87171" stopOpacity={0.2} />
-                                    <stop offset="95%" stopColor="#f87171" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.03)" vertical={false} />
-                            <XAxis dataKey="semana" axisLine={false} tickLine={false}
-                                tick={{ fill: "#475569", fontSize: 9, fontFamily: "monospace" }} dy={6} />
-                            <YAxis hide domain={[0, 100]} />
-                            <Tooltip
-                                cursor={{ stroke: "rgba(0,229,255,0.3)", strokeWidth: 1 }}
-                                contentStyle={{ backgroundColor: "#030712", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "10px", color: "#fff" }}
-                                itemStyle={{ color: "#00E5FF" }}
-                            />
-                            <Area type="monotone" dataKey="churn" fill="url(#churnGrad)"
-                                stroke="#f87171" strokeWidth={1.5} animationDuration={1800} />
-                            <Area type="monotone" dataKey="neutro" fill="url(#neutroGrad)"
-                                stroke="#94a3b8" strokeWidth={1.5} animationDuration={1600} />
-                            <Area type="monotone" dataKey="recompra" fill="url(#recompraGrad)"
-                                stroke="#00E5FF" strokeWidth={2} animationDuration={1400} />
-                        </AreaChart>
-                    </ResponsiveContainer>
+            {/* Main content */}
+            <div className="p-8">
+                {/* Top gauges row */}
+                <div className="grid grid-cols-3 gap-8 mb-12">
+                    {inView && (
+                        <>
+                            <AnimatedGauge value={91} label="Recompra" />
+                            <AnimatedGauge value={63} label="Neutro" />
+                            <AnimatedGauge value={8} label="Churn" />
+                        </>
+                    )}
                 </div>
-            </div>
 
-            <div className="px-6 pb-5 grid grid-cols-3 gap-3">
-                {[
-                    { v: "RECOMPRA", l: "Señal alta", c: "text-marketnauta-primary" },
-                    { v: "NEUTRO",   l: "Señal media", c: "text-slate-400" },
-                    { v: "CHURN",   l: "Señal de fuga", c: "text-red-400" },
-                ].map((m, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-center">
-                        <p className={`text-sm font-bold font-mono ${m.c}`}>{m.v}</p>
-                        <p className="text-[9px] font-mono text-slate-600 uppercase tracking-widest mt-0.5">{m.l}</p>
+                {/* Chart section */}
+                <div className="mb-6">
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={inView ? { opacity: 1 } : {}}
+                        transition={{ delay: 0.5 }}
+                        className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-4"
+                    >
+                        Evolución temporal — últimas 6 semanas
+                    </motion.p>
+                    <div className="h-[200px] w-full rounded-lg bg-white/[0.01] border border-white/5 p-4">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={inView ? predData : []} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
+                                <defs>
+                                    <linearGradient id="recompraGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#00E5FF" stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor="#00E5FF" stopOpacity={0} />
+                                    </linearGradient>
+                                    <linearGradient id="neutroGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.2} />
+                                        <stop offset="95%" stopColor="#94a3b8" stopOpacity={0} />
+                                    </linearGradient>
+                                    <linearGradient id="churnGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#f87171" stopOpacity={0.25} />
+                                        <stop offset="95%" stopColor="#f87171" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                                <XAxis dataKey="semana" axisLine={false} tickLine={false}
+                                    tick={{ fill: "#475569", fontSize: 8, fontFamily: "monospace" }} dy={4} />
+                                <YAxis hide domain={[0, 100]} />
+                                <Tooltip
+                                    cursor={{ stroke: "rgba(0,229,255,0.3)", strokeWidth: 1 }}
+                                    contentStyle={{ backgroundColor: "#030712", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "9px", color: "#fff" }}
+                                />
+                                <Area type="monotone" dataKey="churn" fill="url(#churnGrad)"
+                                    stroke="#f87171" strokeWidth={2} animationDuration={2000} />
+                                <Area type="monotone" dataKey="neutro" fill="url(#neutroGrad)"
+                                    stroke="#94a3b8" strokeWidth={2} animationDuration={1800} />
+                                <Area type="monotone" dataKey="recompra" fill="url(#recompraGrad)"
+                                    stroke="#00E5FF" strokeWidth={2.5} animationDuration={1600} />
+                            </AreaChart>
+                        </ResponsiveContainer>
                     </div>
-                ))}
+                </div>
+
+                {/* Metrics grid */}
+                <div className="grid grid-cols-3 gap-3">
+                    {[
+                        { v: "RECOMPRA", l: "Señal alta", c: "text-marketnauta-primary", bg: "bg-marketnauta-primary/5 border-marketnauta-primary/20" },
+                        { v: "NEUTRO",   l: "Señal media", c: "text-slate-400", bg: "bg-slate-400/5 border-slate-400/20" },
+                        { v: "CHURN",   l: "Señal de fuga", c: "text-red-400", bg: "bg-red-400/5 border-red-400/20" },
+                    ].map((m, i) => (
+                        <motion.div key={i}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={inView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ delay: 1.2 + i * 0.1, duration: 0.4 }}
+                            className={`p-4 rounded-xl ${m.bg} border text-center hover:scale-105 transition-transform`}
+                        >
+                            <p className={`text-sm font-bold font-mono ${m.c}`}>{m.v}</p>
+                            <p className="text-[8px] font-mono text-slate-600 uppercase tracking-widest mt-1">{m.l}</p>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </div>
     );
