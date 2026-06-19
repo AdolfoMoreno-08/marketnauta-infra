@@ -28,40 +28,67 @@ const predData = [
 
 // Animated gauge component
 function AnimatedGauge({ value, label }: { value: number; label: string }) {
+    const svgRef = useRef<SVGCircleElement>(null);
+    const circumference = 314;
+
+    useEffect(() => {
+        const circle = svgRef.current;
+        if (!circle) return;
+
+        // Reset and trigger animation
+        circle.style.strokeDasharray = `${circumference}`;
+        circle.style.strokeDashoffset = `${circumference}`;
+
+        setTimeout(() => {
+            circle.style.transition = "stroke-dashoffset 2s cubic-bezier(0.34, 1.56, 0.64, 1)";
+            circle.style.strokeDashoffset = `${circumference - (value / 100) * circumference}`;
+        }, 100);
+    }, [value, circumference]);
+
     return (
-        <motion.div className="flex flex-col items-center relative">
-            <svg width="120" height="120" viewBox="0 0 120 120" className="relative">
-                <defs>
-                    <linearGradient id={`gauge-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#00E5FF" />
-                        <stop offset="100%" stopColor="#0077FF" />
-                    </linearGradient>
-                </defs>
-                {/* Background circle */}
-                <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                {/* Progress circle */}
-                <motion.circle
-                    cx="60"
-                    cy="60"
-                    r="50"
-                    fill="none"
-                    stroke={`url(#gauge-${label})`}
-                    strokeWidth="8"
-                    strokeLinecap="round"
-                    initial={{ strokeDasharray: "0 314" }}
-                    animate={{ strokeDasharray: `${(value / 100) * 314} 314` }}
-                    transition={{ duration: 2, ease: [0.34, 1.56, 0.64, 1] }}
-                    style={{ transformOrigin: "60px 60px", transform: "rotate(-90deg)" }}
-                />
-            </svg>
-            <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="absolute inset-0 flex items-center justify-center"
-            >
-                <span className="text-2xl font-bold text-marketnauta-primary font-mono">{value}%</span>
-            </motion.div>
+        <motion.div
+            className="flex flex-col items-center relative"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+        >
+            <div className="relative w-[120px] h-[120px] mb-4">
+                <svg width="120" height="120" viewBox="0 0 120 120" className="relative">
+                    <defs>
+                        <linearGradient id={`gauge-${label}-grad`} x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#00E5FF" />
+                            <stop offset="100%" stopColor="#0077FF" />
+                        </linearGradient>
+                    </defs>
+                    {/* Background circle */}
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                    {/* Progress circle */}
+                    <circle
+                        ref={svgRef}
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        fill="none"
+                        stroke={`url(#gauge-${label}-grad)`}
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        style={{
+                            transformOrigin: "60px 60px",
+                            transform: "rotate(-90deg)",
+                        }}
+                    />
+                </svg>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.8, duration: 0.6 }}
+                    className="absolute inset-0 flex items-center justify-center"
+                >
+                    <span className="text-2xl font-bold text-marketnauta-primary font-mono">{value}%</span>
+                </motion.div>
+            </div>
             <p className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-3">{label}</p>
         </motion.div>
     );
