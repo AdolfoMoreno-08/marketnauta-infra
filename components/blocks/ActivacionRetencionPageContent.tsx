@@ -202,46 +202,52 @@ function RetentionFunnelChart() {
                 </div>
 
                 {/* Chart Section */}
-                <div className="mb-6">
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={inView ? { opacity: 1 } : {}}
-                        transition={{ delay: 0.5 }}
-                        className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-4"
-                    >
-                        Tendencia de recuperación — últimos 6 meses
-                    </motion.p>
-                    <div className="h-[200px] w-full rounded-lg bg-white/[0.01] border border-white/5 p-4">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart data={inView ? funnelData : []} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
-                                <defs>
-                                    <linearGradient id="recoveredGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#A78BFA" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#A78BFA" stopOpacity={0} />
-                                    </linearGradient>
-                                    <linearGradient id="abandonedGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#FF6B6B" stopOpacity={0.15} />
-                                        <stop offset="95%" stopColor="#FF6B6B" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.03)" vertical={false} />
-                                <XAxis dataKey="mes" axisLine={false} tickLine={false}
-                                    tick={{ fill: "#475569", fontSize: 8, fontFamily: "monospace" }} dy={4} />
-                                <YAxis hide />
-                                <Tooltip
-                                    cursor={{ stroke: "rgba(0,229,255,0.3)", strokeWidth: 1 }}
-                                    contentStyle={{ backgroundColor: "#030712", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "9px", color: "#fff" }}
-                                />
-                                <Bar dataKey="abandonados" barSize={14} fill="rgba(255,107,107,0.1)"
-                                    radius={[2, 2, 0, 0]} animationDuration={1600} />
-                                <Area type="monotone" dataKey="recuperados" fill="url(#recoveredGrad)"
-                                    stroke="#A78BFA" strokeWidth={2.5} animationDuration={1800} />
-                                <Line type="monotone" dataKey="apertura" stroke="#00E5FF"
-                                    strokeWidth={2} strokeDasharray="4 3" dot={false} animationDuration={2000} />
-                            </ComposedChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+<div className="mb-6">
+    <motion.p
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ delay: 0.5 }}
+        className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-4"
+    >
+        Tendencia de recuperación — últimos 6 meses
+    </motion.p>
+    
+    <div className="h-[200px] w-full rounded-lg bg-white/[0.01] border border-white/5 p-4">
+        {/* 1. Condicionamos el renderizado para que no se monte vacío ni con escalas erróneas */}
+        {inView && (
+            {/* 2. Cambiamos width a "99%" (Hack oficial de Recharts para evitar colapsos) */}
+            <ResponsiveContainer width="99%" height="100%">
+                {/* 3. Pasamos funnelData directamente */}
+                <ComposedChart data={funnelData} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
+                    <defs>
+                        <linearGradient id="recoveredGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#A78BFA" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#A78BFA" stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="abandonedGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#FF6B6B" stopOpacity={0.15} />
+                            <stop offset="95%" stopColor="#FF6B6B" stopOpacity={0} />
+                        </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                    <XAxis dataKey="mes" axisLine={false} tickLine={false}
+                        tick={{ fill: "#475569", fontSize: 8, fontFamily: "monospace" }} dy={4} />
+                    <YAxis hide />
+                    <Tooltip
+                        cursor={{ stroke: "rgba(0,229,255,0.3)", strokeWidth: 1 }}
+                        contentStyle={{ backgroundColor: "#030712", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "9px", color: "#fff" }}
+                    />
+                    <Bar dataKey="abandonados" barSize={14} fill="rgba(255,107,107,0.1)"
+                        radius={[2, 2, 0, 0]} animationDuration={1600} />
+                    <Area type="monotone" dataKey="recuperados" fill="url(#recoveredGrad)"
+                        stroke="#A78BFA" strokeWidth={2.5} animationDuration={1800} />
+                    <Line type="monotone" dataKey="apertura" stroke="#00E5FF"
+                        strokeWidth={2} strokeDasharray="4 3" dot={false} animationDuration={2000} />
+                </ComposedChart>
+            </ResponsiveContainer>
+        )}
+    </div>
+</div>
 
                 {/* Metrics Grid */}
                 <div className="grid grid-cols-3 gap-3">
