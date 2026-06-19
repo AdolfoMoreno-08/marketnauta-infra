@@ -106,6 +106,184 @@ function PredictionDashboard() {
     );
 }
 
+// ─── CARD WIDGETS — animados según propuesta de valor ───────────────────────
+
+// ANTICIPAR_01 — Ticket growth: 1x → 2.3x
+function TicketGrowthWidget() {
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true, margin: "-60px" });
+
+    return (
+        <div ref={ref} className="w-full md:w-48 shrink-0 relative z-10">
+            <div className="text-center mb-4">
+                <motion.p
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ duration: 0.6 }}
+                    className="text-4xl font-bold text-white font-mono mb-2"
+                >
+                    2.3<span className="text-marketnauta-primary">×</span>
+                </motion.p>
+                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Crecimiento de Ticket</p>
+            </div>
+            <div className="space-y-2">
+                {[
+                    { label: "Antes", val: 100, color: "bg-slate-600/30", delay: 0.3 },
+                    { label: "Con IA", val: 230, color: "bg-marketnauta-primary", delay: 0.8 },
+                ].map((item, i) => (
+                    <div key={i}>
+                        <div className="flex justify-between mb-1">
+                            <span className="text-[9px] font-mono text-slate-600">{item.label}</span>
+                            <span className="text-[9px] font-mono font-bold text-white">${item.val}</span>
+                        </div>
+                        <div className="h-2 bg-white/[0.04] rounded-full overflow-hidden">
+                            <motion.div
+                                className={`h-full ${item.color} rounded-full`}
+                                initial={{ width: "0%" }}
+                                animate={inView ? { width: `${(item.val / 230) * 100}%` } : { width: "0%" }}
+                                transition={{ delay: item.delay, duration: 1.2, ease: [0.34, 1.56, 0.64, 1] }}
+                            />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+// ANTICIPAR_02 — Churn scoring: 3 clientes con scores diferentes
+function ChurnScoreWidget() {
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true, margin: "-60px" });
+
+    const scores = [
+        { name: "Cliente A", score: 92, status: "Riesgo Alto", color: "text-red-400" },
+        { name: "Cliente B", score: 45, status: "Neutro", color: "text-slate-400" },
+        { name: "Cliente C", score: 12, status: "Riesgo Bajo", color: "text-emerald-400" },
+    ];
+
+    return (
+        <div ref={ref} className="space-y-2.5">
+            {scores.map((s, i) => (
+                <motion.div key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: i * 0.3, duration: 0.4 }}
+                    className="flex items-center justify-between text-[9px] p-2 rounded-lg bg-white/[0.03] border border-white/[0.06]"
+                >
+                    <span className="text-slate-300 font-mono">{s.name}</span>
+                    <div className="flex items-center gap-1.5">
+                        <motion.span
+                            initial={{ opacity: 0 }}
+                            animate={inView ? { opacity: 1 } : {}}
+                            transition={{ delay: i * 0.3 + 0.3, duration: 0.4 }}
+                            className={`font-bold font-mono ${s.color}`}
+                        >
+                            {s.score}%
+                        </motion.span>
+                        <span className="text-[8px] text-slate-600">{s.status}</span>
+                    </div>
+                </motion.div>
+            ))}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 1.2 }}
+                className="mt-3 pt-3 border-t border-white/[0.06] flex items-center gap-2"
+            >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[9px] font-mono text-emerald-400">87.4% precisión</span>
+            </motion.div>
+        </div>
+    );
+}
+
+// ANTICIPAR_03 — Clustering: puntos que se agrupan
+function ClusteringWidget() {
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true, margin: "-60px" });
+
+    const clusters = [
+        { label: "Compradores frecuentes", count: 2400, color: "bg-marketnauta-primary" },
+        { label: "Exploradores", count: 1800, color: "bg-emerald-400" },
+        { label: "Inactivos", count: 920, color: "bg-slate-500" },
+    ];
+
+    return (
+        <div ref={ref} className="mt-4 space-y-3">
+            {clusters.map((c, i) => (
+                <motion.div key={i}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: i * 0.25, duration: 0.5 }}
+                    className="flex items-center gap-3"
+                >
+                    <div className={`w-3 h-3 rounded-full ${c.color}`} />
+                    <div className="flex-1 min-w-0">
+                        <p className="text-[9px] text-slate-300 truncate">{c.label}</p>
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={inView ? { opacity: 1 } : {}}
+                            transition={{ delay: i * 0.25 + 0.2, duration: 0.4 }}
+                            className="text-[10px] font-bold text-white"
+                        >
+                            {c.count.toLocaleString()} clientes
+                        </motion.p>
+                    </div>
+                </motion.div>
+            ))}
+        </div>
+    );
+}
+
+// ANTICIPAR_04 — Pricing: variación de precios en tiempo real
+function PricingWidget() {
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true, margin: "-60px" });
+
+    const prices = [
+        { product: "Smartphone X", base: 599, dynamic: 699, demand: "Alta" },
+        { product: "Audífonos Y", base: 79, dynamic: 79, demand: "Normal" },
+        { product: "Funda Z", base: 19, dynamic: 15, demand: "Baja" },
+    ];
+
+    return (
+        <div ref={ref} className="w-full md:w-56 shrink-0 space-y-2.5">
+            {prices.map((p, i) => (
+                <motion.div key={i}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: i * 0.2, duration: 0.5 }}
+                    className="px-3 py-2 rounded-lg bg-white/[0.03] border border-white/[0.06]"
+                >
+                    <p className="text-[8px] text-slate-500 uppercase tracking-widest font-mono mb-1">{p.product}</p>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-[9px] text-slate-400">
+                                <span className="line-through">${p.base}</span>
+                                <span className="text-marketnauta-primary font-bold ml-1">${p.dynamic}</span>
+                            </p>
+                        </div>
+                        <motion.span
+                            animate={inView ? { scale: [1, 1.2, 1] } : {}}
+                            transition={{ delay: i * 0.2 + 0.4, duration: 0.8 }}
+                            className={`text-[8px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                                p.demand === "Alta"
+                                    ? "bg-red-500/20 text-red-400"
+                                    : p.demand === "Normal"
+                                        ? "bg-slate-500/20 text-slate-400"
+                                        : "bg-emerald-500/20 text-emerald-400"
+                            }`}
+                        >
+                            {p.demand}
+                        </motion.span>
+                    </div>
+                </motion.div>
+            ))}
+        </div>
+    );
+}
+
 // ─── Framer variants ────────────────────────────────────────────────────────
 const fadeUp = {
     initial: { opacity: 0, y: 30 },
@@ -310,7 +488,7 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
 
                         {/* ANTICIPAR_01 — Recomendadores IA (large) */}
                         <motion.div variants={cardVariant} whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                            className="md:col-span-8 p-6 md:p-10 rounded-[2rem] glass-card border border-marketnauta-primary/20 bg-abisal-900/60 relative overflow-hidden group flex flex-col md:flex-row items-center gap-10">
+                            className="md:col-span-8 p-6 md:p-10 rounded-[2rem] glass-card border border-marketnauta-primary/20 bg-abisal-900/60 relative overflow-hidden group flex flex-col md:flex-row items-start md:items-center gap-8">
                             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,229,255,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                             <div className="flex-1 relative z-10">
                                 <Sparkles className="w-8 h-8 text-marketnauta-primary mb-5" />
@@ -323,16 +501,7 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                                         className="text-marketnauta-primary underline-offset-4 hover:underline">la capa de Activación</Link>.
                                 </p>
                             </div>
-                            <div className="w-full md:w-40 shrink-0 grid gap-3 relative z-10">
-                                <div className="p-4 glass-card rounded-2xl text-center border border-marketnauta-primary/20">
-                                    <p className="text-3xl font-bold text-white font-mono">2.3×</p>
-                                    <p className="text-[9px] text-marketnauta-primary uppercase tracking-widest font-mono mt-1">Ticket Prom.</p>
-                                </div>
-                                <div className="p-4 glass-card rounded-2xl text-center border border-white/5">
-                                    <p className="text-2xl font-bold text-white font-mono">AI</p>
-                                    <p className="text-[9px] text-slate-500 uppercase tracking-widest font-mono mt-1">Sobre tu dato</p>
-                                </div>
-                            </div>
+                            <TicketGrowthWidget />
                         </motion.div>
 
                         {/* ANTICIPAR_02 — Churn & Recompra */}
@@ -340,12 +509,11 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                             className="md:col-span-4 p-6 md:p-10 rounded-[2rem] glass-card border border-white/5 bg-gradient-to-b from-white/[0.03] to-transparent group">
                             <TrendingDown className="w-8 h-8 text-white/40 group-hover:text-marketnauta-primary transition-colors duration-300 mb-5" />
                             <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block mb-2">ANTICIPAR_02</span>
-                            <h3 className="text-xl font-bold mb-4 text-white">Churn & Recompra</h3>
-                            <p className="text-slate-400 text-sm leading-relaxed">Scoring de probabilidad de fuga y recompra. Priorizamos la retención donde más vale: el equipo actúa antes de perder al cliente.</p>
-                            <div className="mt-6 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                                <span className="text-[10px] font-mono text-emerald-400">87.4% precisión</span>
-                            </div>
+                            <h3 className="text-xl font-bold mb-3 text-white">Churn & Recompra</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed mb-5">
+                                Scoring de probabilidad de fuga y recompra. Priorizamos la retención donde más vale: el equipo actúa antes de perder al cliente.
+                            </p>
+                            <ChurnScoreWidget />
                         </motion.div>
 
                         {/* ANTICIPAR_03 — Clustering */}
@@ -353,19 +521,22 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                             className="md:col-span-5 p-6 md:p-10 rounded-[2rem] glass-card border border-white/5 bg-white/[0.01] group">
                             <Users className="w-8 h-8 text-white/40 group-hover:text-marketnauta-primary transition-colors duration-300 mb-5" />
                             <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block mb-2">ANTICIPAR_03</span>
-                            <h3 className="text-xl font-bold mb-4 text-white">Segmentación por Clustering</h3>
-                            <p className="text-slate-400 text-sm leading-relaxed">Audiencias reales agrupadas por patrón de compra, no por demografía genérica. Insumo directo para campañas y CRM hiperdirigidos que convierten más con menos presupuesto.</p>
+                            <h3 className="text-xl font-bold mb-3 text-white">Segmentación por Clustering</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed mb-5">
+                                Audiencias reales agrupadas por patrón de compra, no por demografía genérica. Insumo directo para campañas y CRM hiperdirigidos que convierten más con menos presupuesto.
+                            </p>
+                            <ClusteringWidget />
                         </motion.div>
 
                         {/* ANTICIPAR_04 — Price intelligence */}
                         <motion.div variants={cardVariant} whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                            className="md:col-span-7 p-6 md:p-10 rounded-[2rem] glass-card border border-marketnauta-primary/10 bg-abisal-900/60 relative overflow-hidden group">
+                            className="md:col-span-7 p-6 md:p-10 rounded-[2rem] glass-card border border-marketnauta-primary/10 bg-abisal-900/60 relative overflow-hidden group flex flex-col md:flex-row gap-8 items-start md:items-center">
                             <div className="absolute inset-0 opacity-[0.025]" style={{
                                 backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px),
                                                   linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
                                 backgroundSize: "40px 40px",
                             }} />
-                            <div className="relative z-10">
+                            <div className="relative z-10 flex-1">
                                 <Tag className="w-8 h-8 text-marketnauta-primary mb-5" />
                                 <span className="text-[10px] font-mono text-marketnauta-primary uppercase tracking-widest block mb-2">ANTICIPAR_04 // Pricing</span>
                                 <h3 className="text-3xl font-display font-bold mb-4 text-white">Inteligencia Competitiva y de Precios</h3>
@@ -381,6 +552,7 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                                     ))}
                                 </div>
                             </div>
+                            <PricingWidget />
                         </motion.div>
                     </motion.div>
                 </div>
