@@ -142,11 +142,18 @@ export default function ContactForm() {
     const handleCloseIntent = useCallback(() => {
         const hasInteracted = !!(formData.challenge || formData.volume || formData.budget || formData.name || formData.email || formData.phone);
         if (hasInteracted && (status === "idle" || status === "error")) {
+            gtm.pushToDataLayer({
+                event: "form_abandon",
+                event_id: gtm.newEventId(),
+                form_step: step,
+                modal_type: modalType ?? "contacto",
+                form_interaction_level: formData.name ? "advanced" : "initial"
+            });
             setShowConfirm(true);
         } else {
             closeForm();
         }
-    }, [formData, status, closeForm]);
+    }, [formData, status, closeForm, step, modalType]);
 
     // 4. Protección contra abandono (BeforeUnload & PopState)
     useEffect(() => {
@@ -323,6 +330,13 @@ export default function ContactForm() {
                         lead_challenge: payload.challenge, lead_budget: payload.budget, status: 'success'
                     });
                 }
+                gtm.pushToDataLayer({
+                    event: 'form_submit',
+                    event_id: eventId,
+                    form_step: 3,
+                    calc_spend: payload.budget,
+                    modal_type: modalType ?? "contacto"
+                });
                 gtm.pushToDataLayer({
                     event: 'lead_conversion', event_id: eventId, lead_type: payload.challenge,
                     lead_budget_range: payload.budget, lead_company_size: payload.volume, lead_location: 'Web_Terminal_v1'

@@ -358,9 +358,11 @@ export default function ActivacionRetencionPageContent({ faqs }: Props) {
             <div className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden">
                 <HeroGrid />
 
-                <Breadcrumbs items={[
-                    { label: "Inicio", href: "/" },
-                    { label: "Soluciones", href: "/#soluciones" },
+                <Breadcrumbs
+                    fromLayer={3}
+                    items={[
+                    { label: "Inicio", href: "/", toLayer: 1 },
+                    { label: "Soluciones", href: "/#soluciones", toLayer: 1 },
                     { label: "Activación & Retención" },
                 ]} />
 

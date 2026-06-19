@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit -m ' *)",
+      "Bash(openssl rand *)",
+      "Bash(node -e ' *)",
+      "Bash(gcloud *)",
+      "Bash(cat ~/.claude/settings.json 2>/dev/null || echo \"No settings found\")",
+      "Read(//home/codespace/.claude/**)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(git -C /workspaces/marketnauta-infra status --short)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('version:', d.get\\('version',''\\)\\); print\\('engines:', d.get\\('engines',{}\\)\\)\")",
+      "Bash(git -C /workspaces/marketnauta-infra show dadcdb1:package-lock.json)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); pkgs=d.get\\('packages',{}\\); n=pkgs.get\\('node_modules/next',{}\\); print\\('next version in dadcdb1 lock:', n.get\\('version','NOT FOUND'\\)\\)\")",
+      "Bash(git -C /workspaces/marketnauta-infra diff dadcdb1 425a6f8 -- app/layout.tsx)",
+      "Bash(git -C /workspaces/marketnauta-infra diff dadcdb1 425a6f8 -- app/api/send/route.tsx)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('hooks','No hooks'\\), indent=2\\)\\)\")",
+      "Bash(npx eslint *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(git -C /workspaces/marketnauta-infra show HEAD:lib/integrations/google-analytics.ts)",
+      "Bash(NEXT_DISABLE_TURBOPACK=1 npm run build)",
+      "Bash(npm ci *)",
+      "Bash(git -C /workspaces/marketnauta-infra diff lib/integrations/google-analytics.ts)",
+      "Bash(git push *)",
+      "Bash(grep -q \"1f95287\\\\|$\\(git log --format=%H HEAD)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://www.marketnauta.com\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://marketnauta-infra.vercel.app\")",
+      "Bash(curl -s \"https://www.marketnauta.com\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://www.marketnauta.com/api/agents/stream\" -X POST -H \"Content-Type: application/json\" -d '{\"prompt\":\"test\"}')",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -N -X POST https://www.marketnauta.com/api/agents/stream -H 'Content-Type: application/json' -d '{\"prompt\":\"x\"}')",
+      "Bash(curl -s -X POST https://www.marketnauta.com/api/agents/qualify -H 'Content-Type: application/json' -d '{\"name\":\"Test\",\"challenge\":\"pauta\",\"budget\":\"x\"}')"
+    ]
+  },
+  "mcpServers": {
+    "gcp": {
+      "command": "gcp-mcp",
+      "env": {
+        "GOOGLE_CLOUD_PROJECT": "88355967369",
+        "GCLOUD_PROJECT": "88355967369"
+      }
+    }
+  }
+}
