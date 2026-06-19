@@ -192,13 +192,9 @@ function RetentionFunnelChart() {
             <div className="p-8">
                 {/* Gauges Row */}
                 <div className="grid grid-cols-3 gap-12 mb-12">
-                    {inView && (
-                        <>
-                            <RetentionGauge value={98} label="Apertura WA" color="apertura" />
-                            <RetentionGauge value={47} label="Recuperación" color="recuperacion" />
-                            <RetentionGauge value={0} label="Pauta extra" color="pauta" />
-                        </>
-                    )}
+                    <RetentionGauge value={98} label="Apertura WA" color="apertura" />
+                    <RetentionGauge value={47} label="Recuperación" color="recuperacion" />
+                    <RetentionGauge value={0} label="Pauta extra" color="pauta" />
                 </div>
 
                 {/* Chart Section */}

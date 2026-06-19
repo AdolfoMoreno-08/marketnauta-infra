@@ -133,13 +133,9 @@ function PredictionDashboard() {
             <div className="p-8">
                 {/* Top gauges row */}
                 <div className="grid grid-cols-3 gap-8 mb-12">
-                    {inView && (
-                        <>
-                            <AnimatedGauge value={91} label="Recompra" />
-                            <AnimatedGauge value={63} label="Neutro" />
-                            <AnimatedGauge value={8} label="Churn" />
-                        </>
-                    )}
+                    <AnimatedGauge value={91} label="Recompra" />
+                    <AnimatedGauge value={63} label="Neutro" />
+                    <AnimatedGauge value={8} label="Churn" />
                 </div>
 
                 {/* Chart section */}
