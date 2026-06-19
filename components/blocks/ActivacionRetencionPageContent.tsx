@@ -69,73 +69,172 @@ const funnelData = [
     { mes: "Jun", abandonados: 1040, recuperados: 489, apertura: 98 },
 ];
 
+// Animated gauge for retention metrics
+function RetentionGauge({ value, label, color }: { value: number; label: string; color: string }) {
+    const colorMap: { [key: string]: { gradient: string; text: string } } = {
+        apertura: { gradient: "url(#gauge-apertura)", text: "text-marketnauta-primary" },
+        recuperacion: { gradient: "url(#gauge-recuperacion)", text: "text-violet-400" },
+        pauta: { gradient: "url(#gauge-pauta)", text: "text-slate-300" },
+    };
+    const { gradient, text } = colorMap[color] || colorMap.apertura;
+
+    return (
+        <motion.div className="flex flex-col items-center relative">
+            <svg width="120" height="120" viewBox="0 0 120 120" className="relative">
+                <defs>
+                    <linearGradient id="gauge-apertura" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#00E5FF" />
+                        <stop offset="100%" stopColor="#0077FF" />
+                    </linearGradient>
+                    <linearGradient id="gauge-recuperacion" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#A78BFA" />
+                        <stop offset="100%" stopColor="#7C3AED" />
+                    </linearGradient>
+                    <linearGradient id="gauge-pauta" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#94A3B8" />
+                        <stop offset="100%" stopColor="#64748B" />
+                    </linearGradient>
+                </defs>
+                {/* Background circle */}
+                <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                {/* Progress circle */}
+                <motion.circle
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    fill="none"
+                    stroke={gradient}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    initial={{ strokeDasharray: "0 314" }}
+                    animate={{ strokeDasharray: `${(value / 100) * 314} 314` }}
+                    transition={{ duration: 2, ease: [0.34, 1.56, 0.64, 1] }}
+                    style={{ transformOrigin: "60px 60px", transform: "rotate(-90deg)" }}
+                />
+            </svg>
+            <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+                className="absolute inset-0 flex items-center justify-center"
+            >
+                <span className={`text-2xl font-bold font-mono ${text}`}>
+                    {value}%
+                </span>
+            </motion.div>
+            <p className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-3">{label}</p>
+        </motion.div>
+    );
+}
+
 function RetentionFunnelChart() {
     const [mounted, setMounted] = useState(false);
     const ref = useRef(null);
     const inView = useInView(ref, { once: true, margin: "-80px" });
 
     useEffect(() => { setMounted(true); }, []);
-    if (!mounted) return <div className="min-h-[340px]" />;
+    if (!mounted) return <div className="min-h-[480px]" />;
 
     return (
         <div className="glass-card rounded-[2rem] border border-white/10 bg-abisal-900/90 overflow-hidden shadow-2xl">
+            {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
                 <div className="flex items-center gap-2">
                     <div className="flex gap-1.5">
                         <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
                         <div className="w-2.5 h-2.5 rounded-full bg-slate-600" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-marketnauta-primary animate-pulse" />
+                        <motion.div
+                            className="w-2.5 h-2.5 rounded-full bg-marketnauta-primary"
+                            animate={{ opacity: [1, 0.4, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        />
                     </div>
                     <span className="ml-2 text-[10px] text-slate-500 font-mono uppercase tracking-widest">
-                        Retention_CRM.analytics
+                        Retention_CRM_Analytics
                     </span>
                 </div>
-                <div className="px-2 py-1 rounded bg-marketnauta-primary/5 border border-marketnauta-primary/20">
-                    <span className="text-marketnauta-primary font-mono text-[10px] font-bold">+47% recovery</span>
-                </div>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    className="px-3 py-1.5 rounded bg-violet-500/10 border border-violet-500/30"
+                >
+                    <span className="text-violet-400 font-mono text-[10px] font-bold">📈 +47% recovery</span>
+                </motion.div>
             </div>
 
-            <div className="p-6 pb-2" ref={ref}>
-                <div className="h-[220px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={inView ? funnelData : []} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
-                            <defs>
-                                <linearGradient id="recoveredGrad" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#00E5FF" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="#00E5FF" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.03)" vertical={false} />
-                            <XAxis dataKey="mes" axisLine={false} tickLine={false}
-                                tick={{ fill: "#475569", fontSize: 9, fontFamily: "monospace" }} dy={6} />
-                            <YAxis hide />
-                            <Tooltip
-                                cursor={{ stroke: "rgba(0,229,255,0.3)", strokeWidth: 1 }}
-                                contentStyle={{ backgroundColor: "#030712", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "10px", color: "#fff" }}
-                                itemStyle={{ color: "#00E5FF" }}
-                            />
-                            <Bar dataKey="abandonados" barSize={18} fill="rgba(255,255,255,0.04)"
-                                radius={[3, 3, 0, 0]} animationDuration={1400} />
-                            <Area type="monotone" dataKey="recuperados" fill="url(#recoveredGrad)"
-                                stroke="#00E5FF" strokeWidth={2} animationDuration={1600} />
-                            <Line type="monotone" dataKey="apertura" stroke="rgba(139,92,246,0.7)"
-                                strokeWidth={1.5} strokeDasharray="4 3" dot={false} animationDuration={1800} />
-                        </ComposedChart>
-                    </ResponsiveContainer>
+            {/* Content */}
+            <div className="p-8">
+                {/* Gauges Row */}
+                <div className="grid grid-cols-3 gap-12 mb-12">
+                    {inView && (
+                        <>
+                            <RetentionGauge value={98} label="Apertura WA" color="apertura" />
+                            <RetentionGauge value={47} label="Recuperación" color="recuperacion" />
+                            <RetentionGauge value={0} label="Pauta extra" color="pauta" />
+                        </>
+                    )}
                 </div>
-            </div>
 
-            <div className="px-6 pb-5 grid grid-cols-3 gap-3">
-                {[
-                    { v: "98%", l: "Apertura WA", c: "text-marketnauta-primary" },
-                    { v: "+47%", l: "Recuperación", c: "text-violet-400" },
-                    { v: "×0", l: "Pauta extra", c: "text-slate-300" },
-                ].map((m, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-center">
-                        <p className={`text-lg font-bold font-mono ${m.c}`}>{m.v}</p>
-                        <p className="text-[9px] font-mono text-slate-600 uppercase tracking-widest mt-0.5">{m.l}</p>
+                {/* Chart Section */}
+                <div className="mb-6">
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={inView ? { opacity: 1 } : {}}
+                        transition={{ delay: 0.5 }}
+                        className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-4"
+                    >
+                        Tendencia de recuperación — últimos 6 meses
+                    </motion.p>
+                    <div className="h-[200px] w-full rounded-lg bg-white/[0.01] border border-white/5 p-4">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <ComposedChart data={inView ? funnelData : []} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
+                                <defs>
+                                    <linearGradient id="recoveredGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#A78BFA" stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor="#A78BFA" stopOpacity={0} />
+                                    </linearGradient>
+                                    <linearGradient id="abandonedGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#FF6B6B" stopOpacity={0.15} />
+                                        <stop offset="95%" stopColor="#FF6B6B" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                                <XAxis dataKey="mes" axisLine={false} tickLine={false}
+                                    tick={{ fill: "#475569", fontSize: 8, fontFamily: "monospace" }} dy={4} />
+                                <YAxis hide />
+                                <Tooltip
+                                    cursor={{ stroke: "rgba(0,229,255,0.3)", strokeWidth: 1 }}
+                                    contentStyle={{ backgroundColor: "#030712", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "9px", color: "#fff" }}
+                                />
+                                <Bar dataKey="abandonados" barSize={14} fill="rgba(255,107,107,0.1)"
+                                    radius={[2, 2, 0, 0]} animationDuration={1600} />
+                                <Area type="monotone" dataKey="recuperados" fill="url(#recoveredGrad)"
+                                    stroke="#A78BFA" strokeWidth={2.5} animationDuration={1800} />
+                                <Line type="monotone" dataKey="apertura" stroke="#00E5FF"
+                                    strokeWidth={2} strokeDasharray="4 3" dot={false} animationDuration={2000} />
+                            </ComposedChart>
+                        </ResponsiveContainer>
                     </div>
-                ))}
+                </div>
+
+                {/* Metrics Grid */}
+                <div className="grid grid-cols-3 gap-3">
+                    {[
+                        { v: "98%", l: "Apertura WA", c: "text-marketnauta-primary", bg: "bg-marketnauta-primary/5 border-marketnauta-primary/20" },
+                        { v: "+47%", l: "Recuperación", c: "text-violet-400", bg: "bg-violet-400/5 border-violet-400/20" },
+                        { v: "×0", l: "Pauta extra", c: "text-slate-400", bg: "bg-slate-400/5 border-slate-400/20" },
+                    ].map((m, i) => (
+                        <motion.div key={i}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={inView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ delay: 1.2 + i * 0.1, duration: 0.4 }}
+                            className={`p-4 rounded-xl ${m.bg} border text-center hover:scale-105 transition-transform`}
+                        >
+                            <p className={`text-lg font-bold font-mono ${m.c}`}>{m.v}</p>
+                            <p className="text-[8px] font-mono text-slate-600 uppercase tracking-widest mt-1">{m.l}</p>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </div>
     );

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retention CRM Analytics - Animación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes gaugeStroke1 {
+            from { stroke-dasharray: 0 314; }
+            to { stroke-dasharray: 220.2 314; }
+        }
+
+        @keyframes gaugeStroke2 {
+            from { stroke-dasharray: 0 314; }
+            to { stroke-dasharray: 147.58 314; }
+        }
+
+        @keyframes gaugeStroke3 {
+            from { stroke-dasharray: 0 314; }
+            to { stroke-dasharray: 0 314; }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .gauge-1 circle:last-of-type {
+            animation: gaugeStroke1 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .gauge-2 circle:last-of-type {
+            animation: gaugeStroke2 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .gauge-3 circle:last-of-type {
+            animation: gaugeStroke3 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .gauge-number {
+            animation: fadeInScale 0.6s ease-out 0.8s both;
+        }
+
+        .metric-card {
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 1.2s; }
+        .metric-card:nth-child(2) { animation-delay: 1.3s; }
+        .metric-card:nth-child(3) { animation-delay: 1.4s; }
+
+        .pulse-indicator {
+            animation: pulse 2s infinite;
+        }
+
+        .bar {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .bar:nth-child(1) { animation-delay: 0.2s; }
+        .bar:nth-child(2) { animation-delay: 0.3s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.5s; }
+        .bar:nth-child(5) { animation-delay: 0.6s; }
+        .bar:nth-child(6) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body class="bg-slate-950">
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <div class="w-full max-w-4xl">
+            <!-- Dashboard Card -->
+            <div class="glass-card rounded-[2rem] border border-white/10 bg-gradient-to-b from-slate-900/90 to-slate-950/90 overflow-hidden shadow-2xl">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
+                    <div class="flex items-center gap-2">
+                        <div class="flex gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-slate-600"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 pulse-indicator"></div>
+                        </div>
+                        <span class="ml-2 text-[10px] text-slate-500 font-mono uppercase tracking-widest">
+                            Retention_CRM_Analytics
+                        </span>
+                    </div>
+                    <div class="px-3 py-1.5 rounded bg-violet-500/10 border border-violet-500/30">
+                        <span class="text-violet-400 font-mono text-[10px] font-bold">📈 +47% recovery</span>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-8">
+                    <!-- Gauges Row -->
+                    <div class="grid grid-cols-3 gap-12 mb-12">
+                        <!-- Gauge 1: Apertura WA -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-[120px] h-[120px] mb-4">
+                                <svg class="gauge-1" width="120" height="120" viewBox="0 0 120 120">
+                                    <defs>
+                                        <linearGradient id="gauge-apertura" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#00E5FF" />
+                                            <stop offset="100%" stopColor="#0077FF" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" />
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="url(#gauge-apertura)" stroke-width="8" stroke-linecap="round" style="transform-origin: 60px 60px; transform: rotate(-90deg);" />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-cyan-400 font-mono gauge-number">98%</span>
+                                </div>
+                            </div>
+                            <p class="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Apertura WA</p>
+                        </div>
+
+                        <!-- Gauge 2: Recuperación -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-[120px] h-[120px] mb-4">
+                                <svg class="gauge-2" width="120" height="120" viewBox="0 0 120 120">
+                                    <defs>
+                                        <linearGradient id="gauge-recuperacion" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#A78BFA" />
+                                            <stop offset="100%" stopColor="#7C3AED" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" />
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="url(#gauge-recuperacion)" stroke-width="8" stroke-linecap="round" style="transform-origin: 60px 60px; transform: rotate(-90deg);" />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-violet-400 font-mono gauge-number">47%</span>
+                                </div>
+                            </div>
+                            <p class="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Recuperación</p>
+                        </div>
+
+                        <!-- Gauge 3: Pauta Extra -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-[120px] h-[120px] mb-4">
+                                <svg class="gauge-3" width="120" height="120" viewBox="0 0 120 120">
+                                    <defs>
+                                        <linearGradient id="gauge-pauta" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stopColor="#94A3B8" />
+                                            <stop offset="100%" stopColor="#64748B" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" />
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="url(#gauge-pauta)" stroke-width="8" stroke-linecap="round" style="transform-origin: 60px 60px; transform: rotate(-90deg);" />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-slate-400 font-mono gauge-number">×0</span>
+                                </div>
+                            </div>
+                            <p class="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Pauta extra</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart Section -->
+                    <div class="mb-6">
+                        <p class="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-4">
+                            Tendencia de recuperación — últimos 6 meses
+                        </p>
+                        <div class="h-[180px] bg-white/[0.01] border border-white/5 rounded-lg p-4 flex items-end justify-around gap-1.5">
+                            <div class="bar flex-1 bg-gradient-to-t from-violet-500 to-violet-300 rounded-t" style="height: 30%; opacity: 0.7;"></div>
+                            <div class="bar flex-1 bg-gradient-to-t from-violet-500 to-violet-300 rounded-t" style="height: 40%;"></div>
+                            <div class="bar flex-1 bg-gradient-to-t from-violet-500 to-violet-300 rounded-t" style="height: 55%;"></div>
+                            <div class="bar flex-1 bg-gradient-to-t from-violet-500 to-violet-300 rounded-t" style="height: 70%;"></div>
+                            <div class="bar flex-1 bg-gradient-to-t from-violet-500 to-violet-300 rounded-t" style="height: 82%;"></div>
+                            <div class="bar flex-1 bg-gradient-to-t from-violet-500 to-violet-300 rounded-t" style="height: 95%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="metric-card p-4 rounded-xl bg-cyan-400/5 border border-cyan-400/20 text-center hover:scale-105 transition-transform cursor-pointer">
+                            <p class="text-lg font-bold font-mono text-cyan-400">98%</p>
+                            <p class="text-[8px] font-mono text-slate-600 uppercase tracking-widest mt-1">Apertura WA</p>
+                        </div>
+                        <div class="metric-card p-4 rounded-xl bg-violet-400/5 border border-violet-400/20 text-center hover:scale-105 transition-transform cursor-pointer">
+                            <p class="text-lg font-bold font-mono text-violet-400">+47%</p>
+                            <p class="text-[8px] font-mono text-slate-600 uppercase tracking-widest mt-1">Recuperación</p>
+                        </div>
+                        <div class="metric-card p-4 rounded-xl bg-slate-400/5 border border-slate-400/20 text-center hover:scale-105 transition-transform cursor-pointer">
+                            <p class="text-lg font-bold font-mono text-slate-400">×0</p>
+                            <p class="text-[8px] font-mono text-slate-600 uppercase tracking-widest mt-1">Pauta extra</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-slate-500 text-sm">
+                <p>💬 Animación de Retención CRM - Visualiza cómo mejora la recuperación sin pauta adicional</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .glass-card {
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</body>
+</html>
