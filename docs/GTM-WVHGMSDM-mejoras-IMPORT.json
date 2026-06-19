@@ -1,17 +1,30 @@
 {
   "exportFormatVersion": 2,
+  "exportTime": "2026-06-19 12:00:00",
   "containerVersion": {
+    "path": "accounts/6352997913/containers/251160356/versions/0",
+    "accountId": "6352997913",
+    "containerId": "251160356",
+    "containerVersionId": "0",
+    "name": "",
+    "description": "",
+    "fingerprint": "1750334400000",
+    "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6352997913/containers/251160356/versions/0",
     "container": {
+      "path": "accounts/6352997913/containers/251160356",
       "accountId": "6352997913",
       "containerId": "251160356",
       "name": "www.marketnauta.com",
       "publicId": "GTM-WVHGMSDM",
       "usageContext": [
         "WEB"
-      ]
+      ],
+      "fingerprint": "1750334400000",
+      "tagManagerUrl": "https://tagmanager.google.com/#/management/accounts/6352997913/containers/251160356"
     },
     "tag": [
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/tags/130",
         "accountId": "6352997913",
         "containerId": "251160356",
         "tagId": "130",
@@ -25,196 +38,92 @@
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "link_text"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - link_text}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "link_text" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - link_text}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "link_url"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - link_url}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "link_url" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - link_url}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "from_layer"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - from_layer}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "from_layer" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - from_layer}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "to_layer"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - to_layer}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "to_layer" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - to_layer}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "link_position"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - link_position}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "link_position" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - link_position}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "cta_name"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - cta_name}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "cta_name" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - cta_name}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "layer"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - layer}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "layer" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - layer}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "form_step"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - form_step}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "form_step" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - form_step}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "calc_spend"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - calc_spend}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "calc_spend" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - calc_spend}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "calc_loss"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - calc_loss}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "calc_loss" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - calc_loss}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "calc_recoverable"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - calc_recoverable}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "calc_recoverable" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - calc_recoverable}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "event_id"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - event_id}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "event_id" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - event_id}}" }
                 ]
               },
               {
                 "type": "MAP",
                 "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameter",
-                    "value": "modal_type"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "parameterValue",
-                    "value": "{{DLV - modal_type}}"
-                  }
+                  { "type": "TEMPLATE", "key": "parameter",      "value": "modal_type" },
+                  { "type": "TEMPLATE", "key": "parameterValue", "value": "{{DLV - modal_type}}" }
                 ]
               }
             ]
@@ -237,11 +146,12 @@
         "consentSettings": {
           "consentStatus": "NOT_SET"
         },
-        "fingerprint": "0"
+        "fingerprint": "1750334400001"
       }
     ],
     "trigger": [
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/triggers/120",
         "accountId": "6352997913",
         "containerId": "251160356",
         "triggerId": "120",
@@ -264,251 +174,181 @@
             ]
           }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400002"
       }
     ],
     "variable": [
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/101",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "101",
         "name": "DLV - link_text",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "link_text"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "link_text" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400101"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/102",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "102",
         "name": "DLV - link_url",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "link_url"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "link_url" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400102"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/103",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "103",
         "name": "DLV - from_layer",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "from_layer"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "from_layer" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400103"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/104",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "104",
         "name": "DLV - to_layer",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "to_layer"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "to_layer" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400104"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/105",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "105",
         "name": "DLV - link_position",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "link_position"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "link_position" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400105"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/106",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "106",
         "name": "DLV - cta_name",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "cta_name"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "cta_name" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400106"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/107",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "107",
         "name": "DLV - layer",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "layer"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "layer" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400107"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/108",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "108",
         "name": "DLV - form_step",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "form_step"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "form_step" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400108"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/109",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "109",
         "name": "DLV - calc_spend",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "calc_spend"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "calc_spend" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400109"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/110",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "110",
         "name": "DLV - calc_loss",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "calc_loss"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "calc_loss" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400110"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/111",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "111",
         "name": "DLV - calc_recoverable",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "calc_recoverable"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "calc_recoverable" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400111"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/112",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "112",
         "name": "DLV - event_id",
         "type": "v",
         "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "event_id"
-          }
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "event_id" }
         ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400112"
       },
       {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/113",
+        "accountId": "6352997913",
+        "containerId": "251160356",
+        "variableId": "113",
+        "name": "DLV - modal_type",
+        "type": "v",
+        "parameter": [
+          { "type": "INTEGER",  "key": "dataLayerVersion", "value": "2" },
+          { "type": "TEMPLATE", "key": "name",             "value": "modal_type" }
+        ],
+        "fingerprint": "1750334400113"
+      },
+      {
+        "path": "accounts/6352997913/containers/251160356/workspaces/1/variables/26",
         "accountId": "6352997913",
         "containerId": "251160356",
         "variableId": "26",
@@ -534,270 +374,26 @@
             "type": "LIST",
             "key": "map",
             "list": [
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "add_payment_info"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "AddPaymentInfo"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "add_to_cart"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "AddToCart"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "add_to_wishlist"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "AddToWishlist"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "begin_checkout"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "InitiateCheckout"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "generate_lead"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "Lead"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "gtm.dom"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "PageView"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "page_view"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "PageView"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "purchase"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "Purchase"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "search"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "Search"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "sign_up"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "CompleteRegistration"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "view_item"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "ViewContent"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "schedule_call_click"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "Schedule"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "form_start"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "InitiateCheckout"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "calculator_used"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "Lead"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "chat_lead"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "Lead"
-                  }
-                ]
-              },
-              {
-                "type": "MAP",
-                "map": [
-                  {
-                    "type": "TEMPLATE",
-                    "key": "key",
-                    "value": "lead_conversion"
-                  },
-                  {
-                    "type": "TEMPLATE",
-                    "key": "value",
-                    "value": "Lead"
-                  }
-                ]
-              }
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "add_payment_info"  }, { "type": "TEMPLATE", "key": "value", "value": "AddPaymentInfo"        } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "add_to_cart"       }, { "type": "TEMPLATE", "key": "value", "value": "AddToCart"             } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "add_to_wishlist"   }, { "type": "TEMPLATE", "key": "value", "value": "AddToWishlist"         } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "begin_checkout"    }, { "type": "TEMPLATE", "key": "value", "value": "InitiateCheckout"      } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "generate_lead"     }, { "type": "TEMPLATE", "key": "value", "value": "Lead"                  } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "gtm.dom"           }, { "type": "TEMPLATE", "key": "value", "value": "PageView"              } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "page_view"         }, { "type": "TEMPLATE", "key": "value", "value": "PageView"              } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "purchase"          }, { "type": "TEMPLATE", "key": "value", "value": "Purchase"              } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "search"            }, { "type": "TEMPLATE", "key": "value", "value": "Search"                } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "sign_up"           }, { "type": "TEMPLATE", "key": "value", "value": "CompleteRegistration"  } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "view_item"         }, { "type": "TEMPLATE", "key": "value", "value": "ViewContent"           } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "schedule_call_click"}, { "type": "TEMPLATE", "key": "value", "value": "Schedule"            } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "form_start"        }, { "type": "TEMPLATE", "key": "value", "value": "InitiateCheckout"      } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "calculator_used"   }, { "type": "TEMPLATE", "key": "value", "value": "Lead"                  } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "chat_lead"         }, { "type": "TEMPLATE", "key": "value", "value": "Lead"                  } ] },
+              { "type": "MAP", "map": [ { "type": "TEMPLATE", "key": "key", "value": "lead_conversion"   }, { "type": "TEMPLATE", "key": "value", "value": "Lead"                  } ] }
             ]
           }
         ],
-        "fingerprint": "0"
-      },
-      {
-        "accountId": "6352997913",
-        "containerId": "251160356",
-        "variableId": "113",
-        "name": "DLV - modal_type",
-        "type": "v",
-        "parameter": [
-          {
-            "type": "INTEGER",
-            "key": "dataLayerVersion",
-            "value": "2"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "name",
-            "value": "modal_type"
-          }
-        ],
-        "fingerprint": "0"
+        "fingerprint": "1750334400026"
       }
     ]
   }
