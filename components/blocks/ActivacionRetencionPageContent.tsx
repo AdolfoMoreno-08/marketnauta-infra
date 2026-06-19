@@ -415,7 +415,7 @@ export default function ActivacionRetencionPageContent({ faqs }: Props) {
                         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 1.2, duration: 0.6 }}
                             className="flex flex-col sm:flex-row gap-4">
-                            <TrackedCTA href="?modal=auditoria" eventName="hero_activacion_cta"
+                            <TrackedCTA href="?modal=auditoria" eventName="diagnostico-retencion" fromLayer={3}
                                 className="w-fit group inline-flex items-center gap-3 px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:shadow-neon-long transition-all duration-300 active:scale-95">
                                 Diagnóstico de retención
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -641,7 +641,7 @@ export default function ActivacionRetencionPageContent({ faqs }: Props) {
                         Agenda una sesión de diagnóstico. Analizamos tus tasas de abandono actuales
                         y diseñamos el plan de retención que tu ecommerce necesita.
                     </p>
-                    <TrackedCTA href="?modal=auditoria" eventName="footer_activacion_retencion"
+                    <TrackedCTA href="?modal=auditoria" eventName="activar-plan-retencion" fromLayer={3}
                         className="relative z-10 inline-flex items-center gap-4 px-10 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-lg hover:shadow-neon-long transition-all duration-300 active:scale-95 shadow-neon-short group">
                         Activar plan de retención
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />

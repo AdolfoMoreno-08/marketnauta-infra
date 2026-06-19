@@ -391,7 +391,8 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                         >
                             <TrackedCTA
                                 href="?modal=auditoria"
-                                eventName="hero_predictiva_cta"
+                                eventName="explorar-modelos-predictivos"
+                                fromLayer={4}
                                 className="group px-8 py-5 rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-lg hover:bg-white transition-all duration-500 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] flex items-center justify-center gap-3 w-fit"
                             >
                                 Explorar modelos predictivos
@@ -602,7 +603,7 @@ export default function InteligenciaPredictivaPageContent({ faqs }: Props) {
                         Agenda una sesión de exploración. Construimos el modelo predictivo que convierte
                         tu dato en BigQuery en decisiones de negocio con ventaja competitiva real.
                     </p>
-                    <TrackedCTA href="?modal=auditoria" eventName="footer_inteligencia_predictiva"
+                    <TrackedCTA href="?modal=auditoria" eventName="explorar-modelos-footer" fromLayer={4}
                         className="relative z-10 group px-12 py-6 rounded-full bg-marketnauta-primary text-abisal-950 font-black text-xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(0,229,255,0.3)] inline-flex items-center gap-3">
                         <Brain className="w-6 h-6 group-hover:scale-110 transition-transform" />
                         Explorar modelos predictivos

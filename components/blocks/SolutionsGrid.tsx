@@ -17,6 +17,7 @@ const solutions = [
         accentColor: "rgba(0,229,255,0.1)",
         accentBorder: "rgba(0,229,255,0.4)",
         iconColor: "text-marketnauta-primary",
+        layer: 1,
     },
     {
         title: "Growth Pauta",
@@ -29,6 +30,7 @@ const solutions = [
         accentColor: "rgba(0,119,255,0.1)",
         accentBorder: "rgba(0,119,255,0.4)",
         iconColor: "text-marketnauta-secondary",
+        layer: 5,
     },
     {
         title: "Infraestructura & Estrategia",
@@ -41,6 +43,7 @@ const solutions = [
         accentColor: "rgba(16,185,129,0.08)",
         accentBorder: "rgba(16,185,129,0.35)",
         iconColor: "text-emerald-400",
+        layer: 2,
     },
     {
         title: "Activación & Retención",
@@ -53,6 +56,7 @@ const solutions = [
         accentColor: "rgba(255,107,53,0.08)",
         accentBorder: "rgba(255,107,53,0.4)",
         iconColor: "text-marketnauta-orange",
+        layer: 3,
     },
     {
         title: "Inteligencia Predictiva",
@@ -65,6 +69,7 @@ const solutions = [
         accentColor: "rgba(0,119,255,0.1)",
         accentBorder: "rgba(0,119,255,0.4)",
         iconColor: "text-marketnauta-secondary",
+        layer: 4,
     },
 ];
 
@@ -106,7 +111,9 @@ function SolutionCard({
                 onMouseMove={onMouseMove}
                 onMouseLeave={onMouseLeave}
                 data-evt="internal_link_click"
-                data-link-position="content"
+                data-link-position="soluciones-grid"
+                data-from-layer={1}
+                data-to-layer={item.layer}
                 className="group relative h-full border-glow glass-card p-6 md:p-8 rounded-[2rem] bg-white/[0.01] flex flex-col justify-between min-h-[280px] block overflow-hidden active:scale-[0.98] transition-all duration-300"
             >
                 {/* Mouse-tracking glow */}

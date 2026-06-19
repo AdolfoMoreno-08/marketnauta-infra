@@ -236,7 +236,8 @@ export default function TelemetryWidget() {
               {/* CTA */}
               <TrackedCTA
                 href="?modal=auditoria"
-                eventName="telemetry_widget_cta"
+                eventName="auditoria-datos-cta"
+                fromLayer={1}
                 className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-bold text-abisal-950 bg-marketnauta-primary hover:shadow-neon-long transition-all duration-300 group"
               >
                 <TrendingUp className="w-5 h-5" />

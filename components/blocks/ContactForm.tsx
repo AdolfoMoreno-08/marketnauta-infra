@@ -513,10 +513,12 @@ export default function ContactForm() {
                                             rel="noopener noreferrer"
                                             onClick={() => {
                                                 try {
-                                                    gtm.pushToDataLayer({ event: "schedule_call_click", source: "contact_modal_success" });
+                                                    gtm.pushToDataLayer({ event: "cta_click", cta_name: "agendar-llamada-success", event_id: gtm.newEventId() });
                                                 } catch { }
                                             }}
                                             className="mt-8 inline-flex items-center gap-2.5 px-7 py-4 min-h-[48px] rounded-full bg-marketnauta-primary text-abisal-950 font-bold text-sm hover:shadow-neon-long transition-all duration-300 active:scale-95"
+                                            data-evt="cta_click"
+                                            data-cta-name="agendar-llamada-success"
                                         >
                                             <CalendarClock className="w-5 h-5" />
                                             Agendar llamada con Enrique

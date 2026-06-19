@@ -82,7 +82,8 @@ export default function Navbar() {
                 <div className="flex items-center gap-5 relative z-[110]">
                     <TrackedCTA
                         href="?modal=exploracion"
-                        eventName="nav_agendar_exploracion"
+                        eventName="agendar-exploracion-nav"
+                        fromLayer={1}
                         className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-abisal-950 text-[11px] font-bold uppercase tracking-wider hover:bg-marketnauta-primary hover:shadow-neon-short transition-all duration-300 active:scale-95 shadow-lg"
                     >
                         Agendar Exploración
@@ -143,7 +144,8 @@ export default function Navbar() {
 
                             <TrackedCTA
                                 href="?modal=exploracion"
-                                eventName="mobile_menu_contacto"
+                                eventName="contactar-mobile-menu"
+                                fromLayer={1}
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 className="mt-10 flex justify-center items-center w-full py-6 rounded-2xl bg-marketnauta-primary text-abisal-950 font-black uppercase text-xs tracking-[0.2em] shadow-neon-short"
                             >

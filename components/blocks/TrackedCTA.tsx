@@ -10,6 +10,7 @@ interface TrackedCTAProps {
     eventName: string;
     className?: string;
     isExternal?: boolean;
+    fromLayer?: number;
 }
 
 export default function TrackedCTA({
@@ -18,16 +19,18 @@ export default function TrackedCTA({
     children,
     eventName,
     className = "",
-    isExternal = false
+    isExternal = false,
+    fromLayer
 }: TrackedCTAProps) {
 
     const handleInteraction = (e: React.MouseEvent) => {
-        // 1. TRACKING: Avisamos a GA4 y Meta
+        // 1. TRACKING: Avisamos a GA4 y Meta con evento completo
         if (typeof window !== "undefined") {
             (window as any).dataLayer = (window as any).dataLayer || [];
             (window as any).dataLayer.push({
                 event: "cta_click",
-                cta_name: eventName
+                cta_name: eventName,
+                ...(fromLayer && { from_layer: fromLayer })
             });
 
             if ((window as any).fbq) {
@@ -50,6 +53,9 @@ export default function TrackedCTA({
                 className={className}
                 target={isExternal ? "_blank" : "_self"}
                 rel={isExternal ? "noopener noreferrer" : undefined}
+                data-evt="cta_click"
+                data-cta-name={eventName}
+                {...(fromLayer && { "data-from-layer": fromLayer })}
             >
                 {children}
             </Link>
@@ -57,7 +63,13 @@ export default function TrackedCTA({
     }
 
     return (
-        <button onClick={handleInteraction} className={className}>
+        <button
+            onClick={handleInteraction}
+            className={className}
+            data-evt="cta_click"
+            data-cta-name={eventName}
+            {...(fromLayer && { "data-from-layer": fromLayer })}
+        >
             {children}
         </button>
     );

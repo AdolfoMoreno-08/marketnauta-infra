@@ -114,7 +114,8 @@ export default function Footer() {
                                     {link.href === "trigger-contact" ? (
                                         <TrackedCTA
                                             href="?modal=exploracion"
-                                            eventName="footer_contacto"
+                                            eventName="contactanos-footer"
+                                            fromLayer={1}
                                             className="text-slate-400 hover:text-white text-[14px] transition-all font-light"
                                         >
                                             {link.name}
