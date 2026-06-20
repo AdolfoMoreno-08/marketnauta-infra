@@ -64,7 +64,7 @@ export default function AgentsPage() {
           <Bot className="w-5 h-5 text-marketnauta-primary" />
           <h1 className="text-white text-xl font-bold">Agentes IA</h1>
         </div>
-        <p className="text-slate-500 text-sm">Monitoreo y configuración de los agentes Claude del ecosistema</p>
+        <p className="text-slate-500 text-sm">Monitoreo y configuración de los agentes Marketnauta Intelligence del ecosistema</p>
       </div>
 
       {/* AGENT CARDS */}

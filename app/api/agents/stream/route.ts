@@ -1,6 +1,6 @@
 /*
   STREAMING ENDPOINT: POST /api/agents/stream
-  Motor Claude en vivo — transmite eventos del agente al cliente en tiempo real.
+  Motor Marketnauta Intelligence en vivo — transmite eventos del agente al cliente en tiempo real.
 
   Emite eventos newline-delimited JSON:
     {"t":"start"}
@@ -295,7 +295,7 @@ export async function POST(req: Request) {
           return;
         }
 
-        // ── MODO REAL — Claude con herramientas ───────────────────────────────
+        // ── MODO REAL — Marketnauta Intelligence con herramientas ───────────────────────────────
         send(controller, { t: "start" });
         send(controller, { t: "status", s: "Activando agente de análisis..." });
 

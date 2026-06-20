@@ -8,7 +8,7 @@ import Methodology from "@/components/blocks/Methodology";
 import SuccessCases from "@/components/blocks/SuccessCases";
 import PainSection from "@/components/blocks/PainSection";
 import TelemetryWidget from "@/components/blocks/TelemetryWidget";
-import ClaudeEngineSection from "@/components/blocks/ClaudeEngineSection";
+import MarketnautaIntelligenceSection from "@/components/blocks/MarketnautaIntelligenceSection";
 import TrackedCTA from "@/components/blocks/TrackedCTA";
 
 function MouseReactiveGrid() {
@@ -225,8 +225,8 @@ export default function Home() {
       </section>
 
       {/* ═══ 4. CLAUDE ENGINE ═══════════════════════════════════ */}
-      <section id="motor-claude" className="scroll-mt-20">
-        <ClaudeEngineSection />
+      <section id="motor-marketnauta" className="scroll-mt-20">
+        <MarketnautaIntelligenceSection />
       </section>
 
       {/* ═══ 5. SOLUCIONES ══════════════════════════════════════ */}
