@@ -96,7 +96,7 @@ interface NeuralNode {
 
 const NODES: NeuralNode[] = [
   { id: "cs",    x: 60,  y: 90,  label: "Customer", sublabel: "Service" },
-  { id: "core",  x: 200, y: 80,  label: "Claude",   sublabel: "Core" },
+  { id: "core",  x: 200, y: 80,  label: "Marketnauta", sublabel: "Core" },
   { id: "tools", x: 200, y: 25,  label: "Tools",    sublabel: "GA4 · Meta" },
   { id: "data",  x: 340, y: 50,  label: "Data",     sublabel: "Analyst" },
   { id: "lead",  x: 340, y: 120, label: "Lead",     sublabel: "Qualifier" },
@@ -516,7 +516,7 @@ export default function ClaudeEngineSection() {
         >
           <span className="terminal-badge mb-6 inline-flex gap-2">
             <Brain className="w-3.5 h-3.5 text-marketnauta-primary" />
-            Motor Claude // Agentes en Vivo
+            Motor Marketnauta // Agentes en Vivo
           </span>
 
           <h2 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tight mt-4 mb-4">
@@ -525,7 +525,7 @@ export default function ClaudeEngineSection() {
           </h2>
 
           <p className="text-slate-400 text-lg font-light max-w-xl mx-auto">
-            Observa cómo nuestros agentes Claude procesan, razonan y actúan sobre tus datos de marketing.
+            Observa cómo nuestros agentes Marketnauta procesan, razonan y actúan sobre tus datos de marketing.
           </p>
         </motion.div>
 
@@ -701,7 +701,7 @@ export default function ClaudeEngineSection() {
                 {/* Idle state */}
                 {engineState === "idle" && (
                   <div className="flex flex-col gap-1 text-slate-700">
-                    <p>SISTEMA// DATOS.MOTOR_CLAUDE v2.0</p>
+                    <p>SISTEMA// DATOS.MOTOR_MARKETNAUTA v2.0</p>
                     <p>────────────────────────────────────────</p>
                     <p className="mt-2 text-slate-600">
                       ← Selecciona una instrucción y pulsa{" "}
@@ -722,7 +722,7 @@ export default function ClaudeEngineSection() {
                 {engineState !== "idle" && (
                   <div className="mb-4">
                     <p className="text-slate-600 text-[10px]">
-                      SISTEMA// DATOS.MOTOR_CLAUDE v2.0
+                      SISTEMA// DATOS.MOTOR_MARKETNAUTA v2.0
                     </p>
                     <p className="text-slate-700 text-[10px]">────────────────────────────────────────</p>
                     <div className="flex items-center gap-2 mt-2">
