@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ShieldCheck, Activity, TrendingUp, TrendingDown } from "lucide-react";
+import ClientLogosCarousel from "./ClientLogosCarousel";
 
 const cases = [
     {
@@ -136,6 +137,9 @@ export default function SuccessCases() {
                         </p>
                     </div>
                 </div>
+
+                {/* Carousel de Clientes */}
+                <ClientLogosCarousel />
 
                 {/* Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">

@@ -1,0 +1,8 @@
+<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pulday-text { font-family: 'Georgia', serif; font-size: 56px; font-weight: 900; fill: white; font-style: italic; }
+    .pulday-year { font-family: 'Arial', sans-serif; font-size: 12px; fill: #999; letter-spacing: 2px; }
+  </style>
+  <text x="10" y="65" class="pulday-text">pulday</text>
+  <text x="10" y="85" class="pulday-year">DESDE 1972</text>
+</svg>
