@@ -7,7 +7,7 @@ import { Zap, Grid3X3, Database } from "lucide-react";
 const CLIENTS = [
   {
     name: "Alda",
-    logo: "/logo-pulday.png",
+    logo: "/logo-alda.png",
     sector: "E-commerce",
     specs: [
       "Server Side Tracking ecommerce",
