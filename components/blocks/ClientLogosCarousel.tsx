@@ -5,10 +5,58 @@ import { useState, useEffect } from "react";
 import { Zap, Grid3X3, Database } from "lucide-react";
 
 const CLIENTS = [
-  { name: "Pulday", logo: "/logo-pulday.png", sector: "Alimentación" },
-  { name: "Flor de Altura", logo: "/logo-flor-altura.png", sector: "Agricultura" },
-  { name: "Los Inkas", logo: "/logo-inkas.png", sector: "Procesamiento" },
-  { name: "NYC", logo: "/logo-nyc.png", sector: "Inmobiliario" },
+  {
+    name: "Alda",
+    logo: "/logo-pulday.png",
+    sector: "E-commerce",
+    specs: [
+      "Server Side Tracking ecommerce",
+      "Marketnauta Intelligence integrado",
+      "Estrategia full funnel optimizada",
+      "Retargeting con audiencias segmentadas",
+    ],
+    highlight: "15x incremento en ingresos",
+    metric: "ROAS 9.6+",
+  },
+  {
+    name: "Flor de Altura",
+    logo: "/logo-flor-altura.png",
+    sector: "Café Especialidad",
+    specs: [
+      "Café de especialidad - Selva Central",
+      "Optimización Server Side Tracking",
+      "Diseño UX/UI premium",
+      "Conversión optimizada",
+    ],
+    highlight: "Transformación digital completa",
+    metric: "Conversiones +",
+  },
+  {
+    name: "Los Inkas",
+    logo: "/logo-inkas.png",
+    sector: "B2B Processing",
+    specs: [
+      "Creación y diseño web avanzado",
+      "Server Side Tracking avanzado",
+      "BigQuery para lead generation",
+      "Gestión especializada B2B",
+    ],
+    highlight: "Procesamiento y análisis data-driven",
+    metric: "BigQuery activo",
+  },
+  {
+    name: "Fintek Club",
+    logo: "/logo-nyc.png",
+    sector: "Adquisición Socios",
+    specs: [
+      "Sistema de adquisición de socios",
+      "Lead capture alta intención",
+      "Sistema de beneficios integrado",
+      "Gestión inversión en medios",
+    ],
+    highlight: "CPM por debajo del mercado",
+    metric: "ROAS 10.1 | CTR alto",
+  },
 ];
 
 export default function ClientLogosCarousel() {
@@ -189,29 +237,39 @@ export default function ClientLogosCarousel() {
                         <div className="flex items-center gap-2 mb-3">
                           <Database className="w-4 h-4 text-marketnauta-primary" />
                           <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
-                            Transformación
+                            Soluciones Implementadas
                           </p>
                         </div>
                         <ul className="space-y-2 text-sm text-slate-400 font-light">
-                          <li>• Centralización de datos en BigQuery</li>
-                          <li>• Tracking Server-Side implementado</li>
-                          <li>• Reportes en tiempo real activados</li>
-                          <li>• ROI optimizado constantemente</li>
+                          {CLIENTS[activeIndex].specs.map((spec, i) => (
+                            <li key={i}>• {spec}</li>
+                          ))}
                         </ul>
                       </div>
                     </div>
                   </div>
 
-                  {/* Status indicator */}
-                  <div className="flex items-center gap-2 pt-6 border-t border-white/[0.05]">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-2 h-2 rounded-full bg-emerald-400 shadow-glow"
-                    />
-                    <span className="text-slate-500 font-mono text-[9px] uppercase tracking-widest">
-                      En Producción
-                    </span>
+                  {/* Status indicator + Metrics */}
+                  <div className="space-y-4 pt-6 border-t border-white/[0.05]">
+                    <div className="flex items-center gap-2">
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-2 h-2 rounded-full bg-emerald-400 shadow-glow"
+                      />
+                      <span className="text-slate-500 font-mono text-[9px] uppercase tracking-widest">
+                        En Producción
+                      </span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-mono text-marketnauta-primary uppercase tracking-[0.2em]">
+                        {CLIENTS[activeIndex].highlight}
+                      </p>
+                      <p className="text-lg font-display font-bold text-white">
+                        {CLIENTS[activeIndex].metric}
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
               </div>
