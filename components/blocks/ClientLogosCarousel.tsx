@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import { Zap, Grid3X3, Database } from "lucide-react";
 
 const CLIENTS = [
-  { name: "Pulday", logo: "/logo-pulday.svg", sector: "Alimentación" },
-  { name: "Flor de Altura", logo: "/logo-flor-altura.svg", sector: "Agricultura" },
-  { name: "Los Inkas", logo: "/logo-inkas.svg", sector: "Procesamiento" },
-  { name: "NYC", logo: "/logo-nyc.svg", sector: "Inmobiliario" },
+  { name: "Pulday", logo: "/logo-pulday.png", sector: "Alimentación" },
+  { name: "Flor de Altura", logo: "/logo-flor-altura.png", sector: "Agricultura" },
+  { name: "Los Inkas", logo: "/logo-inkas.png", sector: "Procesamiento" },
+  { name: "NYC", logo: "/logo-nyc.png", sector: "Inmobiliario" },
 ];
 
 export default function ClientLogosCarousel() {
