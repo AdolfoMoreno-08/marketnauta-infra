@@ -26,6 +26,7 @@ export default function Navbar() {
         { name: 'Retención', href: '/soluciones/activacion-y-retencion' },
         { name: 'Predicción', href: '/soluciones/inteligencia-predictiva' },
         { name: 'Growth', href: '/soluciones/gestion-de-pauta' },
+        { name: 'Creatividad', href: '/soluciones/estudio-creativo-de-growth' },
     ];
 
     return (

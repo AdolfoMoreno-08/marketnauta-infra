@@ -20,6 +20,7 @@ const footerLinks = {
         { name: "Activación & Retención", href: "/soluciones/activacion-y-retencion" },
         { name: "Inteligencia Predictiva", href: "/soluciones/inteligencia-predictiva" },
         { name: "Motor de Performance", href: "/soluciones/gestion-de-pauta" },
+        { name: "Estudio Creativo de Growth", href: "/soluciones/estudio-creativo-de-growth" },
     ],
     empresa: [
         { name: "Metodología", href: "/#metodologia", id: "metodologia" },

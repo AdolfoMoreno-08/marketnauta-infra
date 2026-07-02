@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Database, TrendingUp, Code2, ArrowUpRight, Cpu, MessageCircle, Sparkles } from "lucide-react";
+import { Database, TrendingUp, Code2, ArrowUpRight, Cpu, MessageCircle, Sparkles, Palette } from "lucide-react";
 import Link from "next/link";
 import { useState, useRef, useCallback } from "react";
 
@@ -70,6 +70,19 @@ const solutions = [
         accentBorder: "rgba(0,119,255,0.4)",
         iconColor: "text-marketnauta-secondary",
         layer: 4,
+    },
+    {
+        title: "Estudio Creativo de Growth",
+        tag: "CREATIVE ENGINE",
+        description: "Piezas como hipótesis medibles: cada anuncio testeable, modular y medido server-side para maximizar ROAS.",
+        icon: Palette,
+        href: "/soluciones/estudio-creativo-de-growth",
+        className: "md:col-span-2",
+        stats: "Creatividad Medible",
+        accentColor: "rgba(255,107,53,0.1)",
+        accentBorder: "rgba(255,107,53,0.4)",
+        iconColor: "text-marketnauta-orange",
+        layer: 6,
     },
 ];
 
