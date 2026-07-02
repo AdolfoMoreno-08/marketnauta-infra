@@ -7,7 +7,7 @@
 */
 
 export interface SolutionLayer {
-  step: 1 | 2 | 3 | 4 | 5;
+  step: 1 | 2 | 3 | 4 | 5 | 6;
   slug: string; // ruta absoluta
   navLabel: string; // etiqueta corta para el nav
   title: string; // H1 del hub / título de card
@@ -64,6 +64,15 @@ export const SOLUTION_LAYERS: SolutionLayer[] = [
     inboundAnchor: "Escala la adquisición con pauta optimizada por IA y retail media (Mercado Libre / Falabella)",
     shortDesc: "Pauta optimizada por IA, retail media en marketplaces locales y SEO conversacional (AI Overviews).",
   },
+  {
+    step: 6,
+    slug: "/soluciones/estudio-creativo-de-growth",
+    navLabel: "Creatividad",
+    title: "Estudio Creativo de Growth",
+    layerTag: "CREAR",
+    inboundAnchor: "Diseña piezas publicitarias como hipótesis medibles, producidas a escala y medidas server-side para maximizar ROAS",
+    shortDesc: "Piezas como variables de crecimiento: cada anuncio es una hipótesis testeable, modular y medida para maximizar ROAS.",
+  },
 ];
 
 /** Capa por número de paso. */
@@ -71,9 +80,9 @@ export function getLayer(step: number): SolutionLayer | undefined {
   return SOLUTION_LAYERS.find((l) => l.step === step);
 }
 
-/** Siguiente paso de la escalera (5 vuelve a 1). */
+/** Siguiente paso de la escalera (6 y 5 vuelven a 1). */
 export function nextLayer(step: number): SolutionLayer {
-  return getLayer(step === 5 ? 1 : step + 1)!;
+  return getLayer(step === 5 || step === 6 ? 1 : step + 1)!;
 }
 
 /** Paso anterior de la escalera (1 envuelve a 5). */
