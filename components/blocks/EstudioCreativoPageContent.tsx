@@ -60,19 +60,20 @@ function WireframeComposer() {
 
   useEffect(() => {
     if (!inView) return;
-    const id = setInterval(() => setStep(s => s < 4 ? s + 1 : 4), 800);
+    const id = setInterval(() => setStep(s => s < 5 ? s + 1 : 5), 700);
     return () => clearInterval(id);
   }, [inView]);
 
-  const hookText = "El hook es tu arma.";
-  const variants = ["v01", "v05", "v12", "v24"];
+  const hookText = "Creatividad medida. Hipótesis testeables.";
+  const stages = ["Input", "Idear", "Producir", "Testear", "Escalar"];
+  const metrics = ["CTR", "CVR", "ROAS", "Fatiga"];
 
   return (
     <div ref={ref} className="relative">
-      {/* Hook typewriter */}
+      {/* Header typewriter */}
       <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}>
-        <p className="text-sm font-mono text-slate-400 mb-4">
-          <span className="text-marketnauta-primary">&gt;</span> Composing...
+        <p className="text-sm font-mono text-marketnauta-primary mb-4">
+          <span className="text-marketnauta-orange">&gt;</span> Activando motor creativo...
         </p>
         <div className="h-12 flex items-start">
           {hookText.split("").map((char, i) => (
@@ -80,8 +81,8 @@ function WireframeComposer() {
               key={i}
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.4 + i * 0.04 }}
-              className="text-xl font-bold text-white font-display"
+              transition={{ delay: 0.4 + i * 0.02 }}
+              className="text-lg md:text-xl font-bold text-white font-display leading-tight"
             >
               {char}
             </motion.span>
@@ -89,42 +90,64 @@ function WireframeComposer() {
         </div>
       </motion.div>
 
-      {/* Wireframe blocks */}
-      <div className="mt-8 space-y-3">
-        {[0, 1, 2].map((i) => (
+      {/* CREAR Pipeline stages */}
+      <div className="mt-8 space-y-2.5">
+        {stages.map((stage, i) => (
           <motion.div
-            key={i}
+            key={stage}
             initial={{ opacity: 0, x: -20 }}
             animate={inView && step > i ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5 }}
-            className="h-4 bg-gradient-to-r from-marketnauta-primary/30 to-transparent rounded"
-          />
+            className="flex items-center gap-3 px-3 py-2 rounded-lg bg-abisal-950/50 border border-white/5"
+          >
+            <span className="text-xs font-mono font-bold text-marketnauta-primary">CREAR_{String(i + 1).padStart(2, '0')}</span>
+            <span className="text-sm text-white font-medium">{stage}</span>
+            <motion.div
+              animate={inView && step > i ? { x: [0, 4, 0] } : {}}
+              transition={{ repeat: Infinity, duration: 2, delay: 0.2 }}
+              className="ml-auto text-marketnauta-primary text-xs"
+            >
+              ▸
+            </motion.div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Variant counter */}
+      {/* KPI Counter */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
-        animate={inView && step > 2 ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.6 }}
+        animate={inView && step > 3 ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.5 }}
         className="mt-8 text-center"
       >
-        <div className="inline-block px-4 py-2 rounded-lg bg-marketnauta-primary/10 border border-marketnauta-primary/30">
-          <p className="text-xs font-mono text-marketnauta-primary uppercase tracking-widest">
-            Variantes: {variants[Math.min(step - 1, 3)]}
+        <div className="inline-block px-4 py-2.5 rounded-lg bg-gradient-to-r from-marketnauta-orange/10 to-marketnauta-primary/10 border border-marketnauta-orange/30">
+          <p className="text-xs font-mono text-marketnauta-orange uppercase tracking-widest mb-1.5">
+            Métricas Rastreadas
           </p>
+          <div className="flex gap-2">
+            {metrics.map((m) => (
+              <span key={m} className="text-[10px] text-marketnauta-primary font-bold px-2 py-0.5 bg-abisal-950/50 rounded border border-marketnauta-primary/20">
+                {m}
+              </span>
+            ))}
+          </div>
         </div>
       </motion.div>
 
       {/* Status */}
-      <motion.p
+      <motion.div
         initial={{ opacity: 0 }}
-        animate={inView && step === 4 ? { opacity: 1 } : {}}
-        transition={{ delay: 0.8 }}
-        className="mt-6 text-xs font-mono text-emerald-400 uppercase tracking-widest text-center"
+        animate={inView && step === 5 ? { opacity: 1 } : {}}
+        transition={{ delay: 0.7 }}
+        className="mt-6 text-center space-y-2"
       >
-        ✓ ENGINE: Ready
-      </motion.p>
+        <p className="text-xs font-mono text-emerald-400 uppercase tracking-widest">
+          ✓ Motor Creativo: Listo
+        </p>
+        <p className="text-xs text-slate-400 font-light">
+          Estructura lista. Comienza a cargar tus hipótesis.
+        </p>
+      </motion.div>
     </div>
   );
 }
